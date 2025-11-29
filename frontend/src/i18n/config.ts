@@ -16,10 +16,16 @@ export const localeDirections: Record<Locale, 'ltr' | 'rtl'> = {
   fr: 'ltr',
 };
 
-export default getRequestConfig(async ({ locale }) => {
-  if (!locales.includes(locale as Locale)) notFound();
+export default getRequestConfig(async (params) => {
+  const locale = params.locale;
+
+  // Type narrowing: vérifier que locale existe et est valide
+  if (!locale || !locales.includes(locale as Locale)) {
+    notFound();
+  }
 
   return {
-    messages: (await import(`./locales/${locale}.json`)).default,
+    locale,
+    messages: (await import(`./locales/${locale}.json`)).default
   };
 });
