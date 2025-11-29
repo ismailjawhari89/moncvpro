@@ -1,0 +1,82 @@
+{
+    "common": {
+        "appName": "CV Master AI",
+        "getStarted": "Commencer",
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "dashboard": "Tableau de bord",
+        "createCV": "Créer un CV",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "loading": "Chargement...",
+        "error": "Une erreur est survenue",
+        "success": "Succès",
+        "next": "Suivant",
+        "previous": "Précédent",
+        "finish": "Terminer",
+        "skip": "Passer"
+    },
+    "nav": {
+        "home": "Accueil",
+        "features": "Fonctionnalités",
+        "templates": "Modèles",
+        "pricing": "Tarifs",
+        "about": "À propos",
+        "contact": "Contact"
+    },
+    "hero": {
+        "title": "Créez un CV professionnel avec l'IA",
+        "subtitle": "Obtenez un CV exceptionnel qui augmente vos chances d'embauche. Modèles professionnels, amélioration automatique et support bilingue Arabe/Français.",
+        "cta": "Créer mon CV gratuitement",
+        "noCreditCard": "Pas de carte de crédit requise"
+    },
+    "features": {
+        "title": "Pourquoi choisir CV Master AI ?",
+        "ai": {
+            "title": "Propulsé par l'IA",
+            "desc": "Amélioration du contenu et suggestions de formulation pour un CV plus attractif."
+        },
+        "templates": {
+            "title": "Modèles Professionnels",
+            "desc": "Plus de 10 modèles soigneusement conçus pour tous les secteurs."
+        },
+        "bilingual": {
+            "title": "Support Bilingue",
+            "desc": "Support complet Arabe (RTL) et Français (LTR) avec conversion automatique."
+        },
+        "export": {
+            "title": "Export Multi-format",
+            "desc": "Téléchargez votre CV en PDF haute qualité ou DOCX éditable."
+        }
+    },
+    "editor": {
+        "personalInfo": "Informations Personnelles",
+        "summary": "Résumé Professionnel",
+        "experience": "Expérience Professionnelle",
+        "education": "Formation",
+        "skills": "Compétences",
+        "languages": "Langues",
+        "projects": "Projets",
+        "certifications": "Certifications",
+        "preview": "Aperçu",
+        "download": "Télécharger",
+        "aiAssistant": "Assistant IA",
+        "aiAssistantDesc": "Obtenez des suggestions pour améliorer votre CV",
+        "suggestLayout": "Suggérer un design",
+        "checkATS": "Vérifier compatibilité ATS",
+        "smartRewrite": "Réécriture intelligente"
+    },
+    "onboarding": {
+        "welcome": "Bienvenue sur CV Master AI",
+        "step1Title": "Choisissez un modèle",
+        "step1Desc": "Parcourez notre collection de modèles professionnels.",
+        "step2Title": "Entrez vos données",
+        "step2Desc": "Remplissez vos informations ou importez depuis LinkedIn.",
+        "step3Title": "Personnalisez le design",
+        "step3Desc": "Changez les couleurs et polices selon vos préférences.",
+        "step4Title": "Téléchargez votre CV",
+        "step4Desc": "Obtenez un fichier PDF prêt à l'emploi."
+    }
+}
