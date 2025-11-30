@@ -6,9 +6,9 @@
 cd "C:\Projects\moncvpro\backend"
 
 # 2️⃣ Set environment variables
-$env:DATABASE_URL="postgresql://postgres:[YOUR_PASSWORD]@db.xqhjolrdfujeifiwifaf.supabase.co:5432/postgres"
-$env:JWT_SECRET="!4FxXN/st5DGC?V"
-$env:OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+$env:DATABASE_URL="postgresql://postgres:PASSWORD@HOST:5432/postgres"
+$env:JWT_SECRET="YOUR_JWT_SECRET"
+$env:OPENAI_API_KEY=""
 
 # 3️⃣ Start Backend in a separate PowerShell window
 Start-Process powershell -ArgumentList '-NoExit', '-Command', 'npm start'
