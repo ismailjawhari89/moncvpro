@@ -9,19 +9,10 @@ const intlMiddleware = createMiddleware({
 });
 
 export default function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
-
-    // Redirect root path to default locale
-    if (pathname === '/') {
-        const url = request.nextUrl.clone();
-        url.pathname = `/${defaultLocale}`;
-        return NextResponse.redirect(url);
-    }
-
     // Handle other routes with next-intl middleware
     return intlMiddleware(request);
 }
 
 export const config = {
-    matcher: ['/', '/(ar|fr)/:path*']
+    matcher: ['/(ar|fr)/:path*']
 };
