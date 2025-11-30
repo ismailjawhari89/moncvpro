@@ -4,6 +4,8 @@ import { getMessages } from 'next-intl/server';
 import { localeDirections, type Locale } from '@/i18n/config';
 import '../globals.css';
 
+export const runtime = 'edge';
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const cairo = Cairo({ subsets: ['arabic'], variable: '--font-cairo' });
 

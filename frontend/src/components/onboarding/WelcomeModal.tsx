@@ -20,7 +20,7 @@ export function WelcomeModal() {
     useEffect(() => {
         const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
         if (!hasSeenWelcome) {
-            setIsOpen(true);
+            setTimeout(() => setIsOpen(true), 0);
         }
     }, []);
 
