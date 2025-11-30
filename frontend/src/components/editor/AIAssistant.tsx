@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, Zap, Target, TrendingUp } from 'lucide-react';
 
 export function AIAssistant() {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false); // Removed unused state
     const t = useTranslations('editor');
 
     return (
