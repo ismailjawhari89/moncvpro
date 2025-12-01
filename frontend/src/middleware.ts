@@ -20,4 +20,4 @@ export const config = {
     // - static files
     matcher: ['/((?!api|_next|.*\\..*).*)']
 };
-export const runtime = 'edge';
+
