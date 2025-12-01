@@ -7,7 +7,7 @@ import type { CVData } from '@/types/cv';
  * Export CV as PDF
  * TEMPORARILY DISABLED FOR CLOUDFLARE BUILD
  */
-export const exportPDF = async (elementId: string, filename: string = 'CV') => {
+export const exportPDF = async (elementId: string, _filename: string = 'CV') => {
     console.log('Export PDF temporarily disabled for build stability');
     alert('PDF Export is coming soon! (Disabled for deployment testing)');
     return true;
@@ -39,7 +39,7 @@ export const exportPDF = async (elementId: string, filename: string = 'CV') => {
  * Export CV as DOCX
  * TEMPORARILY DISABLED FOR CLOUDFLARE BUILD
  */
-export const exportDOCX = async (data: CVData, filename: string = 'CV') => {
+export const exportDOCX = async (data: CVData, _filename: string = 'CV') => {
     console.log('Export DOCX temporarily disabled for build stability');
     alert('DOCX Export is coming soon! (Disabled for deployment testing)');
     return true;
@@ -219,7 +219,7 @@ export const exportDOCX = async (data: CVData, filename: string = 'CV') => {
  * Export CV as plain text
  * TEMPORARILY DISABLED FOR CLOUDFLARE BUILD
  */
-export const exportTXT = (data: CVData, filename: string = 'CV') => {
+export const exportTXT = (data: CVData, _filename: string = 'CV') => {
     console.log('Export TXT temporarily disabled for build stability');
     alert('TXT Export is coming soon! (Disabled for deployment testing)');
     return true;

@@ -18,7 +18,7 @@ export default function CVBuilderClient() {
         languages: []
     });
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
-    const [savedCVs, setSavedCVs] = useState<any[]>([]);
+    const [savedCVs, setSavedCVs] = useState<{ id: string; title: string; updated_at: string; data: CVData }[]>([]);
     const [loading, setLoading] = useState(false);
 
     // Check auth state on mount
@@ -38,7 +38,7 @@ export default function CVBuilderClient() {
     }, []);
 
     const fetchSavedCVs = async () => {
-        const { data, error } = await supabase
+        const { data } = await supabase
             .from('cvs')
             .select('*')
             .order('updated_at', { ascending: false });
@@ -71,7 +71,7 @@ export default function CVBuilderClient() {
         }
     };
 
-    const handleLoad = (savedCV: any) => {
+    const handleLoad = (savedCV: { data: CVData }) => {
         if (confirm('Voulez-vous charger ce CV ? Les données actuelles seront remplacées.')) {
             setCVData(savedCV.data);
         }

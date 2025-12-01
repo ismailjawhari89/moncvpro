@@ -27,10 +27,11 @@ export default function Login() {
                 type: 'success',
                 text: 'Lien de connexion envoyé ! Vérifiez votre boîte mail.'
             });
-        } catch (error: any) {
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue.';
             setMessage({
                 type: 'error',
-                text: error.message || 'Une erreur est survenue.'
+                text: errorMessage
             });
         } finally {
             setLoading(false);
