@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 export const runtime = 'edge';
 
@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function LocalePage({ params }: PageProps) {
     const { locale } = await params;
-    const t = useTranslations('hero');
+    const t = await getTranslations({ locale, namespace: 'hero' });
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
