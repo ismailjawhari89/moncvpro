@@ -9,10 +9,15 @@ const intlMiddleware = createMiddleware({
 });
 
 export default function middleware(request: NextRequest) {
-    // Handle other routes with next-intl middleware
+    // Handle locale routing with next-intl middleware
     return intlMiddleware(request);
 }
 
 export const config = {
-    matcher: ['/(ar|fr)/:path*']
+    // Match all pathnames except for
+    // - api routes
+    // - _next (Next.js internals)
+    // - static files
+    matcher: ['/((?!api|_next|.*\\..*).*)']
 };
+export const runtime = 'edge';
