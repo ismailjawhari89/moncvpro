@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { getTranslations } from 'next-intl/server';
 import CVForm from '@/components/cv/CVForm';

@@ -38,7 +38,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
         });
     };
 
-    const updateExperience = (id: string, field: keyof Experience, value: any) => {
+    const updateExperience = (id: string, field: keyof Experience, value: Experience[keyof Experience]) => {
         setExperiences(experiences.map(exp =>
             exp.id === id ? { ...exp, [field]: value } : exp
         ));
@@ -62,7 +62,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
         }]);
     };
 
-    const updateEducation = (id: string, field: keyof Education, value: any) => {
+    const updateEducation = (id: string, field: keyof Education, value: Education[keyof Education]) => {
         setEducation(education.map(edu =>
             edu.id === id ? { ...edu, [field]: value } : edu
         ));
@@ -86,7 +86,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
         }]);
     };
 
-    const updateSkill = (id: string, field: keyof Skill, value: any) => {
+    const updateSkill = (id: string, field: keyof Skill, value: Skill[keyof Skill]) => {
         setSkills(skills.map(skill =>
             skill.id === id ? { ...skill, [field]: value } : skill
         ));
@@ -106,7 +106,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
         }]);
     };
 
-    const updateLanguage = (id: string, field: keyof Language, value: any) => {
+    const updateLanguage = (id: string, field: keyof Language, value: Language[keyof Language]) => {
         setLanguages(languages.map(lang =>
             lang.id === id ? { ...lang, [field]: value } : lang
         ));

@@ -27,180 +27,168 @@ export const exportPDF = async (elementId: string, filename: string = 'CV') => {
         console.error('PDF export error:', error);
         throw error;
     }
-};
+    heading: HeadingLevel.HEADING_1,
+        spacing: { after: 200 }
+})
+    );
 
-/**
- * Export CV as DOCX
- */
-export const exportDOCX = async (data: CVData, filename: string = 'CV') => {
-    const sections: any[] = [];
+if (data.personal.email || data.personal.phone || data.personal.location) {
+    const contactInfo = [
+        data.personal.email,
+        data.personal.phone,
+        data.personal.location
+    ].filter(Boolean).join(' | ');
 
-    // Header - Personal Info
     sections.push(
         new Paragraph({
-            text: data.personal.fullName || 'Your Name',
-            heading: HeadingLevel.HEADING_1,
-            spacing: { after: 200 }
+            children: [new TextRun({ text: contactInfo, size: 20 })],
+            spacing: { after: 300 }
+        })
+    );
+}
+
+// Summary
+if (data.personal.summary) {
+    sections.push(
+        new Paragraph({
+            text: 'Summary',
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 200, after: 100 }
+        }),
+        new Paragraph({
+            children: [new TextRun(data.personal.summary)],
+            spacing: { after: 300 }
+        })
+    );
+}
+
+// Experience
+if (data.experiences.length > 0) {
+    sections.push(
+        new Paragraph({
+            text: 'Professional Experience',
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 200, after: 100 }
         })
     );
 
-    if (data.personal.email || data.personal.phone || data.personal.location) {
-        const contactInfo = [
-            data.personal.email,
-            data.personal.phone,
-            data.personal.location
-        ].filter(Boolean).join(' | ');
-
+    data.experiences.forEach(exp => {
         sections.push(
             new Paragraph({
-                children: [new TextRun({ text: contactInfo, size: 20 })],
-                spacing: { after: 300 }
-            })
-        );
-    }
-
-    // Summary
-    if (data.personal.summary) {
-        sections.push(
-            new Paragraph({
-                text: 'Summary',
-                heading: HeadingLevel.HEADING_2,
-                spacing: { before: 200, after: 100 }
+                children: [
+                    new TextRun({ text: exp.position, bold: true }),
+                    new TextRun(` - ${exp.company}`)
+                ],
+                spacing: { before: 100 }
             }),
             new Paragraph({
-                children: [new TextRun(data.personal.summary)],
-                spacing: { after: 300 }
-            })
-        );
-    }
-
-    // Experience
-    if (data.experiences.length > 0) {
-        sections.push(
-            new Paragraph({
-                text: 'Professional Experience',
-                heading: HeadingLevel.HEADING_2,
-                spacing: { before: 200, after: 100 }
+                children: [
+                    new TextRun({
+                        text: `${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`,
+                        italics: true,
+                        size: 20
+                    })
+                ]
             })
         );
 
-        data.experiences.forEach(exp => {
-            sections.push(
-                new Paragraph({
-                    children: [
-                        new TextRun({ text: exp.position, bold: true }),
-                        new TextRun(` - ${exp.company}`)
-                    ],
-                    spacing: { before: 100 }
-                }),
-                new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: `${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`,
-                            italics: true,
-                            size: 20
-                        })
-                    ]
-                })
-            );
-
-            exp.achievements.forEach(achievement => {
-                if (achievement) {
-                    sections.push(
-                        new Paragraph({
-                            text: `• ${achievement}`,
-                            spacing: { before: 50 }
-                        })
-                    );
-                }
-            });
-        });
-    }
-
-    // Education
-    if (data.education.length > 0) {
-        sections.push(
-            new Paragraph({
-                text: 'Education',
-                heading: HeadingLevel.HEADING_2,
-                spacing: { before: 300, after: 100 }
-            })
-        );
-
-        data.education.forEach(edu => {
-            sections.push(
-                new Paragraph({
-                    children: [
-                        new TextRun({ text: edu.degree, bold: true }),
-                        new TextRun(` - ${edu.institution}`)
-                    ],
-                    spacing: { before: 100 }
-                }),
-                new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: `${edu.startDate} - ${edu.current ? 'Present' : edu.endDate}`,
-                            italics: true,
-                            size: 20
-                        })
-                    ]
-                })
-            );
-
-            if (edu.field) {
+        exp.achievements.forEach(achievement => {
+            if (achievement) {
                 sections.push(
                     new Paragraph({
-                        text: edu.field,
+                        text: `• ${achievement}`,
                         spacing: { before: 50 }
                     })
                 );
             }
         });
-    }
-
-    // Skills
-    if (data.skills.length > 0) {
-        sections.push(
-            new Paragraph({
-                text: 'Skills',
-                heading: HeadingLevel.HEADING_2,
-                spacing: { before: 300, after: 100 }
-            }),
-            new Paragraph({
-                text: data.skills.map(s => s.name).join(', ')
-            })
-        );
-    }
-
-    // Languages
-    if (data.languages.length > 0) {
-        sections.push(
-            new Paragraph({
-                text: 'Languages',
-                heading: HeadingLevel.HEADING_2,
-                spacing: { before: 300, after: 100 }
-            }),
-            new Paragraph({
-                text: data.languages.map(l => `${l.name} (${l.proficiency})`).join(', ')
-            })
-        );
-    }
-
-    const doc = new Document({
-        sections: [{
-            properties: {},
-            children: sections
-        }]
     });
+}
 
-    try {
-        const blob = await Packer.toBlob(doc);
-        saveAs(blob, `${filename}.docx`);
-        return true;
-    } catch (error) {
-        console.error('DOCX export error:', error);
-        throw error;
-    }
+// Education
+if (data.education.length > 0) {
+    sections.push(
+        new Paragraph({
+            text: 'Education',
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 300, after: 100 }
+        })
+    );
+
+    data.education.forEach(edu => {
+        sections.push(
+            new Paragraph({
+                children: [
+                    new TextRun({ text: edu.degree, bold: true }),
+                    new TextRun(` - ${edu.institution}`)
+                ],
+                spacing: { before: 100 }
+            }),
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: `${edu.startDate} - ${edu.current ? 'Present' : edu.endDate}`,
+                        italics: true,
+                        size: 20
+                    })
+                ]
+            })
+        );
+
+        if (edu.field) {
+            sections.push(
+                new Paragraph({
+                    text: edu.field,
+                    spacing: { before: 50 }
+                })
+            );
+        }
+    });
+}
+
+// Skills
+if (data.skills.length > 0) {
+    sections.push(
+        new Paragraph({
+            text: 'Skills',
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 300, after: 100 }
+        }),
+        new Paragraph({
+            text: data.skills.map(s => s.name).join(', ')
+        })
+    );
+}
+
+// Languages
+if (data.languages.length > 0) {
+    sections.push(
+        new Paragraph({
+            text: 'Languages',
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 300, after: 100 }
+        }),
+        new Paragraph({
+            text: data.languages.map(l => `${l.name} (${l.proficiency})`).join(', ')
+        })
+    );
+}
+
+const doc = new Document({
+    sections: [{
+        properties: {},
+        children: sections
+    }]
+});
+
+try {
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, `${filename}.docx`);
+    return true;
+} catch (error) {
+    console.error('DOCX export error:', error);
+    throw error;
+}
 };
 
 /**
