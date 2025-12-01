@@ -65,3 +65,7 @@ logs/
 
 # OS
 Thumbs.db
+
+# Personal Dev Scripts (with credentials)
+**/start_backend_ngrok.ps1
+*.ps1.secret
