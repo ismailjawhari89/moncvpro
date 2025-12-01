@@ -1,22 +1,24 @@
 import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 
-export const locales = ['ar', 'fr'] as const;
+// 1. Define locales and default locale
+export const locales = ['fr', 'ar'] as const;
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = 'ar';
+export const defaultLocale: Locale = 'fr';
 
 export const localeNames: Record<Locale, string> = {
-  ar: 'العربية',
   fr: 'Français',
+  ar: 'العربية',
 };
 
 export const localeDirections: Record<Locale, 'ltr' | 'rtl'> = {
-  ar: 'rtl',
   fr: 'ltr',
+  ar: 'rtl',
 };
 
+// 2. Use requestLocale to detect locale (Next.js 15 compatible)
 export default getRequestConfig(async ({ requestLocale }) => {
+  // This typically corresponds to the `[locale]` segment
   let locale = await requestLocale;
 
   // Validate that the incoming `locale` parameter is valid
