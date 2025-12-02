@@ -1,10 +1,12 @@
-export async function submitCV(cvData: any) {
+import type { CVData } from '@/types/cv';
+
+export async function submitCV(cvData: CVData) {
     // Legacy function, kept for compatibility if needed
     console.log('submitCV called', cvData);
     return { success: true };
 }
 
-export async function generateCVContent(jobTitle: string, currentData: any) {
+export async function generateCVContent(jobTitle: string, currentData: CVData) {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://moncvpro-backend.ismailhouwa123.workers.dev';
 
     try {
