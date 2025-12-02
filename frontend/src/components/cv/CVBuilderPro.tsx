@@ -270,7 +270,7 @@ export default function CVBuilderPro() {
         setCVData(prev => ({ ...prev, experiences: [...prev.experiences, newExp] }));
     };
 
-    const updateExperience = (id: string, field: keyof Experience, value: any) => {
+    const updateExperience = (id: string, field: keyof Experience, value: string | boolean | string[]) => {
         setCVData(prev => ({
             ...prev,
             experiences: prev.experiences.map(exp =>
@@ -838,8 +838,8 @@ export default function CVBuilderPro() {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id
-                                                ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
-                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
+                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                     >
                                         <tab.icon size={16} />
@@ -910,8 +910,8 @@ export default function CVBuilderPro() {
                                         key={template.id}
                                         onClick={() => setSelectedTemplate(template.id as TemplateType)}
                                         className={`relative aspect-[3/4] rounded-lg border-2 overflow-hidden transition-all ${selectedTemplate === template.id
-                                                ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
-                                                : 'border-gray-200 hover:border-blue-300'
+                                            ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
+                                            : 'border-gray-200 hover:border-blue-300'
                                             }`}
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-50" />
