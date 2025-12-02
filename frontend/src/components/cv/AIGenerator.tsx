@@ -28,7 +28,7 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
                     ...currentData.personal,
                     summary: result.summary || currentData.personal.summary
                 },
-                experiences: result.experiences ? result.experiences.map((exp: any, index: number) => ({
+                experiences: result.experiences ? result.experiences.map((exp: { position: string; company: string; description: string }, index: number) => ({
                     id: `ai-exp-${Date.now()}-${index}`,
                     position: exp.position,
                     company: exp.company,
@@ -76,7 +76,7 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
                         </h3>
 
                         <p className="text-sm text-gray-600 mb-6">
-                            Entrez le poste que vous visez, et l'IA générera un résumé professionnel et des exemples d'expériences.
+                            Entrez le poste que vous visez, et l&apos;IA générera un résumé professionnel et des exemples d&apos;expériences.
                         </p>
 
                         <div className="space-y-4">
