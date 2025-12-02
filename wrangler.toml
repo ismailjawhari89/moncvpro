@@ -1,0 +1,8 @@
+name = "moncvpro-worker"
+main = "backend-worker/worker.js"
+compatibility_date = "2025-12-02"
+
+[vars]
+GEMINI_API_KEY = "…"
+GROQ_API_KEY = "…"
+OPENAI_API_KEY = "…"

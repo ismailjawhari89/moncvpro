@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { generateCVContent } from '@/services/api';
 import type { CVData } from '@/types/cv';
+import { Sparkles, Wand2, Loader2, X } from 'lucide-react';
 
 interface AIGeneratorProps {
     onGenerate: (data: Partial<CVData>) => void;
@@ -42,7 +43,6 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
 
             onGenerate(newContent);
             setIsOpen(false);
-            alert('Contenu généré avec succès !');
         } catch (err) {
             console.error(err);
             setError('Erreur lors de la génération. Vérifiez votre connexion.');
@@ -55,47 +55,54 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm font-medium"
             >
-                <span>✨</span>
-                <span className="hidden sm:inline">Assistant IA</span>
+                <Sparkles size={18} />
+                <span>Start AI Generation</span>
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200">
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative animate-in zoom-in-95 duration-200 border border-gray-100">
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-full transition-colors"
                         >
-                            ✕
+                            <X size={20} />
                         </button>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-                            <span>🤖</span> Assistant de Rédaction
-                        </h3>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                                <Wand2 size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900">AI Assistant</h3>
+                                <p className="text-sm text-gray-500">Powered by AI</p>
+                            </div>
+                        </div>
 
-                        <p className="text-sm text-gray-600 mb-6">
-                            Entrez le poste que vous visez, et l&apos;IA générera un résumé professionnel et des exemples d&apos;expériences.
+                        <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                            Enter your target job title, and our AI will generate a professional summary and experience examples tailored for you.
                         </p>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Poste visé / Titre du job
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Target Job Title
                                 </label>
                                 <input
                                     type="text"
                                     value={jobTitle}
                                     onChange={(e) => setJobTitle(e.target.value)}
-                                    placeholder="ex: Boulanger, Développeur Web, Commercial..."
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                                    placeholder="e.g. Full Stack Developer, Marketing Manager..."
+                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400"
                                     autoFocus
                                 />
                             </div>
 
                             {error && (
-                                <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
+                                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-100 flex items-center gap-2">
+                                    <span className="block w-1.5 h-1.5 bg-red-500 rounded-full" />
                                     {error}
                                 </div>
                             )}
@@ -103,16 +110,17 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
                             <button
                                 onClick={handleGenerate}
                                 disabled={loading || !jobTitle.trim()}
-                                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
                             >
                                 {loading ? (
                                     <>
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        Rédaction en cours...
+                                        <Loader2 size={20} className="animate-spin" />
+                                        Generating Content...
                                     </>
                                 ) : (
                                     <>
-                                        <span>✨</span> Générer le contenu
+                                        <Sparkles size={18} />
+                                        Generate Content
                                     </>
                                 )}
                             </button>
@@ -123,3 +131,4 @@ export default function AIGenerator({ onGenerate, currentData }: AIGeneratorProp
         </>
     );
 }
+

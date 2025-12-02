@@ -1,5 +1,4 @@
 'use client';
-'use client';
 
 import { useState } from 'react';
 import type { CVData, TemplateType } from '@/types/cv';
