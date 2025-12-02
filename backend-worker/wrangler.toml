@@ -1,0 +1,8 @@
+name = "moncvpro-backend"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+# SUPABASE_URL = "..." (Set in Cloudflare Dashboard)
+# SUPABASE_SERVICE_KEY = "..." (Set in Cloudflare Dashboard)
+# OPENAI_API_KEY = "..." (Set in Cloudflare Dashboard)
