@@ -13,6 +13,15 @@ export default function Login() {
         setLoading(true);
         setMessage(null);
 
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+            setMessage({
+                type: 'error',
+                text: 'Configuration manquante : NEXT_PUBLIC_SUPABASE_URL introuvable.'
+            });
+            setLoading(false);
+            return;
+        }
+
         try {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
