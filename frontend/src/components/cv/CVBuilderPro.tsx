@@ -24,7 +24,13 @@ import {
     ChevronDown,
     LogOut,
     Settings,
-    FileText
+    FileText,
+    Moon,
+    Sun,
+    FileDown,
+    Zap,
+    TrendingUp,
+    Copy
 } from 'lucide-react';
 import { CVData, TemplateType, Experience, Education, Skill, Language } from '@/types/cv';
 
@@ -49,12 +55,21 @@ interface User {
     avatar?: string;
 }
 
+interface AIAnalysis {
+    score: number;
+    suggestions: string[];
+    keywords: string[];
+    missingInfo: string[];
+}
+
+type ThemeMode = 'light' | 'dark';
+
 // ============================================================================
 // REUSABLE COMPONENTS
 // ============================================================================
 
-const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-    <div className={`bg-white rounded-xl shadow-sm border border-gray-200 p-6 ${className}`}>
+const Card = ({ children, className = '', isDark }: { children: React.ReactNode; className?: string; isDark?: boolean }) => (
+    <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl shadow-sm border p-6 transition-colors duration-300 ${className}`}>
         {children}
     </div>
 );
@@ -62,19 +77,21 @@ const Card = ({ children, className = '' }: { children: React.ReactNode; classNa
 const SectionHeader = ({
     icon: Icon,
     title,
-    description
+    description,
+    isDark
 }: {
     icon: React.ElementType;
     title: string;
     description: string;
+    isDark?: boolean;
 }) => (
     <div className="flex items-start gap-4 mb-6">
-        <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+        <div className={`p-3 ${isDark ? 'bg-blue-900/50 text-blue-400' : 'bg-blue-50 text-blue-600'} rounded-xl transition-colors duration-300`}>
             <Icon size={24} />
         </div>
         <div>
-            <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-500 mt-1">{description}</p>
+            <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} transition-colors duration-300`}>{title}</h2>
+            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'} mt-1 transition-colors duration-300`}>{description}</p>
         </div>
     </div>
 );
@@ -83,15 +100,17 @@ const InputGroup = ({
     label,
     error,
     required = false,
-    children
+    children,
+    isDark
 }: {
     label: string;
     error?: string;
     required?: boolean;
     children: React.ReactNode;
+    isDark?: boolean;
 }) => (
     <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-300`}>
             {label}
             {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -106,21 +125,29 @@ const InputGroup = ({
 
 const Input = ({
     className = '',
+    isDark,
     ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => (
+}: React.InputHTMLAttributes<HTMLInputElement> & { isDark?: boolean }) => (
     <input
         {...props}
-        className={`w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400 text-gray-900 text-sm ${className}`}
+        className={`w-full px-4 py-2.5 rounded-lg border ${isDark
+                ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            } focus:ring-2 transition-all outline-none text-sm ${className}`}
     />
 );
 
 const TextArea = ({
     className = '',
+    isDark,
     ...props
-}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { isDark?: boolean }) => (
     <textarea
         {...props}
-        className={`w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400 text-gray-900 text-sm min-h-[120px] resize-y ${className}`}
+        className={`w-full px-4 py-2.5 rounded-lg border ${isDark
+                ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            } focus:ring-2 transition-all outline-none text-sm min-h-[120px] resize-y ${className}`}
     />
 );
 
@@ -130,6 +157,7 @@ const Button = ({
     icon: Icon,
     children,
     className = '',
+    isDark,
     ...props
 }: {
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -137,11 +165,18 @@ const Button = ({
     icon?: React.ElementType;
     children: React.ReactNode;
     className?: string;
+    isDark?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     const variants = {
-        primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md',
-        secondary: 'bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 shadow-sm',
-        ghost: 'bg-transparent hover:bg-gray-100 text-gray-700',
+        primary: isDark
+            ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md'
+            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md',
+        secondary: isDark
+            ? 'bg-gray-700 border border-gray-600 hover:bg-gray-600 text-gray-200 shadow-sm'
+            : 'bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 shadow-sm',
+        ghost: isDark
+            ? 'bg-transparent hover:bg-gray-700 text-gray-300'
+            : 'bg-transparent hover:bg-gray-100 text-gray-700',
         danger: 'bg-red-600 hover:bg-red-700 text-white shadow-sm'
     };
 
@@ -149,7 +184,7 @@ const Button = ({
         <button
             {...props}
             disabled={loading || props.disabled}
-            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
+            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
         >
             {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -161,12 +196,14 @@ const Button = ({
     );
 };
 
-const Alert = ({
+const Toast = ({
     type,
-    message
+    message,
+    onClose
 }: {
     type: 'success' | 'error' | 'info';
     message: string;
+    onClose: () => void;
 }) => {
     const styles = {
         success: 'bg-green-50 border-l-4 border-green-500 text-green-800',
@@ -183,18 +220,21 @@ const Alert = ({
     const Icon = icons[type];
 
     return (
-        <div className={`p-4 rounded-lg ${styles[type]} flex items-center gap-3 animate-in slide-in-from-top-2 duration-300`}>
+        <div className={`fixed top-20 right-4 z-50 p-4 rounded-lg ${styles[type]} flex items-center gap-3 shadow-lg animate-in slide-in-from-top-2 duration-300 max-w-md`}>
             <Icon size={20} />
-            <p className="text-sm font-medium">{message}</p>
+            <p className="text-sm font-medium flex-1">{message}</p>
+            <button onClick={onClose} className="text-current hover:opacity-70">
+                <X size={16} />
+            </button>
         </div>
     );
 };
 
-const LoadingSkeleton = () => (
+const LoadingSkeleton = ({ isDark }: { isDark?: boolean }) => (
     <div className="space-y-4 animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-        <div className="h-32 bg-gray-200 rounded"></div>
+        <div className={`h-4 ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded w-3/4`}></div>
+        <div className={`h-4 ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded w-1/2`}></div>
+        <div className={`h-32 ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded`}></div>
     </div>
 );
 
@@ -205,15 +245,20 @@ const LoadingSkeleton = () => (
 export default function CVBuilderPro() {
     // State Management
     const [activeTab, setActiveTab] = useState('personal');
-    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(true); // Default to open for real-time preview
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
+    const [theme, setTheme] = useState<ThemeMode>('light');
+    const [showAIModal, setShowAIModal] = useState(false);
+    const [aiAnalysis, setAIAnalysis] = useState<AIAnalysis | null>(null);
     const [formState, setFormState] = useState<FormState>({
         loading: false,
         saving: false,
         error: null,
         success: null
     });
+
+    const isDark = theme === 'dark';
 
     // Mock user data
     const [user] = useState<User>({
@@ -236,7 +281,7 @@ export default function CVBuilderPro() {
         languages: []
     });
 
-    // Auto-dismiss alerts
+    // Auto-dismiss toasts
     useEffect(() => {
         if (formState.success || formState.error) {
             const timer = setTimeout(() => {
@@ -249,6 +294,10 @@ export default function CVBuilderPro() {
     // ========================================================================
     // HANDLERS
     // ========================================================================
+
+    const toggleTheme = () => {
+        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    };
 
     const updatePersonal = (field: keyof CVData['personal'], value: string) => {
         setCVData(prev => ({
@@ -379,6 +428,57 @@ export default function CVBuilderPro() {
         });
     };
 
+    const handleExportPDF = async () => {
+        setFormState(prev => ({ ...prev, loading: true }));
+
+        // Simulate export
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        setFormState({
+            loading: false,
+            saving: false,
+            error: null,
+            success: 'PDF exported successfully!'
+        });
+    };
+
+    const handleExportDOCX = async () => {
+        setFormState(prev => ({ ...prev, loading: true }));
+
+        // Simulate export
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        setFormState({
+            loading: false,
+            saving: false,
+            error: null,
+            success: 'DOCX exported successfully!'
+        });
+    };
+
+    const handleAIAnalyze = async () => {
+        setFormState(prev => ({ ...prev, loading: true }));
+
+        // Simulate AI analysis
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        const analysis: AIAnalysis = {
+            score: 85,
+            suggestions: [
+                'Add more quantifiable achievements in your experience section',
+                'Include relevant certifications to boost credibility',
+                'Optimize keywords for ATS compatibility',
+                'Expand your professional summary with specific skills'
+            ],
+            keywords: ['JavaScript', 'React', 'TypeScript', 'Leadership', 'Project Management'],
+            missingInfo: ['LinkedIn URL', 'Portfolio Website', 'Professional Certifications']
+        };
+
+        setAIAnalysis(analysis);
+        setShowAIModal(true);
+        setFormState(prev => ({ ...prev, loading: false }));
+    };
+
     const handleAIGenerate = (newData: Partial<CVData>) => {
         setCVData(prev => ({
             ...prev,
@@ -403,49 +503,55 @@ export default function CVBuilderPro() {
                 icon={UserIcon}
                 title="Personal Information"
                 description="Start with the basics. Let employers know who you are."
+                isDark={isDark}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputGroup label="Full Name" required>
+                <InputGroup label="Full Name" required isDark={isDark}>
                     <Input
                         placeholder="e.g. John Doe"
                         value={cvData.personal.fullName}
                         onChange={(e) => updatePersonal('fullName', e.target.value)}
+                        isDark={isDark}
                     />
                 </InputGroup>
 
-                <InputGroup label="Email Address" required>
+                <InputGroup label="Email Address" required isDark={isDark}>
                     <Input
                         type="email"
                         placeholder="john@example.com"
                         value={cvData.personal.email}
                         onChange={(e) => updatePersonal('email', e.target.value)}
+                        isDark={isDark}
                     />
                 </InputGroup>
 
-                <InputGroup label="Phone Number">
+                <InputGroup label="Phone Number" isDark={isDark}>
                     <Input
                         type="tel"
                         placeholder="+1 234 567 890"
                         value={cvData.personal.phone}
                         onChange={(e) => updatePersonal('phone', e.target.value)}
+                        isDark={isDark}
                     />
                 </InputGroup>
 
-                <InputGroup label="Location">
+                <InputGroup label="Location" isDark={isDark}>
                     <Input
                         placeholder="City, Country"
                         value={cvData.personal.location}
                         onChange={(e) => updatePersonal('location', e.target.value)}
+                        isDark={isDark}
                     />
                 </InputGroup>
 
                 <div className="md:col-span-2">
-                    <InputGroup label="Professional Summary">
+                    <InputGroup label="Professional Summary" isDark={isDark}>
                         <TextArea
                             placeholder="Briefly describe your professional background and key achievements..."
                             value={cvData.personal.summary}
                             onChange={(e) => updatePersonal('summary', e.target.value)}
+                            isDark={isDark}
                         />
                     </InputGroup>
                 </div>
@@ -459,61 +565,66 @@ export default function CVBuilderPro() {
                 icon={Briefcase}
                 title="Work Experience"
                 description="Highlight your professional journey and achievements."
+                isDark={isDark}
             />
 
             <div className="space-y-6">
                 {cvData.experiences.length === 0 ? (
-                    <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-                        <Briefcase className="mx-auto text-gray-400 mb-3" size={48} />
-                        <p className="text-gray-600 font-medium mb-2">No experience added yet</p>
-                        <p className="text-sm text-gray-500 mb-4">Click the button below to add your first position</p>
+                    <div className={`text-center py-12 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} rounded-xl border-2 border-dashed ${isDark ? 'border-gray-700' : 'border-gray-300'} transition-colors duration-300`}>
+                        <Briefcase className={`mx-auto ${isDark ? 'text-gray-600' : 'text-gray-400'} mb-3`} size={48} />
+                        <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} font-medium mb-2`}>No experience added yet</p>
+                        <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'} mb-4`}>Click the button below to add your first position</p>
                     </div>
                 ) : (
                     cvData.experiences.map((exp) => (
-                        <Card key={exp.id} className="relative group hover:border-blue-300 transition-all">
+                        <Card key={exp.id} className="relative group hover:border-blue-500 transition-all" isDark={isDark}>
                             <button
                                 onClick={() => removeExperience(exp.id)}
-                                className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className={`absolute top-4 right-4 ${isDark ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'} opacity-0 group-hover:opacity-100 transition-opacity`}
                             >
                                 <Trash2 size={18} />
                             </button>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <InputGroup label="Job Title" required>
+                                <InputGroup label="Job Title" required isDark={isDark}>
                                     <Input
                                         placeholder="e.g. Senior Product Manager"
                                         value={exp.position}
                                         onChange={(e) => updateExperience(exp.id, 'position', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="Company" required>
+                                <InputGroup label="Company" required isDark={isDark}>
                                     <Input
                                         placeholder="e.g. Google"
                                         value={exp.company}
                                         onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="Start Date">
+                                <InputGroup label="Start Date" isDark={isDark}>
                                     <Input
                                         type="month"
                                         value={exp.startDate}
                                         onChange={(e) => updateExperience(exp.id, 'startDate', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="End Date">
+                                <InputGroup label="End Date" isDark={isDark}>
                                     <Input
                                         type="month"
                                         value={exp.endDate}
                                         disabled={exp.current}
                                         onChange={(e) => updateExperience(exp.id, 'endDate', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
                             </div>
 
-                            <label className="flex items-center gap-2 text-sm text-gray-700 mb-4">
+                            <label className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
                                 <input
                                     type="checkbox"
                                     checked={exp.current}
@@ -528,7 +639,7 @@ export default function CVBuilderPro() {
 
                 <button
                     onClick={addExperience}
-                    className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                    className={`w-full py-4 border-2 border-dashed ${isDark ? 'border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-gray-800' : 'border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'} rounded-xl font-medium transition-all flex items-center justify-center gap-2`}
                 >
                     <Plus size={20} />
                     Add Experience
@@ -543,55 +654,60 @@ export default function CVBuilderPro() {
                 icon={GraduationCap}
                 title="Education"
                 description="Share your academic background and qualifications."
+                isDark={isDark}
             />
 
             <div className="space-y-6">
                 {cvData.education.length === 0 ? (
-                    <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-                        <GraduationCap className="mx-auto text-gray-400 mb-3" size={48} />
-                        <p className="text-gray-600 font-medium mb-2">No education added yet</p>
-                        <p className="text-sm text-gray-500 mb-4">Add your academic achievements</p>
+                    <div className={`text-center py-12 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} rounded-xl border-2 border-dashed ${isDark ? 'border-gray-700' : 'border-gray-300'}`}>
+                        <GraduationCap className={`mx-auto ${isDark ? 'text-gray-600' : 'text-gray-400'} mb-3`} size={48} />
+                        <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} font-medium mb-2`}>No education added yet</p>
+                        <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'} mb-4`}>Add your academic achievements</p>
                     </div>
                 ) : (
                     cvData.education.map((edu) => (
-                        <Card key={edu.id} className="relative group hover:border-blue-300 transition-all">
+                        <Card key={edu.id} className="relative group hover:border-blue-500 transition-all" isDark={isDark}>
                             <button
                                 onClick={() => removeEducation(edu.id)}
-                                className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className={`absolute top-4 right-4 ${isDark ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'} opacity-0 group-hover:opacity-100 transition-opacity`}
                             >
                                 <Trash2 size={18} />
                             </button>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <InputGroup label="Institution" required>
+                                <InputGroup label="Institution" required isDark={isDark}>
                                     <Input
                                         placeholder="e.g. Harvard University"
                                         value={edu.institution}
                                         onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="Degree" required>
+                                <InputGroup label="Degree" required isDark={isDark}>
                                     <Input
                                         placeholder="e.g. Bachelor of Science"
                                         value={edu.degree}
                                         onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="Field of Study">
+                                <InputGroup label="Field of Study" isDark={isDark}>
                                     <Input
                                         placeholder="e.g. Computer Science"
                                         value={edu.field}
                                         onChange={(e) => updateEducation(edu.id, 'field', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
 
-                                <InputGroup label="Graduation Year">
+                                <InputGroup label="Graduation Year" isDark={isDark}>
                                     <Input
                                         placeholder="e.g. 2020"
                                         value={edu.endDate}
                                         onChange={(e) => updateEducation(edu.id, 'endDate', e.target.value)}
+                                        isDark={isDark}
                                     />
                                 </InputGroup>
                             </div>
@@ -601,7 +717,7 @@ export default function CVBuilderPro() {
 
                 <button
                     onClick={addEducation}
-                    className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                    className={`w-full py-4 border-2 border-dashed ${isDark ? 'border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-gray-800' : 'border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'} rounded-xl font-medium transition-all flex items-center justify-center gap-2`}
                 >
                     <Plus size={20} />
                     Add Education
@@ -616,28 +732,30 @@ export default function CVBuilderPro() {
                 icon={Award}
                 title="Skills"
                 description="Showcase your technical and professional capabilities."
+                isDark={isDark}
             />
 
             <div className="space-y-4">
                 {cvData.skills.map((skill) => (
-                    <div key={skill.id} className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200 group hover:border-blue-300 transition-all">
+                    <div key={skill.id} className={`flex items-center gap-3 p-4 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg border ${isDark ? 'border-gray-700 hover:border-blue-500' : 'border-gray-200 hover:border-blue-300'} group transition-all`}>
                         <Input
                             placeholder="e.g. JavaScript, Leadership, Design"
                             value={skill.name}
                             onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
                             className="flex-1"
+                            isDark={isDark}
                         />
                         <select
                             value={skill.category}
                             onChange={(e) => updateSkill(skill.id, 'category', e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                            className={`px-3 py-2 rounded-lg border ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-blue-500 outline-none text-sm`}
                         >
                             <option value="technical">Technical</option>
                             <option value="soft">Soft Skill</option>
                         </select>
                         <button
                             onClick={() => removeSkill(skill.id)}
-                            className="text-gray-400 hover:text-red-500 transition-colors"
+                            className={`${isDark ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'} transition-colors`}
                         >
                             <Trash2 size={18} />
                         </button>
@@ -646,7 +764,7 @@ export default function CVBuilderPro() {
 
                 <button
                     onClick={addSkill}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                    className={`w-full py-3 border-2 border-dashed ${isDark ? 'border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-gray-800' : 'border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'} rounded-xl font-medium transition-all flex items-center justify-center gap-2`}
                 >
                     <Plus size={20} />
                     Add Skill
@@ -661,21 +779,23 @@ export default function CVBuilderPro() {
                 icon={Languages}
                 title="Languages"
                 description="List the languages you speak and your proficiency level."
+                isDark={isDark}
             />
 
             <div className="space-y-4">
                 {cvData.languages.map((lang) => (
-                    <div key={lang.id} className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200 group hover:border-blue-300 transition-all">
+                    <div key={lang.id} className={`flex items-center gap-3 p-4 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg border ${isDark ? 'border-gray-700 hover:border-blue-500' : 'border-gray-200 hover:border-blue-300'} group transition-all`}>
                         <Input
                             placeholder="e.g. English, Spanish"
                             value={lang.name}
                             onChange={(e) => updateLanguage(lang.id, 'name', e.target.value)}
                             className="flex-1"
+                            isDark={isDark}
                         />
                         <select
                             value={lang.proficiency}
                             onChange={(e) => updateLanguage(lang.id, 'proficiency', e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                            className={`px-3 py-2 rounded-lg border ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-blue-500 outline-none text-sm`}
                         >
                             <option value="basic">Basic</option>
                             <option value="conversational">Conversational</option>
@@ -684,7 +804,7 @@ export default function CVBuilderPro() {
                         </select>
                         <button
                             onClick={() => removeLanguage(lang.id)}
-                            className="text-gray-400 hover:text-red-500 transition-colors"
+                            className={`${isDark ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'} transition-colors`}
                         >
                             <Trash2 size={18} />
                         </button>
@@ -693,7 +813,7 @@ export default function CVBuilderPro() {
 
                 <button
                     onClick={addLanguage}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                    className={`w-full py-3 border-2 border-dashed ${isDark ? 'border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-gray-800' : 'border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'} rounded-xl font-medium transition-all flex items-center justify-center gap-2`}
                 >
                     <Plus size={20} />
                     Add Language
@@ -732,9 +852,9 @@ export default function CVBuilderPro() {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+            <header className={`sticky top-0 z-50 ${isDark ? 'bg-gray-800/90' : 'bg-white/90'} backdrop-blur-md border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-sm transition-colors duration-300`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
@@ -743,44 +863,75 @@ export default function CVBuilderPro() {
                                 CV
                             </div>
                             <div>
-                                <h1 className="font-bold text-xl text-gray-900">
+                                <h1 className={`font-bold text-xl ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                     CV<span className="text-blue-600">Builder</span> Pro
                                 </h1>
-                                <p className="text-xs text-gray-500">Professional Resume Creator</p>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Professional Resume Creator</p>
                             </div>
                         </div>
 
                         {/* Desktop Actions */}
-                        <div className="hidden md:flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-3">
+                            {/* Theme Toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'} transition-colors`}
+                                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            >
+                                {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                            </button>
+
+                            {/* Export Buttons */}
+                            <Button
+                                variant="secondary"
+                                icon={FileDown}
+                                onClick={handleExportPDF}
+                                isDark={isDark}
+                                className="!py-2 !px-3"
+                            >
+                                PDF
+                            </Button>
+
+                            <Button
+                                variant="secondary"
+                                icon={FileDown}
+                                onClick={handleExportDOCX}
+                                isDark={isDark}
+                                className="!py-2 !px-3"
+                            >
+                                DOCX
+                            </Button>
+
                             <Button
                                 variant="secondary"
                                 icon={Save}
                                 loading={formState.saving}
                                 onClick={handleSave}
+                                isDark={isDark}
                             >
-                                Save CV
+                                Save
                             </Button>
 
                             {/* User Menu */}
                             <div className="relative group">
-                                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                <button className={`flex items-center gap-2 px-3 py-2 rounded-lg ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors`}>
                                     <div className="w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-semibold text-sm">
                                         {user.name.charAt(0)}
                                     </div>
-                                    <ChevronDown size={16} className="text-gray-500" />
+                                    <ChevronDown size={16} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
                                 </button>
 
                                 {/* Dropdown */}
-                                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                    <div className="px-4 py-3 border-b border-gray-100">
-                                        <p className="font-semibold text-gray-900">{user.name}</p>
-                                        <p className="text-sm text-gray-500">{user.email}</p>
+                                <div className={`absolute right-0 top-full mt-2 w-56 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-lg border py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all`}>
+                                    <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
+                                        <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>{user.name}</p>
+                                        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{user.email}</p>
                                     </div>
-                                    <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700">
+                                    <button className={`w-full px-4 py-2 text-left text-sm ${isDark ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-50 text-gray-700'} flex items-center gap-2`}>
                                         <Settings size={16} />
                                         Settings
                                     </button>
-                                    <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700">
+                                    <button className={`w-full px-4 py-2 text-left text-sm ${isDark ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-50 text-gray-700'} flex items-center gap-2`}>
                                         <FileText size={16} />
                                         My CVs
                                     </button>
@@ -795,51 +946,68 @@ export default function CVBuilderPro() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            className={`md:hidden p-2 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} rounded-lg transition-colors`}
                         >
-                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            {isMobileMenuOpen ? <X size={24} className={isDark ? 'text-white' : 'text-gray-900'} /> : <Menu size={24} className={isDark ? 'text-white' : 'text-gray-900'} />}
                         </button>
                     </div>
                 </div>
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden border-t border-gray-200 bg-white">
+                    <div className={`md:hidden border-t ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
                         <div className="px-4 py-3 space-y-2">
-                            <Button variant="primary" icon={Save} className="w-full" onClick={handleSave}>
+                            <Button variant="primary" icon={Save} className="w-full" onClick={handleSave} isDark={isDark}>
                                 Save CV
                             </Button>
-                            <Button variant="secondary" icon={Download} className="w-full">
-                                Export PDF
-                            </Button>
+                            <div className="grid grid-cols-2 gap-2">
+                                <Button variant="secondary" icon={FileDown} className="w-full" onClick={handleExportPDF} isDark={isDark}>
+                                    PDF
+                                </Button>
+                                <Button variant="secondary" icon={FileDown} className="w-full" onClick={handleExportDOCX} isDark={isDark}>
+                                    DOCX
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 )}
             </header>
 
-            {/* Alerts */}
-            {(formState.success || formState.error) && (
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                    {formState.success && <Alert type="success" message={formState.success} />}
-                    {formState.error && <Alert type="error" message={formState.error} />}
-                </div>
+            {/* Toasts */}
+            {formState.success && (
+                <Toast
+                    type="success"
+                    message={formState.success}
+                    onClose={() => setFormState(prev => ({ ...prev, success: null }))}
+                />
+            )}
+            {formState.error && (
+                <Toast
+                    type="error"
+                    message={formState.error}
+                    onClose={() => setFormState(prev => ({ ...prev, error: null }))}
+                />
             )}
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Column - Form */}
+                    {/* Left Column - Form (2/3 width) */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Tabs */}
-                        <Card className="!p-2">
+                        <Card className="!p-2" isDark={isDark}>
                             <div className="flex overflow-x-auto gap-1 no-scrollbar">
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id
-                                            ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                                ? isDark
+                                                    ? 'bg-blue-900/50 text-blue-400 shadow-sm ring-1 ring-blue-500'
+                                                    : 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
+                                                : isDark
+                                                    ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+                                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                     >
                                         <tab.icon size={16} />
@@ -850,170 +1018,255 @@ export default function CVBuilderPro() {
                         </Card>
 
                         {/* Form Content */}
-                        <Card className="min-h-[600px]">
+                        <Card className="min-h-[600px]" isDark={isDark}>
                             {renderTabContent()}
+                        </Card>
+
+                        {/* AI Analysis Card */}
+                        <Card isDark={isDark}>
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className={`p-2 ${isDark ? 'bg-purple-900/50 text-purple-400' : 'bg-purple-50 text-purple-600'} rounded-lg`}>
+                                        <Zap size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>AI Analysis</h3>
+                                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Get instant feedback on your CV</p>
+                                    </div>
+                                </div>
+                                <Button
+                                    variant="primary"
+                                    icon={TrendingUp}
+                                    onClick={handleAIAnalyze}
+                                    loading={formState.loading}
+                                    isDark={isDark}
+                                    className="!py-2"
+                                >
+                                    Analyze Now
+                                </Button>
+                            </div>
                         </Card>
                     </div>
 
-                    {/* Right Column - Sidebar */}
+                    {/* Right Column - Live Preview Sidebar (1/3 width) */}
                     <div className="space-y-6">
-                        {/* AI Assistant Card */}
-                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border border-blue-100 p-6 shadow-md">
+                        {/* Preview Toggle */}
+                        <Card isDark={isDark}>
+                            <button
+                                onClick={() => setIsPreviewOpen(!isPreviewOpen)}
+                                className="w-full flex items-center justify-between"
+                            >
+                                <div className="flex items-center gap-3">
+                                    {isPreviewOpen ? <Eye size={20} className={isDark ? 'text-gray-400' : 'text-gray-600'} /> : <EyeOff size={20} className={isDark ? 'text-gray-400' : 'text-gray-600'} />}
+                                    <div className="text-left">
+                                        <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>Live Preview</p>
+                                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            {isPreviewOpen ? 'Updates in real-time' : 'Click to show'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={`w-12 h-6 rounded-full transition-colors ${isPreviewOpen ? 'bg-blue-600' : isDark ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                                    <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform m-0.5 ${isPreviewOpen ? 'translate-x-6' : 'translate-x-0'}`} />
+                                </div>
+                            </button>
+                        </Card>
+
+                        {/* Live Preview Content */}
+                        {isPreviewOpen && (
+                            <Card isDark={isDark} className="sticky top-24">
+                                <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4 flex items-center gap-2`}>
+                                    <LayoutTemplate size={18} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                                    Preview
+                                </h3>
+                                <div className={`${isDark ? 'bg-gray-900' : 'bg-gray-100'} p-4 rounded-lg max-h-[600px] overflow-y-auto`}>
+                                    <Suspense fallback={<LoadingSkeleton isDark={isDark} />}>
+                                        <div className="scale-50 origin-top-left w-[200%]">
+                                            <CVPreview
+                                                data={cvData}
+                                                selectedTemplate={selectedTemplate}
+                                                onTemplateChange={setSelectedTemplate}
+                                            />
+                                        </div>
+                                    </Suspense>
+                                </div>
+                            </Card>
+                        )}
+
+                        {/* Templates */}
+                        <Card isDark={isDark}>
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'} flex items-center gap-2`}>
+                                    <LayoutTemplate size={18} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                                    Templates
+                                </h3>
+                                <span className={`text-xs font-medium ${isDark ? 'text-blue-400 bg-blue-900/50' : 'text-blue-600 bg-blue-50'} px-2 py-1 rounded-full`}>
+                                    {templates.length} Available
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-3">
+                                {templates.map((template) => (
+                                    <button
+                                        key={template.id}
+                                        onClick={() => setSelectedTemplate(template.id as TemplateType)}
+                                        className={`relative p-3 rounded-lg border-2 transition-all text-left ${selectedTemplate === template.id
+                                                ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
+                                                : isDark
+                                                    ? 'border-gray-700 hover:border-blue-500'
+                                                    : 'border-gray-200 hover:border-blue-300'
+                                            }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <p className={`text-sm font-medium capitalize ${isDark ? 'text-white' : 'text-gray-700'}`}>
+                                                {template.name}
+                                            </p>
+                                            {selectedTemplate === template.id && (
+                                                <CheckCircle size={16} className="text-blue-600" fill="currentColor" />
+                                            )}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </Card>
+
+                        {/* AI Assistant */}
+                        <div className={`relative overflow-hidden rounded-xl ${isDark ? 'bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-gray-800 border-purple-700' : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-blue-100'} border p-6 shadow-md transition-colors duration-300`}>
                             <div className="absolute top-0 right-0 p-4 opacity-10">
                                 <Sparkles size={100} className="text-purple-600" />
                             </div>
 
                             <div className="relative z-10">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="p-3 bg-white rounded-xl shadow-sm text-purple-600">
+                                    <div className={`p-3 ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-sm text-purple-600`}>
                                         <Wand2 size={24} />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900">AI Assistant</h3>
-                                        <p className="text-xs text-gray-600">Powered by AI</p>
+                                        <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>AI Assistant</h3>
+                                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Powered by AI</p>
                                     </div>
                                 </div>
 
-                                <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4 leading-relaxed`}>
                                     Let AI help you craft professional content tailored to your target role.
                                 </p>
 
-                                <Suspense fallback={<LoadingSkeleton />}>
+                                <Suspense fallback={<LoadingSkeleton isDark={isDark} />}>
                                     <AIGenerator
                                         currentData={cvData}
                                         onGenerate={handleAIGenerate}
                                     />
                                 </Suspense>
-
-                                <button className="w-full mt-3 py-2 text-sm text-purple-700 hover:text-purple-800 font-medium flex items-center justify-center gap-2 hover:bg-white/50 rounded-lg transition-colors">
-                                    <Eye size={16} />
-                                    View Demo
-                                </button>
                             </div>
                         </div>
-
-                        {/* Templates Gallery */}
-                        <Card>
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                                    <LayoutTemplate size={18} className="text-gray-500" />
-                                    Templates
-                                </h3>
-                                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                                    {templates.length} Available
-                                </span>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                {templates.map((template) => (
-                                    <button
-                                        key={template.id}
-                                        onClick={() => setSelectedTemplate(template.id as TemplateType)}
-                                        className={`relative aspect-[3/4] rounded-lg border-2 overflow-hidden transition-all ${selectedTemplate === template.id
-                                            ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
-                                            : 'border-gray-200 hover:border-blue-300'
-                                            }`}
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-50" />
-                                        <div className="absolute inset-2 bg-white shadow-sm rounded-sm opacity-60" />
-
-                                        <div className="absolute bottom-0 left-0 right-0 p-2 bg-white/90 backdrop-blur-sm border-t border-gray-100">
-                                            <p className="text-xs font-medium text-center capitalize text-gray-700">
-                                                {template.name}
-                                            </p>
-                                        </div>
-
-                                        {selectedTemplate === template.id && (
-                                            <div className="absolute top-2 right-2 text-blue-600 bg-white rounded-full p-1 shadow-sm">
-                                                <CheckCircle size={14} fill="currentColor" />
-                                            </div>
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-                        </Card>
-
-                        {/* Export Actions */}
-                        <Card>
-                            <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <Download size={18} className="text-gray-500" />
-                                Export Options
-                            </h3>
-
-                            <div className="space-y-3">
-                                <button className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-red-50 text-red-600 rounded-lg group-hover:bg-white transition-colors">
-                                            <FileText size={20} />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-sm font-medium text-gray-900">Download PDF</p>
-                                            <p className="text-xs text-gray-500">Print-ready format</p>
-                                        </div>
-                                    </div>
-                                    <Download size={16} className="text-gray-400 group-hover:text-blue-600" />
-                                </button>
-
-                                <button className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-white transition-colors">
-                                            <FileText size={20} />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-sm font-medium text-gray-900">Download DOCX</p>
-                                            <p className="text-xs text-gray-500">Editable document</p>
-                                        </div>
-                                    </div>
-                                    <Download size={16} className="text-gray-400 group-hover:text-blue-600" />
-                                </button>
-                            </div>
-                        </Card>
-
-                        {/* Live Preview Toggle */}
-                        <Card>
-                            <button
-                                onClick={() => setIsPreviewOpen(!isPreviewOpen)}
-                                className="w-full flex items-center justify-between"
-                            >
-                                <div className="flex items-center gap-3">
-                                    {isPreviewOpen ? <EyeOff size={20} /> : <Eye size={20} />}
-                                    <div className="text-left">
-                                        <p className="font-medium text-gray-900">Live Preview</p>
-                                        <p className="text-xs text-gray-500">
-                                            {isPreviewOpen ? 'Hide preview' : 'Show preview'}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className={`w-12 h-6 rounded-full transition-colors ${isPreviewOpen ? 'bg-blue-600' : 'bg-gray-300'}`}>
-                                    <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform m-0.5 ${isPreviewOpen ? 'translate-x-6' : 'translate-x-0'}`} />
-                                </div>
-                            </button>
-                        </Card>
                     </div>
                 </div>
             </main>
 
-            {/* Preview Modal */}
-            {isPreviewOpen && (
+            {/* AI Analysis Modal */}
+            {showAIModal && aiAnalysis && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-                        <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-                            <h3 className="font-bold text-gray-900">Live Preview</h3>
+                    <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border`}>
+                        <div className={`p-6 border-b ${isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'} flex justify-between items-center`}>
+                            <div className="flex items-center gap-3">
+                                <div className={`p-3 ${isDark ? 'bg-purple-900/50 text-purple-400' : 'bg-purple-50 text-purple-600'} rounded-xl`}>
+                                    <TrendingUp size={24} />
+                                </div>
+                                <div>
+                                    <h3 className={`font-bold text-xl ${isDark ? 'text-white' : 'text-gray-900'}`}>AI Analysis Results</h3>
+                                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>ATS Compatibility Score: {aiAnalysis.score}%</p>
+                                </div>
+                            </div>
                             <button
-                                onClick={() => setIsPreviewOpen(false)}
-                                className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                                onClick={() => setShowAIModal(false)}
+                                className={`p-2 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-200'} rounded-full transition-colors`}
                             >
-                                <X size={20} />
+                                <X size={20} className={isDark ? 'text-gray-400' : 'text-gray-600'} />
                             </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
-                            <Suspense fallback={<LoadingSkeleton />}>
-                                <CVPreview
-                                    data={cvData}
-                                    selectedTemplate={selectedTemplate}
-                                    onTemplateChange={setSelectedTemplate}
-                                />
-                            </Suspense>
+
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                            {/* Score */}
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Overall Score</span>
+                                    <span className={`text-2xl font-bold ${aiAnalysis.score >= 80 ? 'text-green-600' : aiAnalysis.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                        {aiAnalysis.score}%
+                                    </span>
+                                </div>
+                                <div className={`w-full ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded-full h-3`}>
+                                    <div
+                                        className={`h-3 rounded-full transition-all ${aiAnalysis.score >= 80 ? 'bg-green-600' : aiAnalysis.score >= 60 ? 'bg-yellow-600' : 'bg-red-600'}`}
+                                        style={{ width: `${aiAnalysis.score}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Suggestions */}
+                            <div>
+                                <h4 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-3 flex items-center gap-2`}>
+                                    <Sparkles size={18} className="text-purple-600" />
+                                    Suggestions for Improvement
+                                </h4>
+                                <div className="space-y-2">
+                                    {aiAnalysis.suggestions.map((suggestion, index) => (
+                                        <div key={index} className={`p-3 ${isDark ? 'bg-gray-700' : 'bg-blue-50'} rounded-lg flex items-start gap-2`}>
+                                            <CheckCircle size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                                            <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{suggestion}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Keywords */}
+                            <div>
+                                <h4 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-3`}>Detected Keywords</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {aiAnalysis.keywords.map((keyword, index) => (
+                                        <span key={index} className={`px-3 py-1 ${isDark ? 'bg-blue-900/50 text-blue-400' : 'bg-blue-100 text-blue-800'} rounded-full text-sm font-medium`}>
+                                            {keyword}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Missing Info */}
+                            <div>
+                                <h4 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-3 flex items-center gap-2`}>
+                                    <AlertCircle size={18} className="text-yellow-600" />
+                                    Missing Information
+                                </h4>
+                                <div className="space-y-2">
+                                    {aiAnalysis.missingInfo.map((info, index) => (
+                                        <div key={index} className={`p-3 ${isDark ? 'bg-yellow-900/20 border-yellow-700' : 'bg-yellow-50 border-yellow-200'} rounded-lg border flex items-center gap-2`}>
+                                            <AlertCircle size={16} className="text-yellow-600 flex-shrink-0" />
+                                            <p className={`text-sm ${isDark ? 'text-yellow-400' : 'text-yellow-800'}`}>{info}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={`p-4 border-t ${isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'} flex gap-3`}>
+                            <Button
+                                variant="secondary"
+                                icon={Copy}
+                                onClick={() => {
+                                    navigator.clipboard.writeText(aiAnalysis.suggestions.join('\n'));
+                                    setFormState(prev => ({ ...prev, success: 'Recommendations copied to clipboard!' }));
+                                }}
+                                isDark={isDark}
+                                className="flex-1"
+                            >
+                                Copy Recommendations
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={() => setShowAIModal(false)}
+                                isDark={isDark}
+                                className="flex-1"
+                            >
+                                Close
+                            </Button>
                         </div>
                     </div>
                 </div>
