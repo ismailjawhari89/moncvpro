@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { CVData, PersonalInfo, Experience, Education, Skill, Language } from '@/types/cv';
 import AIGenerator from './AIGenerator';
-import AIGenerator from './AIGenerator';
 
 interface CVFormProps {
     initialData?: CVData;
