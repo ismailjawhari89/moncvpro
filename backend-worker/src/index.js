@@ -47,11 +47,15 @@ export default {
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: `Generate content for a ${jobTitle}.` }
-                ],
-                response_format: { type: "json_object" }
+                ]
             });
 
-            const generatedContent = JSON.parse(completion.choices[0].message.content);
+            let content = completion.choices[0].message.content;
+
+            // Clean markdown code blocks if present (```json ... ```)
+            content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+
+            const generatedContent = JSON.parse(content);
 
             return new Response(JSON.stringify(generatedContent), {
                 headers: { ...corsHeaders, "Content-Type": "application/json" }

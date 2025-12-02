@@ -41,7 +41,7 @@ export default function CVBuilderClient() {
         const { data } = await supabase
             .from('cvs')
             .select('*')
-            .order('updated_at', { ascending: false });
+            .order('updated_at', { ascending: false, nullsLast: true });
 
         if (data) setSavedCVs(data);
     };
