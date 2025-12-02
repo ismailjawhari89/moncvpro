@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { CVData, PersonalInfo, Experience, Education, Skill, Language } from '@/types/cv';
 import AIGenerator from './AIGenerator';
+import AIGenerator from './AIGenerator';
 
 interface CVFormProps {
     initialData?: CVData;
@@ -129,6 +130,22 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
 
     return (
         <div className="space-y-8 p-6 bg-white rounded-lg shadow-sm">
+            <div className="flex justify-between items-center mb-6 border-b pb-4">
+                <h1 className="text-2xl font-bold text-gray-900">Mon CV</h1>
+                <AIGenerator
+                    currentData={{ personal, experiences, education, skills, languages }}
+                    onGenerate={(newData) => {
+                        if (newData.personal?.summary) {
+                            setPersonal(prev => ({ ...prev, summary: newData.personal!.summary! }));
+                        }
+                        if (newData.experiences) {
+                            setExperiences(prev => [...prev, ...newData.experiences!]);
+                        }
+                        updateCV();
+                    }}
+                />
+            </div>
+
             {/* Personal Information */}
             <section>
                 <h2 className="text-2xl font-bold mb-4">{t('personal.title')}</h2>
