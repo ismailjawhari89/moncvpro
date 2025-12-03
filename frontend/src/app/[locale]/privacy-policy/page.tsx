@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Shield, Lock, Eye, Database, UserCheck, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
     const lastUpdated = 'December 3, 2025';
@@ -167,7 +168,7 @@ export default function PrivacyPolicyPage() {
                                     limit some features of our website.
                                 </p>
                                 <p>
-                                    For more information, please see our <a href="/cookies-policy" className="text-blue-600 hover:underline">Cookies Policy</a>.
+                                    For more information, please see our <Link href="/cookies-policy" className="text-blue-600 hover:underline">Cookies Policy</Link>.
                                 </p>
                             </div>
                         </div>
@@ -213,7 +214,7 @@ export default function PrivacyPolicyPage() {
                                 <p className="mb-2">If you have questions about this Privacy Policy, please contact us:</p>
                                 <ul className="space-y-1">
                                     <li><strong>Email:</strong> privacy@moncvpro.com</li>
-                                    <li><strong>Website:</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact Form</a></li>
+                                    <li><strong>Website:</strong> <Link href="/contact" className="text-blue-600 hover:underline">Contact Form</Link></li>
                                 </ul>
                             </div>
                         </div>

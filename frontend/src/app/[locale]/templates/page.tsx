@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle, Eye, Sparkles } from 'lucide-react';
+import { Eye, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 type ThemeMode = 'light' | 'dark';

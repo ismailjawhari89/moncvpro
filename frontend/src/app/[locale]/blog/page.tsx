@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, User, ArrowRight, Search, Tag } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { blogService, type BlogPost } from '@/services/blogService';
 

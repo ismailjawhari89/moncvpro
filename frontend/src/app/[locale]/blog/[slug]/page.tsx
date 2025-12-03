@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Link as LinkIcon } from 'lucide-react';
+import { Calendar, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Link as LinkIcon } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { blogService, type BlogPost } from '@/services/blogService';
 
@@ -16,6 +16,7 @@ export default function BlogPostPage() {
         if (params?.slug) {
             loadPost(params.slug as string);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params?.slug]);
 
     const loadPost = async (slug: string) => {
@@ -183,7 +184,7 @@ export default function BlogPostPage() {
             <section className="bg-blue-600 py-16">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl font-bold text-white mb-4">
-                        Ready to apply what you've learned?
+                        Ready to apply what you&apos;ve learned?
                     </h2>
                     <p className="text-xl text-blue-100 mb-8">
                         Create your professional CV in minutes with our free builder.

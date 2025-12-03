@@ -120,6 +120,7 @@ export default function TemplatesGallery({ selectedTemplate, onTemplateChange, i
                                             <Loader2 className="animate-spin text-gray-400" size={32} />
                                         </div>
                                     )}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={template.preview}
                                         alt={template.name}

@@ -1,4 +1,4 @@
-import { User } from 'lucide-react';
+
 
 export interface BlogPost {
     id: string;

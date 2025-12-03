@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FileText, Shield, Ban, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function TermsPage() {
     const lastUpdated = 'December 3, 2025';
@@ -220,7 +221,7 @@ export default function TermsPage() {
                                 <p className="mb-2">If you have any questions about these Terms, please contact us:</p>
                                 <ul className="space-y-1">
                                     <li><strong>Email:</strong> legal@moncvpro.com</li>
-                                    <li><strong>Website:</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact Form</a></li>
+                                    <li><strong>Website:</strong> <Link href="/contact" className="text-blue-600 hover:underline">Contact Form</Link></li>
                                 </ul>
                             </div>
                         </div>
