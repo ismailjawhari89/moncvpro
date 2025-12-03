@@ -1,7 +1,7 @@
 // Virtual Scrolling Component for Long Lists
 'use client';
 
-import React, { useState, useRef, useEffect, ReactNode } from 'react';
+import React, { useState, useRef, ReactNode } from 'react';
 
 interface VirtualScrollProps<T> {
     items: T[];

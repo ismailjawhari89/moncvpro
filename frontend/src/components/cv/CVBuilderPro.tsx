@@ -10,7 +10,6 @@ import {
     Plus,
     Trash2,
     Save,
-    Download,
     Eye,
     EyeOff,
     Sparkles,
@@ -28,7 +27,6 @@ import {
     Moon,
     Sun,
     FileDown,
-    Zap,
     TrendingUp,
     Copy
 } from 'lucide-react';

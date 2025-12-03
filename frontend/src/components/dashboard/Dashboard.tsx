@@ -10,10 +10,8 @@ import {
     Download,
     TrendingUp,
     Sparkles,
-    BarChart3,
     Clock,
-    Loader2,
-    Eye
+    Loader2
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cvService, type SavedCV, type UserAnalytics } from '@/services/cvService';
@@ -25,12 +23,12 @@ export default function Dashboard() {
     const [cvs, setCVs] = useState<SavedCV[]>([]);
     const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
     const [loading, setLoading] = useState(true);
-    const [selectedCV, setSelectedCV] = useState<string | null>(null);
 
     useEffect(() => {
         if (user) {
             loadDashboardData();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const loadDashboardData = async () => {
@@ -176,12 +174,6 @@ export default function Dashboard() {
                                         >
                                             <Edit size={14} />
                                             Edit
-                                        </button>
-                                        <button
-                                            onClick={() => setSelectedCV(cv.id)}
-                                            className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-sm font-medium transition-all"
-                                        >
-                                            <Eye size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDeleteCV(cv.id)}

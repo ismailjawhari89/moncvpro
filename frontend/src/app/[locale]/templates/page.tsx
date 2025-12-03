@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { CheckCircle, Eye, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 type ThemeMode = 'light' | 'dark';
 type TemplateCategory = 'all' | 'modern' | 'minimalist' | 'creative' | 'professional';
@@ -20,7 +19,6 @@ export default function TemplatesGalleryPage() {
     const router = useRouter();
     const [theme] = useState<ThemeMode>('light');
     const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('all');
-    const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
     const isDark = theme === 'dark';
 
@@ -104,12 +102,12 @@ export default function TemplatesGalleryPage() {
                             key={category.id}
                             onClick={() => setSelectedCategory(category.id)}
                             className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${selectedCategory === category.id
-                                    ? isDark
-                                        ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400'
-                                        : 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-200'
-                                    : isDark
-                                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
-                                        : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                                ? isDark
+                                    ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400'
+                                    : 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-200'
+                                : isDark
+                                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                                 }`}
                         >
                             {category.label}
@@ -158,12 +156,7 @@ export default function TemplatesGalleryPage() {
                                     </div>
                                 )}
 
-                                {/* Selected Badge */}
-                                {selectedTemplate === template.id && (
-                                    <div className="absolute top-3 left-3 bg-blue-600 text-white rounded-full p-2 shadow-lg">
-                                        <CheckCircle size={16} fill="currentColor" />
-                                    </div>
-                                )}
+
 
                                 {/* Zoom Effect on Hover */}
                                 <div className="absolute inset-0 transform group-hover:scale-105 transition-transform duration-500" />
@@ -180,8 +173,8 @@ export default function TemplatesGalleryPage() {
                                         <span
                                             key={cat}
                                             className={`text-xs px-2 py-1 rounded-full ${isDark
-                                                    ? 'bg-blue-900/50 text-blue-400'
-                                                    : 'bg-blue-100 text-blue-700'
+                                                ? 'bg-blue-900/50 text-blue-400'
+                                                : 'bg-blue-100 text-blue-700'
                                                 }`}
                                         >
                                             {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -192,8 +185,8 @@ export default function TemplatesGalleryPage() {
                                 <button
                                     onClick={() => handleUseTemplate(template.id)}
                                     className={`w-full py-2.5 rounded-lg font-medium transition-all duration-300 ${isDark
-                                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                        : 'bg-blue-600 hover:bg-blue-700 text-white'
                                         }`}
                                 >
                                     Use This Template
@@ -221,7 +214,7 @@ export default function TemplatesGalleryPage() {
             <section className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t py-12`}>
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
-                        Can't decide? Start with our most popular template
+                        Can&apos;t decide? Start with our most popular template
                     </h2>
                     <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
                         The Modern Professional template is loved by thousands of users

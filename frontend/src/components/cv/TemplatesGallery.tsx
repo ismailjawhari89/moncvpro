@@ -52,6 +52,7 @@ export default function TemplatesGallery({ selectedTemplate, onTemplateChange, i
 
     // Intersection Observer for lazy loading
     useEffect(() => {
+        const currentRef = galleryRef.current;
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -63,13 +64,13 @@ export default function TemplatesGallery({ selectedTemplate, onTemplateChange, i
             { threshold: 0.1 }
         );
 
-        if (galleryRef.current) {
-            observer.observe(galleryRef.current);
+        if (currentRef) {
+            observer.observe(currentRef);
         }
 
         return () => {
-            if (galleryRef.current) {
-                observer.unobserve(galleryRef.current);
+            if (currentRef) {
+                observer.unobserve(currentRef);
             }
         };
     }, []);
@@ -104,10 +105,10 @@ export default function TemplatesGallery({ selectedTemplate, onTemplateChange, i
                         key={template.id}
                         onClick={() => handleTemplateSelect(template.id)}
                         className={`relative group text-left rounded-xl border-2 transition-all overflow-hidden ${selectedTemplate === template.id
-                                ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
-                                : isDark
-                                    ? 'border-gray-700 hover:border-blue-500'
-                                    : 'border-gray-200 hover:border-blue-300'
+                            ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
+                            : isDark
+                                ? 'border-gray-700 hover:border-blue-500'
+                                : 'border-gray-200 hover:border-blue-300'
                             }`}
                     >
                         {/* Template Preview */}
