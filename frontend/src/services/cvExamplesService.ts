@@ -266,9 +266,9 @@ const generateCVs = (): CVExample[] => {
             slug: `example-cv-${i + 5}`,
             title: `${INDUSTRIES[i % INDUSTRIES.length]} Professional`,
             description: `A professional CV template designed for ${INDUSTRIES[i % INDUSTRIES.length]} roles.`,
-            industry: INDUSTRIES[i % INDUSTRIES.length] as any,
-            level: LEVELS[i % LEVELS.length] as any,
-            style: STYLES[i % STYLES.length] as any,
+            industry: INDUSTRIES[i % INDUSTRIES.length] as CVExample['industry'],
+            level: LEVELS[i % LEVELS.length] as CVExample['level'],
+            style: STYLES[i % STYLES.length] as CVExample['style'],
             color: COLORS[i % COLORS.length],
             content: {
                 personalInfo: {
