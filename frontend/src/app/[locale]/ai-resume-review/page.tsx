@@ -84,7 +84,7 @@ export default function AIResumeReviewPage() {
                     </div>
                     <p className="mt-6 text-sm text-blue-300 flex items-center justify-center gap-2">
                         <Shield size={14} />
-                        Your data is secure and private. We don't share your CV with anyone.
+                        Your data is secure and private. We don&apos;t share your CV with anyone.
                     </p>
                 </div>
             </section>
@@ -176,7 +176,7 @@ export default function AIResumeReviewPage() {
                                 <div className="flex gap-1 text-yellow-400 mb-4">
                                     {[1, 2, 3, 4, 5].map(star => <Star key={star} size={16} fill="currentColor" />)}
                                 </div>
-                                <p className="text-gray-700 mb-6">"{testimonial.text}"</p>
+                                <p className="text-gray-700 mb-6">&quot;{testimonial.text}&quot;</p>
                                 <div>
                                     <div className="font-bold text-gray-900">{testimonial.name}</div>
                                     <div className="text-sm text-gray-500">{testimonial.role}</div>
