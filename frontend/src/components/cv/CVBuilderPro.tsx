@@ -131,8 +131,8 @@ const Input = ({
     <input
         {...props}
         className={`w-full px-4 py-2.5 rounded-lg border ${isDark
-                ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
-                : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
             } focus:ring-2 transition-all outline-none text-sm ${className}`}
     />
 );
@@ -145,8 +145,8 @@ const TextArea = ({
     <textarea
         {...props}
         className={`w-full px-4 py-2.5 rounded-lg border ${isDark
-                ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
-                : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
+            : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:ring-blue-500 focus:border-blue-500'
             } focus:ring-2 transition-all outline-none text-sm min-h-[120px] resize-y ${className}`}
     />
 );
@@ -991,9 +991,9 @@ export default function CVBuilderPro() {
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {/* Left Column - Form (2/3 width) */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-2 space-y-4">
                         {/* Tabs */}
                         <Card className="!p-2" isDark={isDark}>
                             <div className="flex overflow-x-auto gap-1 no-scrollbar">
@@ -1002,12 +1002,12 @@ export default function CVBuilderPro() {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id
-                                                ? isDark
-                                                    ? 'bg-blue-900/50 text-blue-400 shadow-sm ring-1 ring-blue-500'
-                                                    : 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
-                                                : isDark
-                                                    ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
-                                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            ? isDark
+                                                ? 'bg-blue-900/50 text-blue-400 shadow-sm ring-1 ring-blue-500'
+                                                : 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200'
+                                            : isDark
+                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                     >
                                         <tab.icon size={16} />
@@ -1021,35 +1021,10 @@ export default function CVBuilderPro() {
                         <Card className="min-h-[600px]" isDark={isDark}>
                             {renderTabContent()}
                         </Card>
-
-                        {/* AI Analysis Card */}
-                        <Card isDark={isDark}>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2 ${isDark ? 'bg-purple-900/50 text-purple-400' : 'bg-purple-50 text-purple-600'} rounded-lg`}>
-                                        <Zap size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>AI Analysis</h3>
-                                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Get instant feedback on your CV</p>
-                                    </div>
-                                </div>
-                                <Button
-                                    variant="primary"
-                                    icon={TrendingUp}
-                                    onClick={handleAIAnalyze}
-                                    loading={formState.loading}
-                                    isDark={isDark}
-                                    className="!py-2"
-                                >
-                                    Analyze Now
-                                </Button>
-                            </div>
-                        </Card>
                     </div>
 
                     {/* Right Column - Live Preview Sidebar (1/3 width) */}
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         {/* Preview Toggle */}
                         <Card isDark={isDark}>
                             <button
@@ -1110,10 +1085,10 @@ export default function CVBuilderPro() {
                                         key={template.id}
                                         onClick={() => setSelectedTemplate(template.id as TemplateType)}
                                         className={`relative p-3 rounded-lg border-2 transition-all text-left ${selectedTemplate === template.id
-                                                ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
-                                                : isDark
-                                                    ? 'border-gray-700 hover:border-blue-500'
-                                                    : 'border-gray-200 hover:border-blue-300'
+                                            ? 'border-blue-600 ring-2 ring-blue-100 ring-offset-2'
+                                            : isDark
+                                                ? 'border-gray-700 hover:border-blue-500'
+                                                : 'border-gray-200 hover:border-blue-300'
                                             }`}
                                     >
                                         <div className="flex items-center justify-between">
@@ -1129,7 +1104,7 @@ export default function CVBuilderPro() {
                             </div>
                         </Card>
 
-                        {/* AI Assistant */}
+                        {/* AI Assistant - Single Comprehensive Card */}
                         <div className={`relative overflow-hidden rounded-xl ${isDark ? 'bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-gray-800 border-purple-700' : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-blue-100'} border p-6 shadow-md transition-colors duration-300`}>
                             <div className="absolute top-0 right-0 p-4 opacity-10">
                                 <Sparkles size={100} className="text-purple-600" />
@@ -1147,9 +1122,34 @@ export default function CVBuilderPro() {
                                 </div>
 
                                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4 leading-relaxed`}>
-                                    Let AI help you craft professional content tailored to your target role.
+                                    Let AI help you craft professional content and analyze your CV for ATS compatibility.
                                 </p>
 
+                                {/* AI Action Buttons */}
+                                <div className="space-y-3 mb-4">
+                                    <Button
+                                        variant="primary"
+                                        icon={TrendingUp}
+                                        onClick={handleAIAnalyze}
+                                        loading={formState.loading}
+                                        isDark={isDark}
+                                        className="w-full"
+                                    >
+                                        Analyze CV
+                                    </Button>
+
+                                    <Button
+                                        variant="secondary"
+                                        icon={Sparkles}
+                                        onClick={() => {/* AI Generate handler from AIGenerator */ }}
+                                        isDark={isDark}
+                                        className="w-full"
+                                    >
+                                        Generate Content
+                                    </Button>
+                                </div>
+
+                                {/* AI Generator Component */}
                                 <Suspense fallback={<LoadingSkeleton isDark={isDark} />}>
                                     <AIGenerator
                                         currentData={cvData}
