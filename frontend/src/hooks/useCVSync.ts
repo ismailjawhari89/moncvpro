@@ -11,8 +11,8 @@ interface SyncStatus {
 
 export const useCVSync = (cvId?: string) => {
     const queryClient = useQueryClient();
-    const currentCV = useCVStore((state) => state.currentCV);
-    const setCurrentCV = useCVStore((state) => state.setCurrentCV);
+    const currentCV = useCVStore((state) => state.cvData);
+    const setCurrentCV = useCVStore((state) => state.applyTemplate);
 
     const [syncStatus, setSyncStatus] = useState<SyncStatus>({ status: 'idle' });
     const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
