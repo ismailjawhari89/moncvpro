@@ -36,7 +36,7 @@ export const ThemeSelector = () => {
 
             {/* Variants */}
             {variantKeys.map(key => {
-                const v = variants[key];
+                const v = variants[key] as any;
                 const isActive = selectedTheme === key;
                 return (
                     <button
