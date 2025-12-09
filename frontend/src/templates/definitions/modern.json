@@ -1,0 +1,87 @@
+{
+    "id": "modern",
+    "name": "Modern Professional",
+    "description": "Clean two-column layout perfect for tech and creative roles",
+    "thumbnail": "/templates/modern-professional.png",
+    "metadata": {
+        "layout": "two-column"
+    },
+    "category": "modern",
+    "typography": {
+        "heading": "Poppins",
+        "body": "Inter"
+    },
+    "palette": {
+        "primary": "#3b82f6",
+        "accent": "#1d4ed8",
+        "text": "#1e293b",
+        "muted": "#64748b",
+        "background": "#ffffff"
+    },
+    "variants": {
+        "dark": {
+            "name": "Dark Mode",
+            "palette": {
+                "primary": "#60a5fa",
+                "accent": "#93c5fd",
+                "text": "#f1f5f9",
+                "muted": "#94a3b8",
+                "background": "#0f172a"
+            }
+        },
+        "emerald": {
+            "name": "Emerald City",
+            "palette": {
+                "primary": "#059669",
+                "accent": "#047857",
+                "text": "#064e3b",
+                "muted": "#6ee7b7",
+                "background": "#ecfdf5"
+            }
+        },
+        "purple": {
+            "name": "Creative Purple",
+            "palette": {
+                "primary": "#7c3aed",
+                "accent": "#6d28d9",
+                "text": "#2e1065",
+                "muted": "#a78bfa",
+                "background": "#ffffff"
+            }
+        }
+    },
+    "spacing": {
+        "sectionGap": 32,
+        "itemGap": 12
+    },
+    "blocks": [
+        {
+            "type": "header",
+            "layout": "centered",
+            "showProfileImage": true
+        },
+        {
+            "type": "summary",
+            "maxLength": 300
+        },
+        {
+            "type": "experience",
+            "showDates": true,
+            "showLocation": true
+        },
+        {
+            "type": "education",
+            "showDates": true,
+            "showGrades": true
+        },
+        {
+            "type": "skills",
+            "layout": "grid",
+            "maxSkills": 10
+        },
+        {
+            "type": "languages",
+            "layout": "list"
+        }
+    ]
+}

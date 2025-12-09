@@ -1,16 +1,25 @@
 'use client';
 
-import type { CVData } from '@/types/cv';
+import type { TemplateData } from '@/types/cv';
 
 interface ClassicTemplateProps {
-    data: CVData;
+    data: TemplateData;
+    customizations?: {
+        primaryColor?: string;
+        fontFamily?: string;
+    };
 }
 
-export default function ClassicTemplate({ data }: ClassicTemplateProps) {
+export default function ClassicTemplate({ data, customizations }: ClassicTemplateProps) {
+    const primaryColor = customizations?.primaryColor || '#1f2937';
+
     return (
-        <div className="bg-white p-8 shadow-lg max-w-4xl mx-auto" style={{ minHeight: '842px' }}>
+        <div
+            className="bg-white p-8 shadow-lg max-w-4xl mx-auto"
+            style={{ minHeight: '842px', fontFamily: customizations?.fontFamily || 'Georgia, serif' }}
+        >
             {/* Header - Centered */}
-            <header className="text-center border-b-2 border-gray-800 pb-4 mb-6">
+            <header className="text-center border-b-2 pb-4 mb-6" style={{ borderColor: primaryColor }}>
                 <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">
                     {data.personal.fullName || 'VOTRE NOM'}
                 </h1>
@@ -26,7 +35,10 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
             {/* Summary */}
             {data.personal.summary && (
                 <section className="mb-5">
-                    <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+                    <h2
+                        className="text-sm font-bold mb-2 uppercase border-b pb-1"
+                        style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
+                    >
                         Résumé Professionnel
                     </h2>
                     <p className="text-gray-700 text-sm leading-relaxed">{data.personal.summary}</p>
@@ -36,7 +48,10 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
             {/* Experience */}
             {data.experiences.length > 0 && (
                 <section className="mb-5">
-                    <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+                    <h2
+                        className="text-sm font-bold mb-2 uppercase border-b pb-1"
+                        style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
+                    >
                         Expérience Professionnelle
                     </h2>
                     <div className="space-y-3">
@@ -51,7 +66,7 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
                                         {exp.startDate} - {exp.current ? 'Présent' : exp.endDate}
                                     </span>
                                 </div>
-                                {exp.achievements.length > 0 && exp.achievements[0] && (
+                                {exp.achievements && exp.achievements.length > 0 && (
                                     <ul className="list-disc list-inside text-gray-600 text-xs space-y-0.5 mt-1">
                                         {exp.achievements.map((achievement, idx) => (
                                             achievement && <li key={idx}>{achievement}</li>
@@ -67,7 +82,10 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
             {/* Education */}
             {data.education.length > 0 && (
                 <section className="mb-5">
-                    <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+                    <h2
+                        className="text-sm font-bold mb-2 uppercase border-b pb-1"
+                        style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
+                    >
                         Formation
                     </h2>
                     <div className="space-y-2">
@@ -92,7 +110,10 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
             {/* Skills */}
             {data.skills.length > 0 && (
                 <section className="mb-5">
-                    <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+                    <h2
+                        className="text-sm font-bold mb-2 uppercase border-b pb-1"
+                        style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
+                    >
                         Compétences
                     </h2>
                     <p className="text-gray-700 text-sm">
@@ -104,7 +125,10 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
             {/* Languages */}
             {data.languages.length > 0 && (
                 <section>
-                    <h2 className="text-sm font-bold text-gray-900 mb-2 uppercase border-b border-gray-300 pb-1">
+                    <h2
+                        className="text-sm font-bold mb-2 uppercase border-b pb-1"
+                        style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
+                    >
                         Langues
                     </h2>
                     <div className="text-sm text-gray-700">

@@ -1,11 +1,12 @@
 import { Inter, Cairo } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { localeDirections, type Locale } from '@/i18n/config';
+import { localeDirections, type Locale } from '@/i18n/settings';
+import { QueryProvider } from '@/providers/QueryProvider';
 import '../globals.css';
 
 // 1. Edge Runtime for Layout
-export const runtime = 'edge';
+// export const runtime = 'edge'; // Commented out if not strictly needed or causing issues, sticking to original provided code structure.
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const cairo = Cairo({ subsets: ['arabic'], variable: '--font-cairo' });
@@ -28,10 +29,12 @@ export default async function LocaleLayout({
     const fontClass = locale === 'ar' ? cairo.className : inter.className;
 
     return (
-        <html lang={locale} dir={direction} className={`${inter.variable} ${cairo.variable}`}>
-            <body className={`${fontClass} antialiased min-h-screen bg-background`}>
+        <html lang={locale} dir={direction} className={`${inter.variable} ${cairo.variable}`} suppressHydrationWarning>
+            <body className={`${fontClass} antialiased min-h-screen bg-background`} suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
-                    {children}
+                    <QueryProvider>
+                        {children}
+                    </QueryProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

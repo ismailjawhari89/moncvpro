@@ -1,0 +1,60 @@
+{
+    "id": "classic",
+    "name": "Classic Business",
+    "thumbnail": "/templates/business-manager.png",
+    "description": "Traditional single-column layout for corporate roles",
+    "category": "professional",
+    "metadata": {
+        "layout": "one-column"
+    },
+    "typography": {
+        "heading": "Merriweather",
+        "body": "Open Sans"
+    },
+    "palette": {
+        "primary": "#1f2937",
+        "accent": "#374151",
+        "text": "#111827",
+        "muted": "#4b5563",
+        "background": "#ffffff"
+    },
+    "spacing": {
+        "sectionGap": 24,
+        "itemGap": 8
+    },
+    "blocks": [
+        {
+            "type": "header",
+            "layout": "left",
+            "showProfileImage": true,
+            "showContact": true
+        },
+        {
+            "type": "summary",
+            "maxLength": 200
+        },
+        {
+            "type": "experience",
+            "layout": "chronological",
+            "showCompanyLogo": false,
+            "showAchievements": true
+        },
+        {
+            "type": "education",
+            "layout": "simple"
+        },
+        {
+            "type": "skills",
+            "layout": "list",
+            "categories": [
+                "Technical",
+                "Soft",
+                "Languages"
+            ]
+        },
+        {
+            "type": "languages",
+            "layout": "simple"
+        }
+    ]
+}

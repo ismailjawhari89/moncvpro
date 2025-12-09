@@ -1,16 +1,25 @@
 'use client';
 
-import type { CVData } from '@/types/cv';
+import type { TemplateData } from '@/types/cv';
 
 interface ModernTemplateProps {
-    data: CVData;
+    data: TemplateData;
+    customizations?: {
+        primaryColor?: string;
+        fontFamily?: string;
+    };
 }
 
-export default function ModernTemplate({ data }: ModernTemplateProps) {
+export default function ModernTemplate({ data, customizations }: ModernTemplateProps) {
+    const primaryColor = customizations?.primaryColor || '#2563eb';
+
     return (
-        <div className="bg-white p-8 shadow-lg max-w-4xl mx-auto" style={{ minHeight: '842px' }}>
+        <div
+            className="bg-white p-8 shadow-lg max-w-4xl mx-auto"
+            style={{ minHeight: '842px', fontFamily: customizations?.fontFamily }}
+        >
             {/* Header */}
-            <header className="border-b-4 border-blue-600 pb-6 mb-6">
+            <header className="border-b-4 pb-6 mb-6" style={{ borderColor: primaryColor }}>
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">
                     {data.personal.fullName || 'Votre Nom'}
                 </h1>
@@ -24,7 +33,10 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
             {/* Summary */}
             {data.personal.summary && (
                 <section className="mb-6">
-                    <h2 className="text-xl font-semibold text-blue-600 mb-3 uppercase tracking-wide">
+                    <h2
+                        className="text-xl font-semibold mb-3 uppercase tracking-wide"
+                        style={{ color: primaryColor }}
+                    >
                         Profil
                     </h2>
                     <p className="text-gray-700 leading-relaxed">{data.personal.summary}</p>
@@ -34,7 +46,10 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
             {/* Experience */}
             {data.experiences.length > 0 && (
                 <section className="mb-6">
-                    <h2 className="text-xl font-semibold text-blue-600 mb-3 uppercase tracking-wide">
+                    <h2
+                        className="text-xl font-semibold mb-3 uppercase tracking-wide"
+                        style={{ color: primaryColor }}
+                    >
                         Expérience Professionnelle
                     </h2>
                     <div className="space-y-4">
@@ -47,7 +62,7 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
                                     </span>
                                 </div>
                                 <p className="text-gray-700 font-medium mb-2">{exp.company}</p>
-                                {exp.achievements.length > 0 && exp.achievements[0] && (
+                                {exp.achievements && exp.achievements.length > 0 && (
                                     <ul className="list-disc list-inside text-gray-600 text-sm space-y-1">
                                         {exp.achievements.map((achievement, idx) => (
                                             achievement && <li key={idx}>{achievement}</li>
@@ -63,7 +78,10 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
             {/* Education */}
             {data.education.length > 0 && (
                 <section className="mb-6">
-                    <h2 className="text-xl font-semibold text-blue-600 mb-3 uppercase tracking-wide">
+                    <h2
+                        className="text-xl font-semibold mb-3 uppercase tracking-wide"
+                        style={{ color: primaryColor }}
+                    >
                         Formation
                     </h2>
                     <div className="space-y-3">
@@ -88,14 +106,21 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
                 {/* Skills */}
                 {data.skills.length > 0 && (
                     <section>
-                        <h2 className="text-xl font-semibold text-blue-600 mb-3 uppercase tracking-wide">
+                        <h2
+                            className="text-xl font-semibold mb-3 uppercase tracking-wide"
+                            style={{ color: primaryColor }}
+                        >
                             Compétences
                         </h2>
                         <div className="flex flex-wrap gap-2">
                             {data.skills.map((skill) => (
                                 <span
                                     key={skill.id}
-                                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                                    className="px-3 py-1 rounded-full text-sm font-medium"
+                                    style={{
+                                        backgroundColor: `${primaryColor}20`,
+                                        color: primaryColor
+                                    }}
                                 >
                                     {skill.name}
                                 </span>
@@ -107,7 +132,10 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
                 {/* Languages */}
                 {data.languages.length > 0 && (
                     <section>
-                        <h2 className="text-xl font-semibold text-blue-600 mb-3 uppercase tracking-wide">
+                        <h2
+                            className="text-xl font-semibold mb-3 uppercase tracking-wide"
+                            style={{ color: primaryColor }}
+                        >
                             Langues
                         </h2>
                         <div className="space-y-1">

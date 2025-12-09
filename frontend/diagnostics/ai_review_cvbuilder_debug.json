@@ -1,0 +1,91 @@
+{
+    "diagnosticReport": {
+        "date": "2025-12-08T15:14:00Z",
+        "status": "PASSED",
+        "summary": "CV Builder Live Preview and Template Application are working correctly"
+    },
+    "issueA_LivePreview": {
+        "status": "FIXED",
+        "description": "Changes in left-side form now update the Live Preview in real-time",
+        "verification": {
+            "action": "Typed 'Ahmed Ben Ali' in Full Name field",
+            "result": "Preview immediately showed 'Ahmed Ben Ali'",
+            "latency": "<300ms"
+        },
+        "implementation": {
+            "store": "useCVStore now uses Zustand selectors for targeted updates",
+            "preview": "CVPreview subscribes to individual state slices (personalInfo, experiences, etc.)",
+            "forms": "All form components update store on onChange, not just onBlur"
+        }
+    },
+    "issueB_TemplateApplication": {
+        "status": "FIXED",
+        "description": "Selecting a template now populates the form and preview with template data",
+        "verification": {
+            "action": "Clicked 'Modern - Software Engineer' template",
+            "result": "Preview populated with template data (name, profession, 3 experiences, 5 skills)",
+            "latency": "<500ms"
+        },
+        "implementation": {
+            "action": "applyTemplate(templateData) in useCVStore",
+            "dataSource": "src/data/templates/sample-templates.json",
+            "uiFlow": "TemplatesGallery calls applyTemplate, triggers store update, CVPreview re-renders"
+        }
+    },
+    "storeState": {
+        "defaultCVData": {
+            "personalInfo": {
+                "fullName": "",
+                "email": "",
+                "phone": "",
+                "address": "",
+                "profession": "",
+                "linkedin": "",
+                "github": ""
+            },
+            "summary": "",
+            "experiences": [],
+            "education": [],
+            "skills": [],
+            "languages": [],
+            "selectedTemplate": "modern"
+        },
+        "actions": [
+            "updatePersonalInfo",
+            "updateSummary",
+            "addExperience",
+            "removeExperience",
+            "updateExperience",
+            "reorderExperiences",
+            "addEducation",
+            "removeEducation",
+            "updateEducation",
+            "addSkill",
+            "removeSkill",
+            "updateSkill",
+            "addLanguage",
+            "removeLanguage",
+            "updateLanguage",
+            "applyTemplate",
+            "setSelectedTemplate",
+            "resetToDefault"
+        ],
+        "persistence": "localStorage via zustand/persist middleware"
+    },
+    "screenshots": {
+        "initial_state": "qa_initial_state_1765203338941.png",
+        "after_name_input": "qa_after_name_input_1765203376079.png",
+        "templates_section": "qa_templates_section_1765203415962.png",
+        "after_template_apply": "qa_after_template_apply_1765203450910.png"
+    },
+    "consoleErrors": [],
+    "performanceMetrics": {
+        "livePreviewLatency": "<300ms",
+        "templateApplyLatency": "<500ms"
+    },
+    "recommendations": [
+        "Consider adding debounce (200ms) for text inputs to reduce store updates",
+        "Add loading skeleton for CVPreview during initial hydration",
+        "Implement undo/redo history for better UX"
+    ]
+}

@@ -1,121 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import type { CVData, TemplateType } from '@/types/cv';
-import ModernTemplate from './templates/ModernTemplate';
-import ClassicTemplate from './templates/ClassicTemplate';
-import CreativeTemplate from './templates/CreativeTemplate';
-import { exportPDF, exportDOCX, exportTXT } from '@/utils/export';
+import React, { useEffect } from 'react';
+import { useCVStore } from '@/stores/useCVStore';
+import { TemplateRenderer } from '@/templates/components/TemplateRenderer';
+import { ThemeSelector } from './ThemeSelector';
 
 interface CVPreviewProps {
-    data: CVData;
-    selectedTemplate: TemplateType;
-    onTemplateChange: (template: TemplateType) => void;
+    data?: any;
+    selectedTemplate?: string;
+    onTemplateChange?: (templateId: string) => void;
 }
 
-export default function CVPreview({ data, selectedTemplate, onTemplateChange }: CVPreviewProps) {
-    const [isExporting, setIsExporting] = useState(false);
+export default function CVPreview({ selectedTemplate }: CVPreviewProps) {
+    const cvData = useCVStore(state => state.cvData);
 
-    const templates = {
-        modern: { component: ModernTemplate, name: 'Modern', color: 'blue' },
-        classic: { component: ClassicTemplate, name: 'Classic', color: 'gray' },
-        creative: { component: CreativeTemplate, name: 'Creative', color: 'purple' }
-    };
-
-    const SelectedTemplate = templates[selectedTemplate].component;
-
-    const handleExportPDF = async () => {
-        setIsExporting(true);
-        try {
-            await exportPDF('cv-preview-content', `CV_${data.personal.fullName || 'Document'}`);
-        } catch (error) {
-            console.error('PDF export failed:', error);
-            alert('Erreur lors de l\'export PDF');
-        } finally {
-            setIsExporting(false);
-        }
-    };
-
-    const handleExportDOCX = async () => {
-        setIsExporting(true);
-        try {
-            await exportDOCX(data, `CV_${data.personal.fullName || 'Document'}`);
-        } catch (error) {
-            console.error('DOCX export failed:', error);
-            alert('Erreur lors de l\'export DOCX');
-        } finally {
-            setIsExporting(false);
-        }
-    };
-
-    const handleExportTXT = () => {
-        try {
-            exportTXT(data, `CV_${data.personal.fullName || 'Document'}`);
-        } catch (error) {
-            console.error('TXT export failed:', error);
-            alert('Erreur lors de l\'export TXT');
-        }
-    };
+    // Determine template to show (prop override or store state)
+    const activeTemplate = selectedTemplate || cvData.template || 'modern';
 
     return (
-        <div className="space-y-4">
-            {/* Template Selector */}
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-sm font-semibold mb-3 text-gray-700">Choisir un template</h3>
-                <div className="grid grid-cols-3 gap-2">
-                    {(Object.keys(templates) as TemplateType[]).map((key) => (
-                        <button
-                            key={key}
-                            onClick={() => onTemplateChange(key)}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${selectedTemplate === key
-                                ? `bg-${templates[key].color}-600 text-white`
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                        >
-                            {templates[key].name}
-                        </button>
-                    ))}
+        <div className="flex flex-col items-center w-full h-full bg-gray-50/50 overflow-hidden relative">
+            {/* Live Preview Header */}
+            <div className="w-full bg-white border-b px-4 py-2 flex justify-between items-center text-xs text-gray-500 z-10 h-14">
+                <span className="font-semibold hidden sm:inline">Live Preview (A4)</span>
+
+                <div className="flex items-center gap-4">
+                    <ThemeSelector />
+                    <span className="capitalize">{activeTemplate}</span>
                 </div>
             </div>
 
-            {/* Export Buttons */}
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-sm font-semibold mb-3 text-gray-700">Exporter le CV</h3>
-                <div className="grid grid-cols-3 gap-2">
-                    <button
-                        onClick={handleExportPDF}
-                        disabled={isExporting}
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                        <span>📄</span>
-                        <span>PDF</span>
-                    </button>
-                    <button
-                        onClick={handleExportDOCX}
-                        disabled={isExporting}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                        <span>📝</span>
-                        <span>DOCX</span>
-                    </button>
-                    <button
-                        onClick={handleExportTXT}
-                        disabled={isExporting}
-                        className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                        <span>📋</span>
-                        <span>TXT</span>
-                    </button>
-                </div>
-                {isExporting && (
-                    <p className="text-xs text-gray-500 mt-2 text-center">Export en cours...</p>
-                )}
-            </div>
-
-            {/* Preview Area */}
-            <div className="bg-gray-100 p-6 rounded-lg overflow-auto" style={{ maxHeight: '85vh' }}>
-                <div id="cv-preview-content">
-                    <SelectedTemplate data={data} />
+            {/* Scrollable Preview Area */}
+            <div className="flex-1 w-full overflow-y-auto p-4 md:p-8 flex justify-center">
+                {/* Scaled Render Container */}
+                <div className="relative shadow-2xl transition-all duration-300 origin-top transform scale-[0.45] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.75] xl:scale-[0.85]">
+                    <TemplateRenderer
+                        data={cvData}
+                        templateId={activeTemplate}
+                    />
                 </div>
             </div>
         </div>

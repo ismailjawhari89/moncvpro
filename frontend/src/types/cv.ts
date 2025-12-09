@@ -3,8 +3,11 @@ export interface PersonalInfo {
     fullName: string;
     email: string;
     phone: string;
-    location: string;
-    summary: string;
+    address: string; // Changed from location to address
+    profession?: string;
+    linkedin?: string;
+    github?: string;
+    photoUrl?: string;
 }
 
 export interface Experience {
@@ -14,7 +17,8 @@ export interface Experience {
     startDate: string;
     endDate: string;
     current: boolean;
-    achievements: string[];
+    description: string; // Added description
+    achievements?: string[];
 }
 
 export interface Education {
@@ -22,17 +26,18 @@ export interface Education {
     institution: string;
     degree: string;
     field: string;
-    startDate: string;
-    endDate: string;
+    graduationYear: string;
+    startDate?: string;
+    endDate?: string;
+    current?: boolean;
     description?: string;
-    current: boolean;
 }
 
 export interface Skill {
     id: string;
     name: string;
-    category: 'technical' | 'soft';
-    level?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+    level: number;
+    category: 'technical' | 'soft' | 'language';
 }
 
 export interface Language {
@@ -42,7 +47,32 @@ export interface Language {
 }
 
 export interface CVData {
-    personal: PersonalInfo;
+    id?: string;
+    personalInfo: PersonalInfo;
+    experiences: Experience[];
+    education: Education[];
+    skills: Skill[];
+    languages: Language[];
+    summary: string;
+    // System Data
+    template: TemplateType;
+    theme?: string; // e.g., 'dark', 'emerald'
+    metadata: {
+        createdAt: string;
+        updatedAt: string;
+        version: number;
+        lastAutoSave: string;
+    };
+}
+
+export interface TemplateData {
+    personal: {
+        fullName: string;
+        email: string;
+        phone: string;
+        location: string;
+        summary: string;
+    };
     experiences: Experience[];
     education: Education[];
     skills: Skill[];

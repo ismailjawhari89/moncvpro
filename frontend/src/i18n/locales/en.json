@@ -1,0 +1,36 @@
+{
+    "cv-form": {
+        "personal": {
+            "title": "Personal Information",
+            "fullName": "Full Name",
+            "email": "Email",
+            "phone": "Phone",
+            "location": "City, Country",
+            "summary": "Professional Summary"
+        },
+        "experience": {
+            "title": "Professional Experience",
+            "add": "Add Experience",
+            "empty": "No experience added"
+        },
+        "education": {
+            "title": "Education",
+            "add": "Add Education",
+            "empty": "No education added"
+        },
+        "skills": {
+            "title": "Skills",
+            "add": "Add Skill",
+            "empty": "No skills added"
+        },
+        "languages": {
+            "title": "Languages",
+            "add": "Add Language",
+            "empty": "No languages added"
+        }
+    },
+    "hero": {
+        "title": "Create a Professional CV with AI",
+        "subtitle": "Get an exceptional CV that boosts your hiring chances. Professional templates, automatic improvement, and bilingual support."
+    }
+}

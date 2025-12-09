@@ -1,0 +1,851 @@
+{
+    "modern": {
+        "id": "modern",
+        "name": "Software Engineer",
+        "category": "Tech & IT",
+        "personalInfo": {
+            "fullName": "Ahmed Ben Ali",
+            "email": "ahmed.benali@email.com",
+            "phone": "+212 612 345 678",
+            "address": "Casablanca, Morocco",
+            "profession": "Senior Full Stack Developer",
+            "linkedin": "linkedin.com/in/ahmedbenali",
+            "github": "github.com/ahmedbenali"
+        },
+        "summary": "Passionate Full Stack Developer with 5+ years of experience building scalable web applications. Expert in React, Node.js, and cloud technologies. Led development of platforms serving 100k+ users. Increased team productivity by 40% through implementation of CI/CD pipelines and code review processes.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "TechCorp Morocco",
+                "position": "Senior Full Stack Developer",
+                "startDate": "2021-03",
+                "endDate": "",
+                "description": "Lead developer for e-commerce platform serving 50,000+ daily users. Implemented microservices architecture reducing page load time by 40%. Mentored team of 5 junior developers.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "StartupXYZ",
+                "position": "Frontend Developer",
+                "startDate": "2019-01",
+                "endDate": "2021-02",
+                "description": "Built responsive dashboards using React and TypeScript. Developed reusable component library used across 3 products. Reduced bundle size by 35% through code splitting.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "Digital Agency",
+                "position": "Junior Web Developer",
+                "startDate": "2017-06",
+                "endDate": "2018-12",
+                "description": "Developed 20+ client websites using HTML, CSS, JavaScript. Collaborated with design team on UI/UX improvements. Achieved 98% client satisfaction rate.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "Mohammed V University",
+                "degree": "Master's Degree",
+                "field": "Computer Science",
+                "graduationYear": "2017",
+                "startDate": "2015-09",
+                "endDate": "2017-06"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "React",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Node.js",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-3",
+                "name": "TypeScript",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "PostgreSQL",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-5",
+                "name": "AWS",
+                "level": 3,
+                "category": "technical"
+            },
+            {
+                "id": "skill-6",
+                "name": "Docker",
+                "level": 4,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            }
+        ]
+    },
+    "classic": {
+        "id": "classic",
+        "name": "Business Manager",
+        "category": "Business & Finance",
+        "personalInfo": {
+            "fullName": "Fatima Zahra El Alaoui",
+            "email": "fatima.elalaoui@email.com",
+            "phone": "+212 661 234 567",
+            "address": "Rabat, Morocco",
+            "profession": "Business Development Manager",
+            "linkedin": "linkedin.com/in/fatimaelalaoui"
+        },
+        "summary": "Results-driven Business Development Manager with 8+ years of experience in B2B sales and strategic partnerships. Proven track record of exceeding revenue targets by 150%. Successfully closed deals worth $10M+ and built strategic partnerships with Fortune 500 companies.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "Global Corp",
+                "position": "Business Development Manager",
+                "startDate": "2020-01",
+                "endDate": "",
+                "description": "Manage key accounts worth $5M annually. Built strategic partnerships with Fortune 500 companies. Led team of 8 sales representatives achieving 125% of quarterly targets.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "Sales Pro Inc",
+                "position": "Senior Sales Representative",
+                "startDate": "2016-06",
+                "endDate": "2019-12",
+                "description": "Exceeded quarterly targets by 130% consistently for 3 years. Managed team of 5 sales representatives. Developed new market segment generating $2M in first year.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "HEC Paris",
+                "degree": "MBA",
+                "field": "Business Administration",
+                "graduationYear": "2016"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Sales Strategy",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Negotiation",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-3",
+                "name": "CRM (Salesforce)",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Leadership",
+                "level": 4,
+                "category": "soft"
+            },
+            {
+                "id": "skill-5",
+                "name": "Financial Analysis",
+                "level": 4,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-4",
+                "name": "Spanish",
+                "proficiency": "conversational"
+            }
+        ]
+    },
+    "creative": {
+        "id": "creative",
+        "name": "Marketing Manager",
+        "category": "Marketing & Design",
+        "personalInfo": {
+            "fullName": "Youssef Mansouri",
+            "email": "youssef.mansouri@email.com",
+            "phone": "+212 667 890 123",
+            "address": "Marrakech, Morocco",
+            "profession": "Digital Marketing Manager",
+            "linkedin": "linkedin.com/in/youssefmansouri"
+        },
+        "summary": "Creative Digital Marketing Manager with 6+ years of experience driving brand growth through innovative campaigns. Expertise in SEO, social media strategy, and content marketing. Increased client ROI by 200% through data-driven campaigns. Managed marketing budgets of $500k+.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "BrandBoost Agency",
+                "position": "Digital Marketing Manager",
+                "startDate": "2022-01",
+                "endDate": "",
+                "description": "Lead digital strategy for 15+ clients across various industries. Increased average client ROI by 200% through data-driven campaigns. Managed team of 6 marketing specialists.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "MediaHouse",
+                "position": "Social Media Specialist",
+                "startDate": "2019-03",
+                "endDate": "2021-12",
+                "description": "Managed social media presence for major brands. Grew combined following by 500k+ across platforms. Created viral campaigns reaching 10M+ impressions.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "Al Akhawayn University",
+                "degree": "Bachelor's Degree",
+                "field": "Marketing & Communications",
+                "graduationYear": "2019"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Digital Marketing",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "SEO/SEM",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-3",
+                "name": "Content Strategy",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Google Analytics",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-5",
+                "name": "Adobe Creative Suite",
+                "level": 3,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            }
+        ]
+    },
+    "minimalist": {
+        "id": "minimalist",
+        "name": "Data Scientist",
+        "category": "Tech & IT",
+        "personalInfo": {
+            "fullName": "Sarah Johnson",
+            "email": "sarah.johnson@email.com",
+            "phone": "+1 555 123 4567",
+            "address": "San Francisco, CA",
+            "profession": "Senior Data Scientist",
+            "linkedin": "linkedin.com/in/sarahjohnsondata",
+            "github": "github.com/sarahjohnson"
+        },
+        "summary": "Data Scientist with 7+ years of experience in machine learning and predictive analytics. PhD in Statistics from Stanford. Developed ML models that increased revenue by $15M annually. Published 5 papers in top-tier journals.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "TechGiant Inc.",
+                "position": "Senior Data Scientist",
+                "startDate": "2021-06",
+                "endDate": "",
+                "description": "Lead ML team of 8 scientists developing recommendation systems. Improved model accuracy by 35% using deep learning. Reduced inference latency by 50%.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "DataDriven Co.",
+                "position": "Data Scientist",
+                "startDate": "2018-03",
+                "endDate": "2021-05",
+                "description": "Built predictive models for customer churn reducing attrition by 25%. Developed A/B testing framework used across organization. Mentored 3 junior data scientists.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "Analytics Startup",
+                "position": "Junior Data Analyst",
+                "startDate": "2016-01",
+                "endDate": "2018-02",
+                "description": "Created dashboards and reports for executive team. Automated data pipelines saving 20 hours weekly. Identified $500k in cost savings through analysis.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "Stanford University",
+                "degree": "PhD",
+                "field": "Statistics",
+                "graduationYear": "2016"
+            },
+            {
+                "id": "edu-2",
+                "institution": "MIT",
+                "degree": "Bachelor's Degree",
+                "field": "Mathematics",
+                "graduationYear": "2012"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Python",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Machine Learning",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-3",
+                "name": "TensorFlow/PyTorch",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "SQL",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-5",
+                "name": "Statistical Analysis",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-6",
+                "name": "Data Visualization",
+                "level": 4,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "English",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "Mandarin",
+                "proficiency": "conversational"
+            }
+        ]
+    },
+    "professional": {
+        "id": "professional",
+        "name": "Project Manager",
+        "category": "Management",
+        "personalInfo": {
+            "fullName": "Mohamed El Fassi",
+            "email": "mohamed.elfassi@email.com",
+            "phone": "+212 622 456 789",
+            "address": "Tangier, Morocco",
+            "profession": "Senior Project Manager",
+            "linkedin": "linkedin.com/in/mohamedelfassi"
+        },
+        "summary": "PMP-certified Project Manager with 10+ years of experience leading cross-functional teams in IT and construction sectors. Successfully delivered 50+ projects worth $100M+ on time and within budget. Expert in Agile and Waterfall methodologies.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "Mega Construction Ltd.",
+                "position": "Senior Project Manager",
+                "startDate": "2019-05",
+                "endDate": "",
+                "description": "Manage portfolio of 8 construction projects valued at $50M. Lead team of 25 engineers and contractors. Achieved 98% on-time delivery rate.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "IT Solutions Corp",
+                "position": "Project Manager",
+                "startDate": "2015-03",
+                "endDate": "2019-04",
+                "description": "Led implementation of ERP systems for 20+ enterprise clients. Reduced project delivery time by 30% through Agile adoption. Managed budgets up to $5M.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "Consulting Firm",
+                "position": "Junior Project Coordinator",
+                "startDate": "2012-09",
+                "endDate": "2015-02",
+                "description": "Coordinated project schedules and resources for consulting engagements. Created detailed project documentation and reports. Supported 15+ successful project deliveries.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "École Centrale Paris",
+                "degree": "Master's Degree",
+                "field": "Industrial Engineering",
+                "graduationYear": "2012"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Project Management",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Agile/Scrum",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-3",
+                "name": "Risk Management",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Stakeholder Management",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-5",
+                "name": "MS Project",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-6",
+                "name": "Budget Planning",
+                "level": 4,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            }
+        ]
+    },
+    "ats-friendly": {
+        "id": "ats-friendly",
+        "name": "HR Manager",
+        "category": "Human Resources",
+        "personalInfo": {
+            "fullName": "Amina Berrada",
+            "email": "amina.berrada@email.com",
+            "phone": "+212 660 111 222",
+            "address": "Fez, Morocco",
+            "profession": "Human Resources Manager",
+            "linkedin": "linkedin.com/in/aminaberrada"
+        },
+        "summary": "SHRM-certified HR professional with 8 years of experience in talent acquisition, employee relations, and HR strategy. Reduced turnover by 40% through improved retention programs. Implemented HRIS system for 500+ employee organization.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "Manufacturing Corp",
+                "position": "HR Manager",
+                "startDate": "2020-02",
+                "endDate": "",
+                "description": "Oversee all HR functions for 500+ employees across 3 locations. Reduced turnover by 40% through retention initiatives. Implemented performance management system improving productivity by 25%.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "Tech Company",
+                "position": "Senior HR Specialist",
+                "startDate": "2017-06",
+                "endDate": "2020-01",
+                "description": "Managed full-cycle recruitment for 100+ positions annually. Developed onboarding program reducing time-to-productivity by 30%. Led diversity and inclusion initiatives.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "HR Consulting",
+                "position": "HR Coordinator",
+                "startDate": "2015-01",
+                "endDate": "2017-05",
+                "description": "Supported HR operations for client organizations. Processed payroll and benefits for 200+ employees. Maintained compliance with labor regulations.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "University of Morocco",
+                "degree": "Master's Degree",
+                "field": "Human Resource Management",
+                "graduationYear": "2015"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Talent Acquisition",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Employee Relations",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-3",
+                "name": "HRIS Systems",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Performance Management",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-5",
+                "name": "Labor Law",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-6",
+                "name": "Conflict Resolution",
+                "level": 4,
+                "category": "soft"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            }
+        ]
+    },
+    "executive": {
+        "id": "executive",
+        "name": "CEO / Executive",
+        "category": "Executive",
+        "personalInfo": {
+            "fullName": "Karim Bensouda",
+            "email": "karim.bensouda@email.com",
+            "phone": "+212 600 000 001",
+            "address": "Casablanca, Morocco",
+            "profession": "Chief Executive Officer",
+            "linkedin": "linkedin.com/in/karimbensouda"
+        },
+        "summary": "Visionary CEO with 15+ years of experience leading technology companies from startup to IPO. Scaled last company from 10 to 500 employees and $50M revenue. Expert in digital transformation, strategic planning, and investor relations. Board member of 3 tech companies.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "TechVenture Inc.",
+                "position": "Chief Executive Officer",
+                "startDate": "2018-01",
+                "endDate": "",
+                "description": "Lead company of 300 employees with $40M annual revenue. Raised $25M Series B funding. Expanded operations to 5 countries. Achieved 40% year-over-year growth.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "Innovation Labs",
+                "position": "Chief Operating Officer",
+                "startDate": "2014-06",
+                "endDate": "2017-12",
+                "description": "Scaled operations from 50 to 200 employees. Implemented operational excellence programs saving $2M annually. Led successful acquisition of competitor company.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "Startup Accelerator",
+                "position": "VP of Operations",
+                "startDate": "2010-03",
+                "endDate": "2014-05",
+                "description": "Managed portfolio of 25 startups. Developed mentorship programs improving startup success rate by 35%. Facilitated $10M+ in follow-on funding for portfolio companies.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "INSEAD",
+                "degree": "Executive MBA",
+                "field": "Business Administration",
+                "graduationYear": "2010"
+            },
+            {
+                "id": "edu-2",
+                "institution": "École Polytechnique",
+                "degree": "Engineering Degree",
+                "field": "Computer Science",
+                "graduationYear": "2005"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Strategic Leadership",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-2",
+                "name": "Fundraising",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-3",
+                "name": "M&A",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Board Management",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-5",
+                "name": "Digital Transformation",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-6",
+                "name": "Public Speaking",
+                "level": 5,
+                "category": "soft"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-4",
+                "name": "German",
+                "proficiency": "conversational"
+            }
+        ]
+    },
+    "healthcare": {
+        "id": "healthcare",
+        "name": "Healthcare Professional",
+        "category": "Healthcare",
+        "personalInfo": {
+            "fullName": "Dr. Leila Chakir",
+            "email": "leila.chakir@hospital.com",
+            "phone": "+212 655 777 888",
+            "address": "Agadir, Morocco",
+            "profession": "Senior Medical Doctor - Internal Medicine",
+            "linkedin": "linkedin.com/in/drleilachakir"
+        },
+        "summary": "Board-certified Internal Medicine physician with 12 years of clinical experience. Specializing in chronic disease management and preventive care. Published researcher with 15+ peer-reviewed articles. Led quality improvement initiative reducing patient readmissions by 30%.",
+        "experiences": [
+            {
+                "id": "exp-1",
+                "company": "University Hospital Agadir",
+                "position": "Senior Attending Physician",
+                "startDate": "2018-07",
+                "endDate": "",
+                "description": "Lead internal medicine department team of 15 physicians. Manage complex patient cases and chronic disease clinics. Achieved 95% patient satisfaction rate.",
+                "current": true
+            },
+            {
+                "id": "exp-2",
+                "company": "Regional Medical Center",
+                "position": "Attending Physician",
+                "startDate": "2014-08",
+                "endDate": "2018-06",
+                "description": "Provided comprehensive primary care for 2000+ patients annually. Implemented diabetes management program improving HbA1c outcomes by 25%.",
+                "current": false
+            },
+            {
+                "id": "exp-3",
+                "company": "Teaching Hospital Casablanca",
+                "position": "Medical Resident",
+                "startDate": "2011-07",
+                "endDate": "2014-06",
+                "description": "Completed 3-year residency in Internal Medicine. Published research on hypertension management. Received Excellence in Patient Care award.",
+                "current": false
+            }
+        ],
+        "education": [
+            {
+                "id": "edu-1",
+                "institution": "Faculty of Medicine, Casablanca",
+                "degree": "Doctor of Medicine",
+                "field": "Medicine",
+                "graduationYear": "2011"
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill-1",
+                "name": "Internal Medicine",
+                "level": 5,
+                "category": "technical"
+            },
+            {
+                "id": "skill-2",
+                "name": "Patient Care",
+                "level": 5,
+                "category": "soft"
+            },
+            {
+                "id": "skill-3",
+                "name": "Clinical Research",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-4",
+                "name": "Electronic Health Records",
+                "level": 4,
+                "category": "technical"
+            },
+            {
+                "id": "skill-5",
+                "name": "Medical Education",
+                "level": 4,
+                "category": "soft"
+            },
+            {
+                "id": "skill-6",
+                "name": "Quality Improvement",
+                "level": 4,
+                "category": "technical"
+            }
+        ],
+        "languages": [
+            {
+                "id": "lang-1",
+                "name": "Arabic",
+                "proficiency": "native"
+            },
+            {
+                "id": "lang-2",
+                "name": "French",
+                "proficiency": "fluent"
+            },
+            {
+                "id": "lang-3",
+                "name": "English",
+                "proficiency": "fluent"
+            }
+        ]
+    }
+}

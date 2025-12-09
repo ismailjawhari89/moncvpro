@@ -1,16 +1,30 @@
 'use client';
 
-import type { CVData } from '@/types/cv';
+import type { TemplateData } from '@/types/cv';
 
 interface CreativeTemplateProps {
-    data: CVData;
+    data: TemplateData;
+    customizations?: {
+        primaryColor?: string;
+        secondaryColor?: string;
+        fontFamily?: string;
+    };
 }
 
-export default function CreativeTemplate({ data }: CreativeTemplateProps) {
+export default function CreativeTemplate({ data, customizations }: CreativeTemplateProps) {
+    const primaryColor = customizations?.primaryColor || '#8b5cf6';
+    const secondaryColor = customizations?.secondaryColor || '#ec4899';
+
     return (
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 shadow-lg max-w-4xl mx-auto" style={{ minHeight: '842px' }}>
+        <div
+            className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 shadow-lg max-w-4xl mx-auto"
+            style={{ minHeight: '842px', fontFamily: customizations?.fontFamily }}
+        >
             {/* Header with Gradient */}
-            <header className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-2xl mb-6 shadow-md">
+            <header
+                className="text-white p-6 rounded-2xl mb-6 shadow-md"
+                style={{ background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})` }}
+            >
                 <h1 className="text-4xl font-black mb-3">
                     {data.personal.fullName || 'Votre Nom'}
                 </h1>
@@ -56,7 +70,7 @@ export default function CreativeTemplate({ data }: CreativeTemplateProps) {
                                         <p className="text-xs text-gray-500 mb-1">
                                             {exp.startDate} - {exp.current ? 'Présent' : exp.endDate}
                                         </p>
-                                        {exp.achievements.length > 0 && exp.achievements[0] && (
+                                        {exp.achievements && exp.achievements.length > 0 && (
                                             <ul className="list-disc list-inside text-gray-600 text-sm space-y-0.5">
                                                 {exp.achievements.map((achievement, idx) => (
                                                     achievement && <li key={idx}>{achievement}</li>

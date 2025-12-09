@@ -1,0 +1,52 @@
+{
+    "id": "creative",
+    "name": "Creative Studio",
+    "thumbnail": "/templates/creative-designer.png",
+    "description": "Bold sidebar layout with vibrant colors for design roles",
+    "category": "creative",
+    "metadata": {
+        "layout": "sidebar"
+    },
+    "typography": {
+        "heading": "Montserrat",
+        "body": "Lato"
+    },
+    "palette": {
+        "primary": "#8b5cf6",
+        "accent": "#7c3aed",
+        "text": "#1f2937",
+        "muted": "#6b7280",
+        "background": "#ffffff"
+    },
+    "spacing": {
+        "sectionGap": 28,
+        "itemGap": 10
+    },
+    "blocks": [
+        {
+            "type": "header",
+            "layout": "split",
+            "showProfileImage": true,
+            "backgroundColor": "#f0f4ff"
+        },
+        {
+            "type": "summary",
+            "layout": "highlight",
+            "icon": "💡"
+        },
+        {
+            "type": "experience",
+            "layout": "timeline",
+            "showIcons": true
+        },
+        {
+            "type": "skills",
+            "layout": "cloud",
+            "colorful": true
+        },
+        {
+            "type": "languages",
+            "layout": "bars"
+        }
+    ]
+}
