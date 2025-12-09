@@ -64,8 +64,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
             endDate: '',
             current: false,
             achievements: [''],
-            description: '',
-            location: ''
+            description: ''
         }]);
     };
 
