@@ -14,11 +14,11 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
     const t = useTranslations('cv-form');
 
     const [personal, setPersonal] = useState<PersonalInfo>(
-        initialData?.personal || {
+        initialData?.personalInfo || {
             fullName: '',
             email: '',
             phone: '',
-            location: '',
+            address: '',
             summary: ''
         }
     );
@@ -31,7 +31,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
     // Update parent whenever data changes
     const updateCV = () => {
         onDataChange({
-            personal,
+            personalInfo: personal,
             experiences,
             education,
             skills,
@@ -132,10 +132,10 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
             <div className="flex justify-between items-center mb-6 border-b pb-4">
                 <h1 className="text-2xl font-bold text-gray-900">Mon CV</h1>
                 <AIGenerator
-                    currentData={{ personal, experiences, education, skills, languages }}
+                    currentData={{ personalInfo: personal, experiences, education, skills, languages }}
                     onGenerate={(newData) => {
-                        if (newData.personal?.summary) {
-                            setPersonal(prev => ({ ...prev, summary: newData.personal!.summary! }));
+                        if (newData.summary) {
+                            setPersonal(prev => ({ ...prev, summary: newData.summary! }));
                         }
                         if (newData.experiences) {
                             setExperiences(prev => [...prev, ...newData.experiences!]);
@@ -182,9 +182,9 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
                     <input
                         type="text"
                         placeholder={t('personal.location')}
-                        value={personal.location}
+                        value={personal.address}
                         onChange={(e) => {
-                            setPersonal({ ...personal, location: e.target.value });
+                            setPersonal({ ...personal, address: e.target.value });
                             updateCV();
                         }}
                         className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"

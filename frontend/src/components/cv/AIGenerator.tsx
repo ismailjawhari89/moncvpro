@@ -5,11 +5,12 @@ import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 
 interface AIGeneratorProps {
-    onGenerate: (content: string) => void;
-    sectionType: string;
+    onGenerate: (data: any) => void;
+    sectionType?: string;
+    currentData?: any;
 }
 
-const AIGenerator: React.FC<AIGeneratorProps> = ({ onGenerate, sectionType }) => {
+const AIGenerator: React.FC<AIGeneratorProps> = ({ onGenerate, sectionType, currentData }) => {
     const t = useTranslations('AIGenerator');
     const [isLoading, setIsLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
@@ -20,15 +21,32 @@ const AIGenerator: React.FC<AIGeneratorProps> = ({ onGenerate, sectionType }) =>
         setIsLoading(true);
 
         try {
-            // Mock AI response for now
-            const mockResponses: Record<string, string> = {
-                summary: `Experienced professional with 5+ years in ${prompt}. Proven track record of success in project management and team leadership.`,
-                experience: `Led a team of developers to build a scalable solution for ${prompt}. Improved performance by 30%.`,
-                education: `Bachelor's Degree in Computer Science with a focus on ${prompt}.`,
-                skills: `${prompt}, React, Node.js, Python, Leadership, Communication`
-            };
+            // Mock AI response
+            const isGeneral = !sectionType;
 
-            const response = mockResponses[sectionType] || `AI generated content for ${sectionType}: ${prompt}`;
+            let response: any;
+
+            if (isGeneral) {
+                // General generation (e.g. "Create a CV for a software engineer")
+                response = {
+                    summary: `Experienced professional with 5+ years in ${prompt}.`,
+                    experiences: [
+                        {
+                            id: Date.now().toString(),
+                            company: 'Tech Corp',
+                            position: 'Senior Developer',
+                            startDate: '2020-01',
+                            endDate: '2023-01',
+                            current: false,
+                            achievements: [`Worked on ${prompt} related projects.`],
+                            description: `Worked on ${prompt} related projects.`
+                        }
+                    ]
+                };
+            } else {
+                // Section specific
+                response = `AI content for ${sectionType}: ${prompt}`;
+            }
 
             setTimeout(() => {
                 onGenerate(response);
@@ -55,7 +73,7 @@ const AIGenerator: React.FC<AIGeneratorProps> = ({ onGenerate, sectionType }) =>
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder={`Describe your ${sectionType} to generate content...`}
+                    placeholder={sectionType ? `Describe your ${sectionType}...` : "Describe your role (e.g. 'Software Engineer')..."}
                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-800"
                     rows={3}
                 />
