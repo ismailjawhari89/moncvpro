@@ -70,7 +70,6 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
 
     // Group metrics by category
     const metricsByCategory = useMemo(() => {
-        if (!analysis) return {};
         const grouped: Record<MetricCategory, ATSMetric[]> = {
             content: [],
             formatting: [],
@@ -78,6 +77,9 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
             impact: [],
             completeness: []
         };
+
+        if (!analysis) return grouped;
+
         analysis.metrics.forEach(m => {
             grouped[m.category].push(m);
         });
@@ -211,10 +213,10 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             key={category}
                             onClick={() => setExpandedCategory(isExpanded ? null : category)}
                             className={`p-4 rounded-xl border-2 transition-all ${isExpanded
-                                    ? `border-${config.color}-500 ${isDark ? 'bg-gray-800' : 'bg-white'} shadow-lg`
-                                    : isDark
-                                        ? 'border-gray-700 bg-gray-800/50 hover:bg-gray-800'
-                                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                                ? `border-${config.color}-500 ${isDark ? 'bg-gray-800' : 'bg-white'} shadow-lg`
+                                : isDark
+                                    ? 'border-gray-700 bg-gray-800/50 hover:bg-gray-800'
+                                    : 'border-gray-200 bg-white hover:bg-gray-50'
                                 }`}
                         >
                             <div className="flex items-center gap-2 mb-2">
@@ -225,7 +227,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             </div>
                             <div className="flex items-end justify-between">
                                 <span className={`text-2xl font-bold ${score >= 70 ? 'text-green-600' :
-                                        score >= 50 ? 'text-amber-600' : 'text-red-600'
+                                    score >= 50 ? 'text-amber-600' : 'text-red-600'
                                     }`}>
                                     {score}%
                                 </span>
@@ -273,8 +275,8 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                                     }`}
                             >
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${metric.status === 'fail'
-                                        ? 'bg-red-100 text-red-600 dark:bg-red-900/30'
-                                        : 'bg-amber-100 text-amber-600 dark:bg-amber-900/30'
+                                    ? 'bg-red-100 text-red-600 dark:bg-red-900/30'
+                                    : 'bg-amber-100 text-amber-600 dark:bg-amber-900/30'
                                     }`}>
                                     {index + 1}
                                 </div>
@@ -284,8 +286,8 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                                             {metric.name}
                                         </span>
                                         <span className={`text-xs px-2 py-0.5 rounded-full ${metric.status === 'fail'
-                                                ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                                                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                                            ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
                                             }`}>
                                             {metric.score}%
                                         </span>
@@ -385,8 +387,8 @@ function MetricRow({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: b
     return (
         <div className={`flex items-center gap-4 p-3 rounded-lg ${isDark ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${metric.status === 'pass' ? 'bg-green-100 dark:bg-green-900/30' :
-                    metric.status === 'warning' ? 'bg-amber-100 dark:bg-amber-900/30' :
-                        'bg-red-100 dark:bg-red-900/30'
+                metric.status === 'warning' ? 'bg-amber-100 dark:bg-amber-900/30' :
+                    'bg-red-100 dark:bg-red-900/30'
                 }`}>
                 {metric.status === 'pass' ? (
                     <CheckCircle2 className="text-green-600" size={20} />
@@ -410,7 +412,7 @@ function MetricRow({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: b
             <div className="flex items-center gap-3">
                 <div className="text-right">
                     <span className={`text-lg font-bold ${metric.score >= 70 ? 'text-green-600' :
-                            metric.score >= 40 ? 'text-amber-600' : 'text-red-600'
+                        metric.score >= 40 ? 'text-amber-600' : 'text-red-600'
                         }`}>
                         {metric.score}%
                     </span>
@@ -439,8 +441,8 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${metric.status === 'pass' ? 'bg-green-100 dark:bg-green-900/30' :
-                                metric.status === 'warning' ? 'bg-amber-100 dark:bg-amber-900/30' :
-                                    'bg-red-100 dark:bg-red-900/30'
+                            metric.status === 'warning' ? 'bg-amber-100 dark:bg-amber-900/30' :
+                                'bg-red-100 dark:bg-red-900/30'
                             }`}>
                             {metric.status === 'pass' ? (
                                 <CheckCircle2 className="text-green-600" size={16} />
@@ -455,7 +457,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                         </h4>
                     </div>
                     <span className={`text-2xl font-bold ${metric.score >= 70 ? 'text-green-600' :
-                            metric.score >= 40 ? 'text-amber-600' : 'text-red-600'
+                        metric.score >= 40 ? 'text-amber-600' : 'text-red-600'
                         }`}>
                         {metric.score}
                     </span>
@@ -465,7 +467,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                 <div className={`h-2 rounded-full overflow-hidden mb-3 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
                     <div
                         className={`h-full rounded-full transition-all duration-500 ${metric.score >= 70 ? 'bg-green-500' :
-                                metric.score >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                            metric.score >= 40 ? 'bg-amber-500' : 'bg-red-500'
                             }`}
                         style={{ width: `${metric.score}%` }}
                     />
