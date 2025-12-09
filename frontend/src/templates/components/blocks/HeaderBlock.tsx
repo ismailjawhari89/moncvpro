@@ -57,7 +57,7 @@ export const HeaderBlock: React.FC<BlockRendererProps> = ({ data, template, bloc
                     </h2>
 
                     {/* Horizontal Contact (if not using separate Contact block) */}
-                    {settings.showIcons && (
+                    {!!settings.showIcons && (
                         <div className={cn("flex flex-wrap gap-3 mt-3 text-sm",
                             align === 'center' ? "justify-center" : (align === 'right' ? "justify-end" : "justify-start")
                         )} style={{ color: subTextColor }}>
