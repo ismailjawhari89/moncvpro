@@ -118,8 +118,8 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
                 <button
                     onClick={() => fileInputRef.current?.click()}
                     className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isDark
-                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
-                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                         }`}
                 >
                     <Upload size={18} />
@@ -142,7 +142,7 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
                 />
                 <InputField
                     label="Professional Title"
-                    value={personalInfo.profession}
+                    value={personalInfo.profession || ''}
                     onChange={(val) => handleChange('profession', val)}
                     placeholder="Senior Software Engineer"
                     isDark={isDark}
