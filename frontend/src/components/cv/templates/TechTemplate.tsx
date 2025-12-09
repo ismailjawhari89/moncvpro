@@ -161,7 +161,7 @@ export default function TechTemplate({ data, customizations }: TechTemplateProps
                                                 style={{
                                                     width: lang.proficiency === 'native' ? '100%' :
                                                         lang.proficiency === 'fluent' ? '85%' :
-                                                            lang.proficiency === 'intermediate' ? '60%' : '35%',
+                                                            lang.proficiency === 'conversational' ? '60%' : '35%',
                                                     backgroundColor: accentColor
                                                 }}
                                             />
