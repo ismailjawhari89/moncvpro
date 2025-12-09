@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
         await browser.close();
 
-        return new NextResponse(pdfBuffer, {
+        return new NextResponse(new Blob([pdfBuffer as any], { type: 'application/pdf' }), {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': 'attachment; filename="cv-export.pdf"'
