@@ -1,5 +1,6 @@
 import React from 'react';
-import { useCVStore, Skill } from '@/stores/useCVStore';
+import { useCVStore } from '@/stores/useCVStore';
+import { Skill } from '@/types/cv';
 import { Card, InputField } from '@/components/ui/FormFields';
 import { Trash2, Plus } from 'lucide-react';
 import * as Slider from '@radix-ui/react-slider';

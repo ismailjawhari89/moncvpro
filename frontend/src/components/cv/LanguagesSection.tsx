@@ -1,5 +1,6 @@
 import React from 'react';
-import { useCVStore, Language } from '@/stores/useCVStore';
+import { useCVStore } from '@/stores/useCVStore';
+import { Language } from '@/types/cv';
 import { Card, InputField } from '@/components/ui/FormFields';
 import { Trash2, Plus } from 'lucide-react';
 
