@@ -6,16 +6,30 @@ import { templates } from '@/templates/definitions';
 import { CheckCircle, Loader2, Sparkles, Eye, Layout } from 'lucide-react';
 import { cn } from '@/templates/utils'; // Assuming global utils exist, or I import local
 
-export default function TemplatesGallery({ isDark }: { isDark?: boolean }) {
-    const selectedTemplateId = useCVStore(state => state.cvData.template || 'modern');
-    const setSelectedTemplate = useCVStore(state => state.setSelectedTemplate);
+interface TemplatesGalleryProps {
+    isDark?: boolean;
+    selectedTemplate?: string;
+    onTemplateChange?: (id: string) => void;
+}
+
+export default function TemplatesGallery({ isDark, selectedTemplate, onTemplateChange }: TemplatesGalleryProps) {
+    const storeTemplateId = useCVStore(state => state.cvData.template || 'modern');
+    const setStoreTemplate = useCVStore(state => state.setSelectedTemplate);
+
+    // Use props if provided (controlled), otherwise use store
+    const activeId = selectedTemplate || storeTemplateId;
+
+    const handleSelect = (id: string) => {
+        if (onTemplateChange) {
+            onTemplateChange(id);
+        } else {
+            setStoreTemplate(id as any);
+        }
+    };
+
     const [previewId, setPreviewId] = useState<string | null>(null);
 
     const templateList = Object.values(templates);
-
-    const handleSelect = (id: string) => {
-        setSelectedTemplate(id as any); // Type assertion as keys match TemplateType
-    };
 
     return (
         <div className="space-y-6">
@@ -32,7 +46,7 @@ export default function TemplatesGallery({ isDark }: { isDark?: boolean }) {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {templateList.map((t) => {
-                    const isSelected = selectedTemplateId === t.id;
+                    const isSelected = activeId === t.id;
                     return (
                         <div key={t.id} className="group relative">
                             <button
