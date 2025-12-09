@@ -164,7 +164,7 @@ export function matchJobDescription(cvData: CVData, jobDescription: string): Job
     const priorityActions = generatePriorityActions(missingSkills, missingKeywords, experienceMatch, educationMatch, extractedRequirements);
 
     // Generate insights
-    const insights = generateInsights(matchingSkills, missingSkills, matchingKeywords, experienceMatch, cvData);
+    const insights = generateInsights(matchingSkills, missingSkills, matchingKeywords, missingKeywords, experienceMatch, cvData);
 
     return {
         matchScore,
@@ -545,6 +545,7 @@ function generateInsights(
     matchingSkills: string[],
     missingSkills: string[],
     matchingKeywords: string[],
+    missingKeywords: string[],
     experienceMatch: JobMatchResult['experienceMatch'],
     cvData: CVData
 ): JobMatchResult['insights'] {
