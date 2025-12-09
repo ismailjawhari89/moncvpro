@@ -18,10 +18,11 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
             fullName: '',
             email: '',
             phone: '',
-            address: '',
-            summary: ''
+            address: ''
         }
     );
+
+    const [summary, setSummary] = useState<string>(initialData?.summary || '');
 
     const [experiences, setExperiences] = useState<Experience[]>(initialData?.experiences || []);
     const [education, setEducation] = useState<Education[]>(initialData?.education || []);
@@ -30,8 +31,11 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
 
     // Update parent whenever data changes
     const updateCV = () => {
+        if (!initialData) return;
         onDataChange({
+            ...initialData,
             personalInfo: personal,
+            summary,
             experiences,
             education,
             skills,
@@ -59,7 +63,9 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
             startDate: '',
             endDate: '',
             current: false,
-            achievements: ['']
+            achievements: [''],
+            description: '',
+            location: ''
         }]);
     };
 
@@ -83,7 +89,8 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
             field: '',
             startDate: '',
             endDate: '',
-            current: false
+            current: false,
+            graduationYear: ''
         }]);
     };
 
@@ -103,7 +110,8 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
         setSkills([...skills, {
             id: Date.now().toString(),
             name: '',
-            category: 'technical'
+            category: 'technical',
+            level: 3
         }]);
     };
 
@@ -135,7 +143,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
                     currentData={{ personalInfo: personal, experiences, education, skills, languages }}
                     onGenerate={(newData) => {
                         if (newData.summary) {
-                            setPersonal(prev => ({ ...prev, summary: newData.summary! }));
+                            setSummary(newData.summary);
                         }
                         if (newData.experiences) {
                             setExperiences(prev => [...prev, ...newData.experiences!]);
@@ -192,9 +200,9 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
                 </div>
                 <textarea
                     placeholder={t('personal.summary')}
-                    value={personal.summary}
+                    value={summary}
                     onChange={(e) => {
-                        setPersonal({ ...personal, summary: e.target.value });
+                        setSummary(e.target.value);
                         updateCV();
                     }}
                     rows={4}
@@ -269,7 +277,7 @@ export default function CVForm({ initialData, onDataChange }: CVFormProps) {
                             </label>
                             <textarea
                                 placeholder="Réalisations (une par ligne)"
-                                value={exp.achievements.join('\n')}
+                                value={(exp.achievements || []).join('\n')}
                                 onChange={(e) => updateExperience(exp.id, 'achievements', e.target.value.split('\n'))}
                                 rows={3}
                                 className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
