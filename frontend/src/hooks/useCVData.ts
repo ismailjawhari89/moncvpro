@@ -6,115 +6,67 @@ export const useCVData = () => {
 
     return {
         // Getters
-        cvData: store.currentCV,
-        isLoading: store.isLoading,
+        cvData: store.cvData,
+        isLoading: false, // isLoading is not managed in this store currently
 
         // Personal Info
-        updatePersonalInfo: (info: Partial<PersonalInfo>) => {
-            if (!store.currentCV) return;
-            store.updateCV({
-                personalInfo: { ...store.currentCV.personalInfo, ...info }
-            });
-        },
+        updatePersonalInfo: store.updatePersonalInfo,
 
         // Experiences
-        addExperience: (exp: Experience) => {
-            const experiences = [...(store.currentCV?.experiences || []), exp];
-            store.updateCV({ experiences });
-        },
-
+        addExperience: store.addExperience,
         updateExperience: (id: string, updates: Partial<Experience>) => {
-            const experiences = store.currentCV?.experiences.map(exp =>
-                exp.id === id ? { ...exp, ...updates } : exp
-            ) || [];
-            store.updateCV({ experiences });
+            // Map partial updates to individual field updates or implementation in store needing update?
+            // Store has updateExperience(id, field, value). 
+            // We can iterate updates.
+            Object.entries(updates).forEach(([key, value]) => {
+                store.updateExperience(id, key as keyof Experience, value);
+            });
         },
-
-        removeExperience: (id: string) => {
-            const experiences = store.currentCV?.experiences.filter(exp => exp.id !== id) || [];
-            store.updateCV({ experiences });
-        },
-
-        reorderExperiences: (startIndex: number, endIndex: number) => {
-            const experiences = [...(store.currentCV?.experiences || [])];
-            const [removed] = experiences.splice(startIndex, 1);
-            experiences.splice(endIndex, 0, removed);
-            store.updateCV({ experiences });
-        },
+        removeExperience: store.removeExperience,
+        reorderExperiences: store.reorderExperiences,
 
         // Education
-        addEducation: (edu: Education) => {
-            const education = [...(store.currentCV?.education || []), edu];
-            store.updateCV({ education });
-        },
-
+        addEducation: store.addEducation,
         updateEducation: (id: string, updates: Partial<Education>) => {
-            const education = store.currentCV?.education.map(edu =>
-                edu.id === id ? { ...edu, ...updates } : edu
-            ) || [];
-            store.updateCV({ education });
+            Object.entries(updates).forEach(([key, value]) => {
+                store.updateEducation(id, key as keyof Education, value);
+            });
         },
-
-        removeEducation: (id: string) => {
-            const education = store.currentCV?.education.filter(edu => edu.id !== id) || [];
-            store.updateCV({ education });
-        },
+        removeEducation: store.removeEducation,
 
         // Skills
-        addSkill: (skill: Skill) => {
-            const skills = [...(store.currentCV?.skills || []), skill];
-            store.updateCV({ skills });
-        },
-
+        addSkill: store.addSkill,
         updateSkill: (id: string, updates: Partial<Skill>) => {
-            const skills = store.currentCV?.skills.map(skill =>
-                skill.id === id ? { ...skill, ...updates } : skill
-            ) || [];
-            store.updateCV({ skills });
+            Object.entries(updates).forEach(([key, value]) => {
+                store.updateSkill(id, key as keyof Skill, value);
+            });
         },
-
-        removeSkill: (id: string) => {
-            const skills = store.currentCV?.skills.filter(skill => skill.id !== id) || [];
-            store.updateCV({ skills });
-        },
+        removeSkill: store.removeSkill,
 
         // Languages
-        addLanguage: (lang: Language) => {
-            const languages = [...(store.currentCV?.languages || []), lang];
-            store.updateCV({ languages });
-        },
-
+        addLanguage: store.addLanguage,
         updateLanguage: (id: string, updates: Partial<Language>) => {
-            const languages = store.currentCV?.languages.map(lang =>
-                lang.id === id ? { ...lang, ...updates } : lang
-            ) || [];
-            store.updateCV({ languages });
+            Object.entries(updates).forEach(([key, value]) => {
+                store.updateLanguage(id, key as keyof Language, value);
+            });
         },
-
-        removeLanguage: (id: string) => {
-            const languages = store.currentCV?.languages.filter(lang => lang.id !== id) || [];
-            store.updateCV({ languages });
-        },
+        removeLanguage: store.removeLanguage,
 
         // Summary
-        updateSummary: (summary: string) => {
-            store.updateCV({ summary });
-        },
+        updateSummary: store.updateSummary,
 
         // Template
-        changeTemplate: (template: CVData['template']) => {
-            store.updateCV({ template });
-        },
+        changeTemplate: store.setSelectedTemplate,
 
         // Utilities
-        save: store.saveToCloud,
+        save: () => console.log('Save handled by persist middleware'),
         undo: store.undo,
         redo: store.redo,
-        canUndo: store.historyIndex > 0,
-        canRedo: store.historyIndex < store.history.length - 1,
+        canUndo: store.canUndo,
+        canRedo: store.canRedo,
 
-        // Full Store Access
-        setCurrentCV: store.setCurrentCV,
-        loadFromCloud: store.loadFromCloud
+        // Full Store Access - Deprecated/Mapped
+        setCurrentCV: (data: CVData) => store.applyTemplate(data), // Approximation
+        loadFromCloud: () => console.warn('loadFromCloud not implemented in store'),
     };
 };
