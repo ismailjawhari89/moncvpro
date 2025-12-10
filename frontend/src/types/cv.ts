@@ -63,6 +63,7 @@ export interface CVData {
         version: number;
         lastAutoSave: string;
     };
+    contentLanguage: 'en' | 'ar' | 'fr'; // Language of the CV content
 }
 
 export interface TemplateData {

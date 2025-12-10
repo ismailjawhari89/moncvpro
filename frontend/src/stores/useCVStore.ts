@@ -9,6 +9,15 @@ import type {
     Language,
     TemplateType
 } from '@/types/cv';
+import {
+    getTemplateSampleCVData,
+    mergeSampleDataWithExisting,
+    hasMinimalData,
+    getTemplateColors,
+    getTemplateTypography
+} from '@/utils/templateDataConverter';
+import { getEnhancedTemplateById } from '@/data/enhanced-templates';
+import arTemplates from '@/i18n/locales/templates/ar.json';
 
 // AI Suggestion Types
 export interface AISuggestion {
@@ -46,6 +55,7 @@ const defaultCVData: CVData = {
     skills: [],
     languages: [],
     template: 'modern',
+    contentLanguage: 'en', // Default content language
     metadata: {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -107,6 +117,12 @@ interface CVStore {
     applyTemplate: (templateData: Partial<CVData>) => void;
     setSelectedTemplate: (templateId: TemplateType) => void;
     setSelectedTheme: (themeId: string) => void;
+    setContentLanguage: (lang: 'en' | 'ar' | 'fr') => void;
+
+    // Smart Template Actions (new)
+    applyTemplateWithSampleData: (templateId: string, fillEmptyOnly?: boolean) => void;
+    loadSampleDataForCurrentTemplate: () => void;
+    clearSampleData: () => void;
 
     // Reset
     resetToDefault: () => void;
@@ -708,6 +724,189 @@ export const useCVStore = create<CVStore>()(
                         theme: themeId
                     }
                 })),
+
+            setContentLanguage: (lang) =>
+                set((state) => ({
+                    cvData: {
+                        ...state.cvData,
+                        contentLanguage: lang
+                    }
+                })),
+
+            // ============ SMART TEMPLATE ACTIONS ============
+            applyTemplateWithSampleData: (templateId: string, fillEmptyOnly: boolean = true) => {
+                const { cvData, captureHistory } = get();
+
+                captureHistory('Apply Template with Sample Data');
+                set({ isApplyingTemplate: true });
+
+                // Get template info
+                const template = getEnhancedTemplateById(templateId);
+                if (!template) {
+                    console.warn('[CVStore] Template not found:', templateId);
+                    set({ isApplyingTemplate: false });
+                    return;
+                }
+
+                // Get sample data
+                const sampleCVData = getTemplateSampleCVData(templateId);
+
+                if (sampleCVData && (fillEmptyOnly ? hasMinimalData(cvData) : true)) {
+                    // Merge sample data with existing
+                    const mergedData = mergeSampleDataWithExisting(cvData, sampleCVData, fillEmptyOnly);
+
+                    set({
+                        cvData: {
+                            ...mergedData,
+                            template: templateId as TemplateType,
+                            theme: undefined, // Reset theme for new template
+                            metadata: {
+                                ...mergedData.metadata,
+                                updatedAt: new Date().toISOString()
+                            }
+                        },
+                        isApplyingTemplate: false
+                    });
+                } else {
+                    // Just apply template styling without sample data
+                    set((state) => ({
+                        cvData: {
+                            ...state.cvData,
+                            template: templateId as TemplateType,
+                            theme: undefined,
+                            metadata: {
+                                ...state.cvData.metadata,
+                                updatedAt: new Date().toISOString()
+                            }
+                        },
+                        isApplyingTemplate: false
+                    }));
+                }
+
+                console.log('[CVStore] applyTemplateWithSampleData:', templateId, { fillEmptyOnly });
+            },
+
+            loadSampleDataForCurrentTemplate: () => {
+                const { cvData, captureHistory } = get();
+                const templateId = cvData.template || 'modern';
+                const lang = cvData.contentLanguage || 'en';
+
+                captureHistory('Load Sample Data');
+
+                let sampleCVData = null;
+
+                if (lang === 'ar') {
+                    // Load Arabic sample data
+                    const arTemplate = (arTemplates as Record<string, any>)[templateId];
+                    if (arTemplate && arTemplate.sampleData) {
+                        // Quick conversion for Arabic data
+                        // NOTE: Ideally we should have a helper for this, but doing inline for now to ensure functionality
+                        const s = arTemplate.sampleData;
+                        // Generate unique IDs
+                        const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+                        sampleCVData = {
+                            personalInfo: {
+                                fullName: s.personalInfo.fullName,
+                                email: s.personalInfo.email,
+                                phone: s.personalInfo.phone,
+                                address: s.personalInfo.address,
+                                profession: s.personalInfo.profession,
+                                linkedin: s.personalInfo.linkedin || '',
+                                github: s.personalInfo.github || ''
+                            },
+                            summary: s.summary,
+                            experiences: s.experiences.map((exp: Record<string, any>) => ({
+                                id: generateId(),
+                                company: exp.company,
+                                position: exp.position,
+                                startDate: exp.startDate,
+                                endDate: exp.endDate,
+                                current: exp.current,
+                                description: exp.description,
+                                achievements: []
+                            })),
+                            education: s.education.map((edu: Record<string, any>) => ({
+                                id: generateId(),
+                                institution: edu.institution,
+                                degree: edu.degree,
+                                field: edu.field,
+                                graduationYear: edu.graduationYear,
+                                startDate: edu.startDate,
+                                endDate: edu.endDate,
+                                current: false,
+                                description: ''
+                            })),
+                            skills: s.skills.map((skill: Record<string, any>) => ({
+                                id: generateId(),
+                                name: skill.name,
+                                level: skill.level,
+                                category: skill.category
+                            })),
+                            languages: s.languages.map((l: Record<string, any>) => ({
+                                id: generateId(),
+                                name: l.name,
+                                proficiency: l.proficiency
+                            }))
+                        };
+                    }
+                }
+
+                if (!sampleCVData) {
+                    // Fallback to default (English/Enhanced)
+                    sampleCVData = getTemplateSampleCVData(templateId);
+                }
+                if (!sampleCVData) {
+                    console.warn('[CVStore] No sample data for template:', templateId);
+                    return;
+                }
+
+                // Force merge (replace empty sections)
+                const mergedData = mergeSampleDataWithExisting(cvData, sampleCVData, true);
+
+                set({
+                    cvData: {
+                        ...mergedData,
+                        metadata: {
+                            ...mergedData.metadata,
+                            updatedAt: new Date().toISOString()
+                        }
+                    }
+                });
+
+                console.log('[CVStore] loadSampleDataForCurrentTemplate:', templateId);
+            },
+
+            clearSampleData: () => {
+                const { captureHistory } = get();
+                captureHistory('Clear Sample Data');
+
+                set((state) => ({
+                    cvData: {
+                        ...state.cvData,
+                        personalInfo: {
+                            fullName: '',
+                            email: '',
+                            phone: '',
+                            address: '',
+                            profession: '',
+                            linkedin: '',
+                            github: ''
+                        },
+                        summary: '',
+                        experiences: [],
+                        education: [],
+                        skills: [],
+                        languages: [],
+                        metadata: {
+                            ...state.cvData.metadata,
+                            updatedAt: new Date().toISOString()
+                        }
+                    }
+                }));
+
+                console.log('[CVStore] clearSampleData');
+            },
 
             // ============ RESET ============
             resetToDefault: () => {

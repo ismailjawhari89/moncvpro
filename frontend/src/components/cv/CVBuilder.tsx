@@ -29,7 +29,7 @@ import ExperienceSection from './ExperienceSection';
 import EducationSection from './EducationSection';
 import SkillsManager from './SkillsManager';
 import LanguagesSection from './LanguagesSection';
-import TemplatesGallery from './TemplatesGallery';
+import UnifiedTemplatesGallery from './UnifiedTemplatesGallery';
 import { AutoSaveIndicator } from './AutoSaveIndicator';
 import { Card } from '@/components/ui/FormFields';
 import { cvApi } from '@/lib/api/cvApi';
@@ -104,7 +104,7 @@ export default function CVBuilder() {
     const handleManualSave = async () => {
         setIsLoading(true);
         try {
-            await cvApi.saveCV(cvData as any);
+            await cvApi.saveCV(cvData);
             showToast('success', 'CV saved to cloud successfully!');
         } catch (error) {
             console.error('Cloud save failed, saving locally:', error);
@@ -126,6 +126,16 @@ export default function CVBuilder() {
         }
     };
 
+    // Load sample/demo data for the current template
+    const loadSampleDataForCurrentTemplate = useCVStore((state) => state.loadSampleDataForCurrentTemplate);
+
+    const handleLoadDemoData = () => {
+        if (confirm('This will load professional demo data for the current template. Your existing data will be merged. Continue?')) {
+            loadSampleDataForCurrentTemplate();
+            showToast('success', 'Demo data loaded successfully!');
+        }
+    };
+
     const showToast = (type: Toast['type'], message: string) => {
         setToast({ type, message });
         setTimeout(() => setToast(null), 3000);
@@ -137,7 +147,7 @@ export default function CVBuilder() {
 
     const handleAIGenerate = async (generatedData: any) => {
         try {
-            const result = await cvApi.analyzeCV(cvData as any);
+            const result = await cvApi.analyzeCV(cvData);
             if (result.success && result.analysis) {
                 showToast('success', 'AI Analysis complete!');
             }
@@ -168,10 +178,12 @@ export default function CVBuilder() {
             case 'skills': return <SkillsManager isDark={isDark} />;
             case 'languages': return <LanguagesSection isDark={isDark} />;
             case 'templates': return (
-                <TemplatesGallery
-                    selectedTemplate={selectedTemplate as any}
+                <UnifiedTemplatesGallery
+                    selectedTemplate={selectedTemplate}
                     onTemplateChange={handleTemplateChange}
                     isDark={isDark}
+                    compact={false}
+                    showFilters={true}
                 />
             );
             default: return null;
@@ -265,8 +277,21 @@ export default function CVBuilder() {
                                 <RotateCcw size={18} />
                             </button>
 
+                            {/* Load Demo Data Button */}
+                            <button
+                                onClick={handleLoadDemoData}
+                                className={`hidden sm:flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${isDark
+                                    ? 'bg-purple-700 hover:bg-purple-600 text-white'
+                                    : 'bg-purple-100 hover:bg-purple-200 text-purple-700'
+                                    }`}
+                                title="Load professional demo data"
+                            >
+                                <Sparkles size={16} />
+                                <span className="text-sm font-medium">Demo</span>
+                            </button>
+
                             <ExportPanel
-                                cvData={cvData as any}
+                                cvData={cvData}
                                 previewElementId="cv-preview-content"
                                 isDark={isDark}
                             />
@@ -332,7 +357,7 @@ export default function CVBuilder() {
                             })}
                             <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                                 <AIAssistant
-                                    currentData={cvData as any}
+                                    currentData={cvData}
                                     onGenerate={handleAIGenerate}
                                 />
                             </div>

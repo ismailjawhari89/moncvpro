@@ -1,0 +1,328 @@
+{
+    "gallery": {
+        "title": "Professional CV Templates",
+        "subtitle": "Choose from our curated collection of ATS-optimized templates designed for every industry",
+        "count": "templates available",
+        "free100": "100% Free",
+        "topRated": "Top Rated - Highest ATS Score",
+        "searchPlaceholder": "Search templates...",
+        "noResults": "No templates found",
+        "noFavorites": "No favorites yet",
+        "noRecent": "No recently used templates",
+        "adjustFilters": "Try adjusting your search or filters",
+        "resetFilters": "Reset Filters"
+    },
+    "filters": {
+        "all": "All Templates",
+        "category": "Category",
+        "style": "Style",
+        "experience": "Experience Level",
+        "favorites": "Favorites",
+        "recent": "Recent"
+    },
+    "categories": {
+        "all": "All",
+        "tech": "Technology",
+        "business": "Business",
+        "creative": "Creative",
+        "medical": "Medical",
+        "education": "Education"
+    },
+    "styles": {
+        "modern": "Modern",
+        "minimalist": "Minimalist",
+        "creative": "Creative",
+        "professional": "Professional",
+        "bold": "Bold"
+    },
+    "levels": {
+        "entry": "Entry Level",
+        "mid": "Mid Level",
+        "senior": "Senior Level",
+        "executive": "Executive"
+    },
+    "card": {
+        "atsScore": "ATS Score",
+        "useTemplate": "Use Template",
+        "preview": "Preview",
+        "favorite": "Add to Favorites",
+        "unfavorite": "Remove from Favorites"
+    },
+    "modal": {
+        "close": "Close",
+        "useThisTemplate": "Use This Template",
+        "atsCompatibility": "ATS Compatibility",
+        "atsReason": "Why this score?",
+        "bestFor": "Best For",
+        "keyFeatures": "Key Features",
+        "includedSections": "Included Sections",
+        "proTips": "Pro Tips",
+        "colorPalette": "Color Palette",
+        "difficulty": "Difficulty",
+        "layout": "Layout"
+    },
+    "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "advanced": "Advanced"
+    },
+    "templates": {
+        "tech-modern-developer": {
+            "name": "Modern Developer",
+            "description": "Clean, professional template perfect for software developers and engineers. Features a modern two-column layout with prominent skills section.",
+            "bestFor": [
+                "Software Developers",
+                "DevOps Engineers",
+                "Data Scientists",
+                "Full Stack Developers"
+            ],
+            "features": [
+                "ATS-Optimized",
+                "Two-Column Layout",
+                "Skills Progress Bars",
+                "GitHub Integration",
+                "Tech Stack Icons"
+            ],
+            "tips": [
+                "Highlight your tech stack prominently in the skills section",
+                "Include links to GitHub and portfolio projects",
+                "Quantify achievements with metrics (performance improvements, users served)"
+            ]
+        },
+        "tech-full-stack": {
+            "name": "Full Stack Pro",
+            "description": "Comprehensive layout to showcase front-end and back-end expertise. Perfect for developers who work across the entire stack.",
+            "bestFor": [
+                "Full Stack Developers",
+                "Web Developers",
+                "Software Engineers"
+            ],
+            "features": [
+                "Tech Stack Icons",
+                "GitHub Integration",
+                "Portfolio Links",
+                "ATS-Friendly",
+                "Project Showcase"
+            ],
+            "tips": [
+                "Balance frontend and backend skills equally",
+                "Include both technologies and frameworks",
+                "Add links to live projects or demos"
+            ]
+        },
+        "tech-data-scientist": {
+            "name": "Data Scientist Elite",
+            "description": "Highlight your data analysis, ML expertise, and research publications. Designed for data professionals.",
+            "bestFor": [
+                "Data Scientists",
+                "ML Engineers",
+                "Research Scientists",
+                "AI Specialists"
+            ],
+            "features": [
+                "Publications Section",
+                "Research Highlights",
+                "Technical Skills Matrix",
+                "Certifications",
+                "Conference Presentations"
+            ],
+            "tips": [
+                "List publications and research papers prominently",
+                "Include specific ML/AI frameworks and tools",
+                "Quantify impact of your models (accuracy, business value)"
+            ]
+        },
+        "tech-devops-engineer": {
+            "name": "DevOps Specialist",
+            "description": "Perfect for DevOps, SRE, and Cloud Engineers. Emphasizes infrastructure, automation, and CI/CD expertise.",
+            "bestFor": [
+                "DevOps Engineers",
+                "SRE",
+                "Cloud Architects",
+                "Platform Engineers"
+            ],
+            "features": [
+                "Certifications Badges",
+                "Infrastructure Skills",
+                "Tool Proficiency Chart",
+                "Cloud Platforms"
+            ],
+            "tips": [
+                "List AWS/GCP/Azure certifications prominently",
+                "Include specific tools: Terraform, Ansible, Jenkins",
+                "Quantify improvements (uptime, deployment frequency)"
+            ]
+        },
+        "tech-ui-ux-designer": {
+            "name": "UI/UX Designer",
+            "description": "Beautiful portfolio-style CV for designers. Balances creativity with ATS compatibility.",
+            "bestFor": [
+                "UI Designers",
+                "UX Designers",
+                "Product Designers",
+                "Interaction Designers"
+            ],
+            "features": [
+                "Portfolio Gallery",
+                "Design Tools",
+                "Case Study Links",
+                "Color Palette Display",
+                "Process Showcase"
+            ],
+            "tips": [
+                "Include links to your design portfolio",
+                "Showcase your design process, not just outputs",
+                "List design tools: Figma, Sketch, Adobe XD"
+            ]
+        },
+        "business-executive": {
+            "name": "Executive Professional",
+            "description": "Premium template for C-level and senior executives. Clean, authoritative design that commands attention.",
+            "bestFor": [
+                "CEOs",
+                "CFOs",
+                "VPs",
+                "Directors",
+                "General Managers"
+            ],
+            "features": [
+                "Leadership Focus",
+                "Board Experience Section",
+                "Strategic Achievements",
+                "Executive Summary"
+            ],
+            "tips": [
+                "Lead with strategic impact, not daily tasks",
+                "Include board positions and advisory roles",
+                "Quantify P&L responsibility and team sizes"
+            ]
+        },
+        "business-manager": {
+            "name": "Modern Manager",
+            "description": "Ideal for project managers and team leaders. Highlights leadership, KPIs, and team achievements.",
+            "bestFor": [
+                "Project Managers",
+                "Product Managers",
+                "Team Leaders",
+                "Operations Managers"
+            ],
+            "features": [
+                "Team Size Metrics",
+                "Budget Management",
+                "KPI Highlights",
+                "Methodology Certifications"
+            ],
+            "tips": [
+                "Quantify team sizes and budget responsibility",
+                "List relevant certifications (PMP, Scrum Master)",
+                "Include key metrics and KPIs achieved"
+            ]
+        },
+        "business-consultant": {
+            "name": "Strategy Consultant",
+            "description": "Perfect for consultants and business analysts. Showcases client work and consulting frameworks.",
+            "bestFor": [
+                "Management Consultants",
+                "Strategy Consultants",
+                "Business Analysts",
+                "Advisory Roles"
+            ],
+            "features": [
+                "Client Portfolio",
+                "Industry Expertise",
+                "Consulting Frameworks",
+                "Impact Metrics"
+            ],
+            "tips": [
+                "Describe client engagements with impact metrics",
+                "List industries served and consulting methodologies",
+                "Highlight prestigious client logos (if allowed)"
+            ]
+        },
+        "business-sales": {
+            "name": "Sales Champion",
+            "description": "Highlight your sales achievements and targets exceeded. Numbers-focused layout for sales professionals.",
+            "bestFor": [
+                "Account Executives",
+                "Sales Managers",
+                "BDRs",
+                "Sales Directors"
+            ],
+            "features": [
+                "Revenue Numbers",
+                "Quota Achievement",
+                "Sales Metrics Dashboard",
+                "Client Wins"
+            ],
+            "tips": [
+                "Lead with revenue numbers and quota attainment",
+                "Include deal sizes and win rates",
+                "List major accounts closed"
+            ]
+        },
+        "creative-graphic-designer": {
+            "name": "Creative Designer",
+            "description": "Bold and colorful template for graphic designers. Showcases creativity while remaining professional.",
+            "bestFor": [
+                "Graphic Designers",
+                "Art Directors",
+                "Brand Designers",
+                "Visual Artists"
+            ],
+            "features": [
+                "Visual Portfolio",
+                "Design Awards",
+                "Creative Tools Section",
+                "Brand Work Showcase"
+            ],
+            "tips": [
+                "Include a link to your online portfolio",
+                "List design software proficiencies",
+                "Showcase award-winning work"
+            ]
+        },
+        "creative-marketing": {
+            "name": "Marketing Specialist",
+            "description": "Dynamic template for marketing professionals. Highlights campaigns, ROI, and social media stats.",
+            "bestFor": [
+                "Marketing Managers",
+                "Digital Marketers",
+                "Content Strategists",
+                "Social Media Managers"
+            ],
+            "features": [
+                "Campaign Highlights",
+                "ROI Metrics",
+                "Social Media Stats",
+                "Brand Projects"
+            ],
+            "tips": [
+                "Quantify campaign results (engagement, conversions, ROI)",
+                "List marketing tools and platforms",
+                "Include relevant certifications (Google Ads, HubSpot)"
+            ]
+        },
+        "medical-doctor": {
+            "name": "Medical Professional",
+            "description": "Professional template for doctors and physicians. Emphasizes credentials, specializations, and clinical experience.",
+            "bestFor": [
+                "Physicians",
+                "Surgeons",
+                "Specialists",
+                "Chief Medical Officers"
+            ],
+            "features": [
+                "Medical License Section",
+                "Specializations",
+                "Publications",
+                "Clinical Experience",
+                "Board Certifications"
+            ],
+            "tips": [
+                "List all medical licenses and board certifications",
+                "Include research publications and presentations",
+                "Highlight clinical hours and patient volumes"
+            ]
+        }
+    }
+}
