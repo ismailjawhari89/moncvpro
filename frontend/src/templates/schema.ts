@@ -3,7 +3,7 @@ import { z } from "zod";
 export const BlockSchema = z.object({
     type: z.string(),
     position: z.enum(["top", "main", "sidebar", "footer"]).optional(),
-    settings: z.record(z.any()).optional().default({}),
+    settings: z.record(z.string(), z.any()).optional().default({}),
 });
 
 const PaletteSchema = z.object({
@@ -32,7 +32,7 @@ export const TemplateSchema = z.object({
     }),
     typography: TypographySchema.optional(), // Make optional for backward compatibility or defaults
     palette: PaletteSchema,
-    variants: z.record(
+    variants: z.record(z.string(),
         z.object({
             name: z.string(),
             palette: PaletteSchema.partial(),
