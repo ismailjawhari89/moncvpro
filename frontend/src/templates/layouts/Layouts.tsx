@@ -17,7 +17,7 @@ export const OneColumnLayout: React.FC<LayoutProps> = (props) => {
     const spacing = getSpacingClass(template.spacing?.itemGap);
 
     return (
-        <div className="min-h-full p-8" style={{ backgroundColor: background, color: text, fontFamily: template.metadata.font }}>
+        <div className="min-h-full p-8" style={{ backgroundColor: background, color: text, fontFamily: template.typography?.body || 'Inter' }}>
             <div className="mb-6">{renderBlocks(blocks.top, props)}</div>
             <div className="mb-6">{renderBlocks(blocks.sidebar, props)}</div> {/* Render sidebar in main flow for single column */}
             <div className={spacing}>{renderBlocks(blocks.main, props)}</div>
@@ -32,7 +32,7 @@ export const TwoColumnLayout: React.FC<LayoutProps> = (props) => {
     const spacing = getSpacingClass(template.spacing?.sectionGap);
 
     return (
-        <div className="min-h-full p-8" style={{ backgroundColor: background, color: text, fontFamily: template.metadata.font }}>
+        <div className="min-h-full p-8" style={{ backgroundColor: background, color: text, fontFamily: template.typography?.body || 'Inter' }}>
             {/* Header matches background */}
             <div className="mb-8">{renderBlocks(blocks.top, props)}</div>
 
@@ -58,7 +58,7 @@ export const SidebarLayout: React.FC<LayoutProps> = (props) => {
     const sidebarBg = primary;
 
     return (
-        <div className="min-h-full flex" style={{ backgroundColor: background, color: text, fontFamily: template.metadata.font }}>
+        <div className="min-h-full flex" style={{ backgroundColor: background, color: text, fontFamily: template.typography?.body || 'Inter' }}>
             <div className="w-1/3 min-h-full p-8 text-white space-y-6 shrink-0" style={{ backgroundColor: sidebarBg }}>
                 {renderBlocks(blocks.top, props)}
                 {renderBlocks(blocks.sidebar, props)}
