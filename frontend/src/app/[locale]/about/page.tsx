@@ -3,6 +3,9 @@
 import React from 'react';
 import { Users, Target, Award, Heart, Sparkles, Globe } from 'lucide-react';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-gray-50">

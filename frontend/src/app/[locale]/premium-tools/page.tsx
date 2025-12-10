@@ -15,6 +15,9 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 type ThemeMode = 'light' | 'dark';
 
 export default function PremiumToolsPage() {

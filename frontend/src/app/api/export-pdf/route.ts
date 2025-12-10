@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 // NOTE: Puppeteer is too heavy for Cloudflare Pages build limits and not supported in Edge runtime.
 // PDF export is disabled for this deployment.
 // To enable PDF export, use a 3rd party API (e.g. Browserless, DocRaptor) or deploy to Vercel/Node.

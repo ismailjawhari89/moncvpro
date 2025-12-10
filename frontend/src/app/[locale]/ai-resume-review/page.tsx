@@ -20,6 +20,9 @@ import Testimonials from '@/components/ai-resume-review/Testimonials';
 import FAQAccordion from '@/components/ai-resume-review/FAQAccordion';
 import { simulateAnalysis } from '@/utils/resume-upload';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function AIResumeReviewPage() {
     const router = useRouter();
     const [isAnalyzing, setIsAnalyzing] = useState(false);

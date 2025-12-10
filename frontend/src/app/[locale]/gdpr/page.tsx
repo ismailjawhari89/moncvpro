@@ -3,6 +3,9 @@
 import React from 'react';
 import { Shield, Lock, Eye, Download, Trash2, UserCheck, Mail } from 'lucide-react';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function GDPRPage() {
     return (
         <div className="min-h-screen bg-gray-50">

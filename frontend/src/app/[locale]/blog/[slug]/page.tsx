@@ -5,6 +5,9 @@ import { Calendar, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Link as LinkI
 import { useRouter, useParams } from 'next/navigation';
 import { blogService, type BlogPost } from '@/services/blogService';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function BlogPostPage() {
     const router = useRouter();
     const params = useParams();

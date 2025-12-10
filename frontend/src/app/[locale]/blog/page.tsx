@@ -5,6 +5,9 @@ import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { blogService, type BlogPost } from '@/services/blogService';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function BlogPage() {
     const router = useRouter();
     const [posts, setPosts] = useState<BlogPost[]>([]);

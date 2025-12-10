@@ -21,6 +21,9 @@ import { useRouter, useParams } from 'next/navigation';
 import { cvExamplesService, type CVExample } from '@/services/cvExamplesService';
 import Link from 'next/link';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function CVExampleSlugPage() {
     const router = useRouter();
     const params = useParams();

@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Phone, Send, CheckCircle } from 'lucide-react';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function ContactPage() {
     const [formData, setFormData] = useState({
         name: '',

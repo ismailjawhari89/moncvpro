@@ -11,6 +11,9 @@ import ExportPanel from '@/components/cover-letter/ExportPanel';
 import { Moon, Sun, Save, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function CoverLetterBuilderPage() {
     const [data, setData] = useState<CoverLetterData>(defaultCoverLetterData);
     const [isDark, setIsDark] = useState(false);

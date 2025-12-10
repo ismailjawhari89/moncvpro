@@ -4,6 +4,9 @@ import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2, FileText } from 'lucide-react';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 // Dynamically import the new unified CVBuilder
 const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
     loading: () => (

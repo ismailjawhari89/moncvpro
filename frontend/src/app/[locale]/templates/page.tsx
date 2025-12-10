@@ -8,6 +8,9 @@ import { Eye, Sparkles, Star, TrendingUp, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { templates, categories, getTemplatesByCategory, type TemplateCategory, type CVTemplate } from '@/data/templates';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function TemplatesGalleryPage() {
     const router = useRouter();
     const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('all');

@@ -4,6 +4,9 @@ import React from 'react';
 import { Cookie, Settings, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function CookiesPolicyPage() {
     const lastUpdated = 'December 3, 2025';
 

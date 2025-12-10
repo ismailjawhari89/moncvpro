@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
+// Edge Runtime for Cloudflare Pages
+export const runtime = 'edge';
+
 export default function AuthCallback() {
     const router = useRouter();
 
