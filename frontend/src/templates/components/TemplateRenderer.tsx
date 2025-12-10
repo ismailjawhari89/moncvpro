@@ -16,6 +16,16 @@ interface TemplateRendererProps {
 export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, data }) => {
     const baseTemplate = getTemplate(templateId) as any;
 
+    // Debug logging
+    console.log('[TemplateRenderer] Rendering:', {
+        templateId,
+        hasData: !!data,
+        personalInfo: data?.personalInfo?.fullName,
+        template: baseTemplate?.id,
+        hasBlocks: !!baseTemplate?.blocks,
+        blocksCount: baseTemplate?.blocks?.length
+    });
+
     // Merge variants
     const variantId = data.theme;
     const variant = variantId && baseTemplate.variants ? baseTemplate.variants[variantId] : undefined;
@@ -27,6 +37,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
     };
 
     if (!data || !template.blocks || template.blocks.length === 0) {
+        console.warn('[TemplateRenderer] No data or blocks:', { hasData: !!data, blocksLength: template.blocks?.length });
         return (
             <div className="p-8 text-center bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <p className="text-gray-500">No template content available</p>
