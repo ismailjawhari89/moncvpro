@@ -21,7 +21,7 @@ export const SummaryBlock: React.FC<BlockRendererProps> = ({ data, template, blo
                     Profile
                 </h3>
             )}
-            <p className={cn("text-sm leading-relaxed", settings.largeText && "text-base")}
+            <p className={cn("text-sm leading-relaxed", !!settings.largeText && "text-base")}
                 style={{ color: inverseText ? 'rgba(255,255,255,0.9)' : text }}>
                 {summary}
             </p>
