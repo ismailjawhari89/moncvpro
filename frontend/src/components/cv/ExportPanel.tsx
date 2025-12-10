@@ -12,10 +12,10 @@ import {
 } from 'lucide-react';
 import { generatePDF, generatePDFWithProgress } from '@/lib/pdfGenerator';
 import { exportDOCX, exportTXT, exportJSON } from '@/utils/export';
-import type { TemplateData } from '@/types/cv';
+import type { TemplateData, CVData } from '@/types/cv';
 
 interface ExportPanelProps {
-    cvData: TemplateData;
+    cvData: CVData;
     previewElementId: string;
     filename?: string;
     isDark?: boolean;
@@ -79,11 +79,27 @@ export default function ExportPanel({
     const borderColor = isDark ? 'border-gray-700' : 'border-gray-200';
     const hoverBg = isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
 
+    const getTemplateData = (): TemplateData => ({
+        personal: {
+            fullName: cvData.personalInfo.fullName,
+            email: cvData.personalInfo.email,
+            phone: cvData.personalInfo.phone,
+            location: cvData.personalInfo.address,
+            summary: cvData.summary
+        },
+        experiences: cvData.experiences,
+        education: cvData.education,
+        skills: cvData.skills,
+        languages: cvData.languages
+    });
+
     const handleExport = async (format: ExportFormat) => {
         setIsExporting(format);
         setExportProgress(0);
         setExportError(null);
         setExportSuccess(null);
+
+        const exportData = getTemplateData();
 
         try {
             switch (format) {
@@ -96,15 +112,15 @@ export default function ExportPanel({
                     break;
 
                 case 'docx':
-                    await exportDOCX(cvData, { filename: `${filename}.docx` });
+                    await exportDOCX(exportData, { filename: `${filename}.docx` });
                     break;
 
                 case 'txt':
-                    exportTXT(cvData, { filename: `${filename}.txt` });
+                    exportTXT(exportData, { filename: `${filename}.txt` });
                     break;
 
                 case 'json':
-                    exportJSON(cvData, { filename: `${filename}.json` });
+                    exportJSON(exportData, { filename: `${filename}.json` });
                     break;
             }
 
@@ -164,10 +180,10 @@ export default function ExportPanel({
                                             }`}
                                     >
                                         <div className={`p-2 rounded-lg ${isSuccess
-                                                ? 'bg-green-100 text-green-600'
-                                                : isCurrentlyExporting
-                                                    ? 'bg-blue-100 text-blue-600'
-                                                    : isDark ? 'bg-gray-700' : 'bg-gray-100'
+                                            ? 'bg-green-100 text-green-600'
+                                            : isCurrentlyExporting
+                                                ? 'bg-blue-100 text-blue-600'
+                                                : isDark ? 'bg-gray-700' : 'bg-gray-100'
                                             }`}>
                                             {isCurrentlyExporting ? (
                                                 <Loader2 size={20} className="animate-spin" />

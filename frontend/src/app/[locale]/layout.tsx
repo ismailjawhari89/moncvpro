@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { localeDirections, type Locale } from '@/i18n/settings';
 import { QueryProvider } from '@/providers/QueryProvider';
+import Header from '@/components/Header';
 import '../globals.css';
 
 // 1. Edge Runtime for Layout
@@ -33,10 +34,14 @@ export default async function LocaleLayout({
             <body className={`${fontClass} antialiased min-h-screen bg-background`} suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
                     <QueryProvider>
-                        {children}
+                        <Header />
+                        <main className="min-h-screen">
+                            {children}
+                        </main>
                     </QueryProvider>
                 </NextIntlClientProvider>
             </body>
         </html>
     );
 }
+

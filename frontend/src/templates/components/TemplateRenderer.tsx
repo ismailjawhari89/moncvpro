@@ -1,11 +1,13 @@
 import React from 'react';
 import { CVData } from '@/types/cv';
 import { getTemplate } from '../definitions';
+import { getEnhancedTemplateById } from '@/data/enhanced-templates';
 import { Mail, Phone, MapPin, Linkedin, Github, Globe, Calendar, Briefcase, GraduationCap, Star, Award, Languages } from 'lucide-react';
 
 interface TemplateRendererProps {
     templateId: string;
     data: CVData;
+    locale?: string; // Add locale for RTL support
 }
 
 // Skill level to percentage
@@ -19,7 +21,24 @@ const proficiencyLabels: Record<string, string> = {
     basic: 'Basic'
 };
 
-export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, data }) => {
+// RTL proficiency labels for Arabic
+const proficiencyLabelsAr: Record<string, string> = {
+    native: 'اللغة الأم',
+    fluent: 'طلاقة تامة',
+    conversational: 'محادثة',
+    basic: 'مبتدئ'
+};
+
+export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, data, locale = 'en' }) => {
+    // Determine RTL direction
+    const isRTL = locale === 'ar';
+    const direction = isRTL ? 'rtl' : 'ltr';
+
+    // Use appropriate labels based on locale
+    const labels = isRTL ? proficiencyLabelsAr : proficiencyLabels;
+
+    // Try to get enhanced template first for colors
+    const enhancedTemplate = getEnhancedTemplateById(templateId);
     const baseTemplate = getTemplate(templateId) as any;
 
     // Merge variants
@@ -32,15 +51,47 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
         typography: variant?.typography ? { ...baseTemplate.typography, ...variant.typography } : baseTemplate.typography
     };
 
-    const primaryColor = template.palette?.primary || '#3b82f6';
-    const accentColor = template.palette?.accent || '#1d4ed8';
+    // Use enhanced template colors if available, otherwise fall back to definition
+    const primaryColor = enhancedTemplate?.colors?.primary || template.palette?.primary || '#3b82f6';
+    const accentColor = enhancedTemplate?.colors?.accent || template.palette?.accent || '#1d4ed8';
+    const secondaryColor = enhancedTemplate?.colors?.secondary || template.palette?.secondary || primaryColor;
     const textColor = template.palette?.text || '#1f2937';
     const mutedColor = template.palette?.muted || '#6b7280';
     const bgColor = template.palette?.background || '#ffffff';
-    const headingFont = template.typography?.heading || 'Inter, sans-serif';
-    const bodyFont = template.typography?.body || 'Inter, sans-serif';
+
+    // Use enhanced template typography if available
+    // For Arabic, prefer Cairo font
+    const headingFont = isRTL
+        ? 'Cairo, sans-serif'
+        : enhancedTemplate?.typography?.heading
+            ? `${enhancedTemplate.typography.heading}, sans-serif`
+            : template.typography?.heading || 'Inter, sans-serif';
+    const bodyFont = isRTL
+        ? 'Cairo, sans-serif'
+        : enhancedTemplate?.typography?.body
+            ? `${enhancedTemplate.typography.body}, sans-serif`
+            : template.typography?.body || 'Inter, sans-serif';
 
     const { personalInfo, summary, experiences, education, skills, languages } = data;
+
+    // Section titles based on locale
+    const sectionTitles = isRTL ? {
+        contact: 'معلومات الاتصال',
+        skills: 'المهارات',
+        languages: 'اللغات',
+        summary: 'الملخص المهني',
+        experience: 'الخبرة المهنية',
+        education: 'التعليم',
+        present: 'حتى الآن'
+    } : {
+        contact: 'Contact',
+        skills: 'Skills',
+        languages: 'Languages',
+        summary: 'Professional Summary',
+        experience: 'Work Experience',
+        education: 'Education',
+        present: 'Present'
+    };
 
     // Check if we have any content
     const hasContent = personalInfo?.fullName || summary || experiences?.length || education?.length || skills?.length;
@@ -50,13 +101,18 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
             <div
                 className="w-full h-full flex items-center justify-center text-gray-400 p-8"
                 style={{ fontFamily: bodyFont, backgroundColor: bgColor }}
+                dir={direction}
             >
                 <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
                         <Briefcase size={24} className="text-gray-400" />
                     </div>
-                    <p className="text-lg font-medium">Start Building Your CV</p>
-                    <p className="text-sm mt-2">Fill in the form to see your CV preview</p>
+                    <p className="text-lg font-medium">
+                        {isRTL ? 'ابدأ ببناء سيرتك الذاتية' : 'Start Building Your CV'}
+                    </p>
+                    <p className="text-sm mt-2">
+                        {isRTL ? 'املأ النموذج لترى معاينة سيرتك الذاتية' : 'Fill in the form to see your CV preview'}
+                    </p>
                 </div>
             </div>
         );
@@ -64,7 +120,8 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
 
     return (
         <div
-            className="w-full min-h-full"
+            className="w-full min-h-full cv-preview"
+            dir={direction}
             style={{
                 fontFamily: bodyFont,
                 backgroundColor: bgColor,
@@ -115,7 +172,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                     {/* Contact Info */}
                     <div className="mb-8">
                         <h3 className="text-xs font-bold uppercase tracking-wider mb-4 text-white/60 border-b border-white/20 pb-2">
-                            Contact
+                            {sectionTitles.contact}
                         </h3>
                         <div className="space-y-3 text-sm">
                             {personalInfo.email && (
@@ -155,7 +212,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                     {skills && skills.length > 0 && (
                         <div className="mb-8">
                             <h3 className="text-xs font-bold uppercase tracking-wider mb-4 text-white/60 border-b border-white/20 pb-2">
-                                Skills
+                                {sectionTitles.skills}
                             </h3>
                             <div className="space-y-3">
                                 {skills.map((skill, idx) => (
@@ -180,14 +237,14 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                     {languages && languages.length > 0 && (
                         <div>
                             <h3 className="text-xs font-bold uppercase tracking-wider mb-4 text-white/60 border-b border-white/20 pb-2">
-                                Languages
+                                {sectionTitles.languages}
                             </h3>
                             <div className="space-y-2">
                                 {languages.map((lang, idx) => (
                                     <div key={idx} className="flex justify-between items-center text-sm">
                                         <span className="text-white/90">{lang.name}</span>
                                         <span className="text-xs px-2 py-0.5 bg-white/20 rounded text-white/80">
-                                            {proficiencyLabels[lang.proficiency] || lang.proficiency}
+                                            {labels[lang.proficiency] || lang.proficiency}
                                         </span>
                                     </div>
                                 ))}
@@ -206,7 +263,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                                 style={{ fontFamily: headingFont, color: primaryColor, borderColor: primaryColor }}
                             >
                                 <Award size={18} />
-                                Professional Summary
+                                {sectionTitles.summary}
                             </h2>
                             <p className="text-sm leading-relaxed" style={{ color: mutedColor }}>
                                 {summary}
@@ -222,7 +279,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                                 style={{ fontFamily: headingFont, color: primaryColor, borderColor: primaryColor }}
                             >
                                 <Briefcase size={18} />
-                                Work Experience
+                                {sectionTitles.experience}
                             </h2>
                             <div className="space-y-4">
                                 {experiences.map((exp, idx) => (
@@ -242,7 +299,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                                                 style={{ backgroundColor: primaryColor + '15', color: primaryColor }}
                                             >
                                                 <Calendar size={10} className="inline mr-1" />
-                                                {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                                                {exp.startDate} - {exp.current ? sectionTitles.present : exp.endDate}
                                             </span>
                                         </div>
 
@@ -269,7 +326,7 @@ export const TemplateRenderer: React.FC<TemplateRendererProps> = ({ templateId, 
                                 style={{ fontFamily: headingFont, color: primaryColor, borderColor: primaryColor }}
                             >
                                 <GraduationCap size={18} />
-                                Education
+                                {sectionTitles.education}
                             </h2>
                             <div className="space-y-3">
                                 {education.map((edu, idx) => (
