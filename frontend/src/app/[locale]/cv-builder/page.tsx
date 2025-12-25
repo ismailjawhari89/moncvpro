@@ -3,13 +3,15 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2, FileText } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // Edge Runtime for Cloudflare Pages
 export const runtime = 'edge';
 
-// Dynamically import the new unified CVBuilder
-const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
-    loading: () => (
+// Loading component that uses translations
+function LoadingScreen() {
+    const t = useTranslations('cvBuilder');
+    return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
             <div className="text-center">
                 <div className="mb-6 inline-block p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl shadow-2xl animate-pulse">
@@ -17,10 +19,10 @@ const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
                 </div>
                 <Loader2 className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    Loading CV Builder...
+                    {t('loading.title')}
                 </h2>
                 <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                    Preparing your professional CV editor with AI assistance
+                    {t('loading.subtitle')}
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -29,7 +31,12 @@ const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
                 </div>
             </div>
         </div>
-    ),
+    );
+}
+
+// Dynamically import the new unified CVBuilder
+const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
+    loading: LoadingScreen,
     ssr: false, // Disable SSR for this component as it uses client-side features
 });
 
@@ -52,24 +59,7 @@ const CVBuilder = dynamic(() => import('@/components/cv/CVBuilder'), {
  */
 export default function CVBuilderPage() {
     return (
-        <Suspense
-            fallback={
-                <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="mb-6 inline-block p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl shadow-2xl animate-pulse">
-                            <FileText className="text-white" size={64} />
-                        </div>
-                        <Loader2 className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                            Loading CV Builder...
-                        </h2>
-                        <p className="text-lg text-gray-600 dark:text-gray-400">
-                            Preparing your professional CV editor
-                        </p>
-                    </div>
-                </div>
-            }
-        >
+        <Suspense fallback={<LoadingScreen />}>
             <CVBuilder />
         </Suspense>
     );

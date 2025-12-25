@@ -1,16 +1,18 @@
-import React from 'react';
 import { useCVStore } from '@/stores/useCVStore';
 import { Skill } from '@/types/cv';
 import { Card, InputField } from '@/components/ui/FormFields';
 import { Trash2, Plus } from 'lucide-react';
 import * as Slider from '@radix-ui/react-slider';
+import { useTranslations } from 'next-intl';
 
 interface SkillsManagerProps {
     isDark?: boolean;
 }
 
 export default function SkillsManager({ isDark }: SkillsManagerProps) {
+    const t = useTranslations('cv-form.skills');
     const skills = useCVStore((state) => state.cvData.skills);
+    // ...
     const addSkill = useCVStore((state) => state.addSkill);
     const removeSkill = useCVStore((state) => state.removeSkill);
     const updateSkill = useCVStore((state) => state.updateSkill);
@@ -44,7 +46,7 @@ export default function SkillsManager({ isDark }: SkillsManagerProps) {
                                     label=""
                                     value={skill.name}
                                     onChange={(val) => handleUpdate(skill.id, 'name', val)}
-                                    placeholder="Skill name (e.g. React)"
+                                    placeholder={t('placeholders.name')}
                                     isDark={isDark}
                                     className="flex-1"
                                 />
@@ -59,7 +61,7 @@ export default function SkillsManager({ isDark }: SkillsManagerProps) {
                             {/* Level Slider */}
                             <div className="px-1">
                                 <div className="flex justify-between text-xs mb-2 text-gray-500">
-                                    <span>Level: {skill.level}/5</span>
+                                    <span>{t('level')}: {skill.level}/5</span>
                                 </div>
                                 <Slider.Root
                                     className="relative flex items-center select-none touch-none w-full h-5"
@@ -74,7 +76,7 @@ export default function SkillsManager({ isDark }: SkillsManagerProps) {
                                     </Slider.Track>
                                     <Slider.Thumb
                                         className="block w-5 h-5 bg-white border-2 border-blue-600 shadow-[0_2px_10px] shadow-black/10 rounded-[10px] hover:bg-blue-50 focus:outline-none focus:shadow-[0_0_0_4px] focus:shadow-blue-600/20 cursor-pointer"
-                                        aria-label="Skill Level"
+                                        aria-label={t('level')}
                                     />
                                 </Slider.Root>
                             </div>
@@ -90,7 +92,7 @@ export default function SkillsManager({ isDark }: SkillsManagerProps) {
                     } flex items-center justify-center gap-2 font-medium`}
             >
                 <Plus size={20} />
-                Add Skill
+                {t('add')}
             </button>
         </div>
     );

@@ -11,6 +11,9 @@ interface AuthContextType {
     loading: boolean;
     signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
     signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+    signInWithOAuth: (provider: 'google' | 'github') => Promise<{ error: Error | null }>;
+    resetPassword: (email: string) => Promise<{ error: Error | null }>;
+    updatePassword: (password: string) => Promise<{ error: Error | null }>;
     signOut: () => Promise<void>;
 }
 
@@ -65,6 +68,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const signInWithOAuth = async (provider: 'google' | 'github') => {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: provider,
+                options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                },
+            });
+            return { error };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
+    const resetPassword = async (email: string) => {
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/update-password`,
+            });
+            return { error };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
+    const updatePassword = async (password: string) => {
+        try {
+            const { error } = await supabase.auth.updateUser({ password });
+            return { error };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
     const signOut = async () => {
         await supabase.auth.signOut();
     };
@@ -75,6 +112,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signUp,
         signIn,
+        signInWithOAuth,
+        resetPassword,
+        updatePassword,
         signOut,
     };
 

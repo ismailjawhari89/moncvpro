@@ -1,0 +1,63 @@
+// Template 3 - Academic Professor
+name: { en: 'Academic Professor', fr: 'Professeur Universitaire', ar: 'الأستاذ الأكاديمي' },
+description: {
+    en: 'Scholarly design emphasizing publications, research, and academic achievements.',
+    fr: 'Design académique mettant l\'accent sur les publications, la recherche et les réalisations universitaires.',
+    ar: 'تصميم أكاديمي يركز على المنشورات والأبحاث والإنجازات الأكاديمية.'
+},
+
+// Template 4 - Creative Designer
+name: { en: 'Creative Designer', fr: 'Designer Créatif', ar: 'المصمم الإبداعي' },
+description: {
+    en: 'Bold, artistic layout with portfolio-first approach and visual impact.',
+    fr: 'Mise en page audacieuse et artistique avec approche axée sur le portfolio et impact visuel.',
+    ar: 'تصميم جريء وفني مع نهج يركز على المحفظة والتأثير البصري.'
+},
+
+// Template 5 - Executive Manager
+name: { en: 'Executive Manager', fr: 'Cadre Dirigeant', ar: 'المدير التنفيذي' },
+description: {
+    en: 'Professional, authoritative design for senior leadership positions.',
+    fr: 'Design professionnel et autoritaire pour les postes de direction supérieure.',
+    ar: 'تصميم احترافي وموثوق لمناصب القيادة العليا.'
+},
+
+// Template 6 - Professional Chef
+name: { en: 'Professional Chef', fr: 'Chef Professionnel', ar: 'الطاهي المحترف' },
+description: {
+    en: 'Culinary-focused design highlighting kitchen experience and specializations.',
+    fr: 'Design culinaire mettant en valeur l\'expérience en cuisine et les spécialisations.',
+    ar: 'تصميم يركز على الطهي ويبرز الخبرة في المطبخ والتخصصات.'
+},
+
+// Template 7 - Research Scientist
+name: { en: 'Research Scientist', fr: 'Chercheur Scientifique', ar: 'الباحث العلمي' },
+description: {
+    en: 'Data-driven layout perfect for research positions and lab work.',
+    fr: 'Mise en page axée sur les données, parfaite pour les postes de recherche et le travail en laboratoire.',
+    ar: 'تصميم قائم على البيانات مثالي لمناصب البحث والعمل المخبري.'
+},
+
+// Template 8 - HR Manager
+name: { en: 'HR Manager', fr: 'Responsable RH', ar: 'مدير الموارد البشرية' },
+description: {
+    en: 'People-focused design emphasizing soft skills and team leadership.',
+    fr: 'Design axé sur les personnes, mettant l\'accent sur les compétences interpersonnelles et le leadership d\'équipe.',
+    ar: 'تصميم يركز على الأشخاص ويبرز المهارات الناعمة وقيادة الفريق.'
+},
+
+// Template 9 - Civil Engineer
+name: { en: 'Civil Engineer', fr: 'Ingénieur Civil', ar: 'المهندس المدني' },
+description: {
+    en: 'Technical layout showcasing projects, certifications, and engineering skills.',
+    fr: 'Mise en page technique présentant les projets, certifications et compétences en ingénierie.',
+    ar: 'تصميم تقني يعرض المشاريع والشهادات والمهارات الهندسية.'
+},
+
+// Template 10 - Artist / Musician
+name: { en: 'Artist / Musician', fr: 'Artiste / Musicien', ar: 'الفنان / الموسيقي' },
+description: {
+    en: 'Expressive design for performers, with focus on shows and artistic achievements.',
+    fr: 'Design expressif pour les artistes, mettant l\'accent sur les spectacles et les réalisations artistiques.',
+    ar: 'تصميم تعبيري للفنانين، مع التركيز على العروض والإنجازات الفنية.'
+},

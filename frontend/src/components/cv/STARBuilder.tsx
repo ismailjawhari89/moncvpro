@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     Sparkles,
     ArrowRight,
@@ -16,6 +16,7 @@ import {
     X
 } from 'lucide-react';
 import { STAR_TEMPLATES, assembleSTARPoint, generateSTARPreview, type STARContent, type AchievementTemplate } from '@/lib/starFramework';
+import { useTranslations } from 'next-intl';
 
 interface STARBuilderProps {
     onSave?: (text: string) => void;
@@ -31,6 +32,28 @@ const ICONS: Record<string, any> = {
 };
 
 export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBuilderProps) {
+    const t = useTranslations('star');
+
+    // Localize templates using useMemo
+    const localizedTemplates = useMemo(() => {
+        return STAR_TEMPLATES.map(template => ({
+            ...template,
+            label: t(`templates.${template.id}.label`),
+            prompts: {
+                situation: t(`templates.${template.id}.prompts.situation`),
+                task: t(`templates.${template.id}.prompts.task`),
+                action: t(`templates.${template.id}.prompts.action`),
+                result: t(`templates.${template.id}.prompts.result`),
+            },
+            example: {
+                situation: t(`templates.${template.id}.example.situation`),
+                task: t(`templates.${template.id}.example.task`),
+                action: t(`templates.${template.id}.example.action`),
+                result: t(`templates.${template.id}.example.result`),
+            }
+        }));
+    }, [t]);
+
     const [selectedTemplate, setSelectedTemplate] = useState<AchievementTemplate | null>(null);
     const [content, setContent] = useState<STARContent>({
         situation: '',
@@ -85,35 +108,33 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
                         </div>
                         <div>
                             <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                STAR Method Builder
+                                {t('title')}
                             </h3>
-                            <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Create powerful, results-oriented bullet points by following the <strong className="text-indigo-600">Situation, Task, Action, Result</strong> framework.
-                            </p>
+                            <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} dangerouslySetInnerHTML={{ __html: t.raw('description') }} />
                         </div>
                     </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                    {STAR_TEMPLATES.map(template => {
+                    {localizedTemplates.map(template => {
                         const Icon = ICONS[template.icon] || Sparkles;
                         return (
                             <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template)}
                                 className={`flex items-start gap-4 p-5 rounded-xl border-2 text-left transition-all hover:scale-[1.02] ${isDark
-                                        ? 'bg-gray-800 border-gray-700 hover:border-indigo-500 hover:bg-gray-750'
-                                        : 'bg-white border-gray-200 hover:border-indigo-400 hover:shadow-md'
+                                    ? 'bg-gray-800 border-gray-700 hover:border-indigo-500 hover:bg-gray-750'
+                                    : 'bg-white border-gray-200 hover:border-indigo-400 hover:shadow-md'
                                     }`}
                             >
                                 <div className={`p-3 rounded-lg ${isDark ? 'bg-indigo-900/30 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
                                     <Icon size={24} />
                                 </div>
-                                <div>
-                                    <h4 className={`font-bold text-lg mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className={`font-bold text-lg mb-1 truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                         {template.label}
                                     </h4>
-                                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    <p className={`text-sm line-clamp-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         {Object.values(template.prompts)[0].split('?')[0]}...
                                     </p>
                                 </div>
@@ -127,7 +148,12 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
 
     // Builder Steps
     const currentField = ['situation', 'task', 'action', 'result'][step - 1] as keyof STARContent;
-    const labels = { situation: 'Situation', task: 'Task', action: 'Action', result: 'Result' };
+    const labels = {
+        situation: t('labels.situation'),
+        task: t('labels.task'),
+        action: t('labels.action'),
+        result: t('labels.result')
+    };
     const prompt = selectedTemplate?.prompts[currentField];
     const example = selectedTemplate?.example[currentField];
 
@@ -139,17 +165,17 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
                     onClick={() => setStep(0)}
                     className={`text-sm flex items-center gap-1 ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}
                 >
-                    <X size={16} /> Choose different template
+                    <X size={16} /> {t('changeTemplate')}
                 </button>
                 <div className="flex gap-2">
                     {[1, 2, 3, 4].map(s => (
                         <div
                             key={s}
                             className={`h-2 w-8 rounded-full transition-all ${s === step
-                                    ? 'bg-indigo-600'
-                                    : s < step
-                                        ? 'bg-green-500'
-                                        : isDark ? 'bg-gray-700' : 'bg-gray-200'
+                                ? 'bg-indigo-600'
+                                : s < step
+                                    ? 'bg-green-500'
+                                    : isDark ? 'bg-gray-700' : 'bg-gray-200'
                                 }`}
                         />
                     ))}
@@ -174,10 +200,10 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
                     <textarea
                         value={content[currentField]}
                         onChange={(e) => handleInputChange(currentField, e.target.value)}
-                        placeholder={`Example: ${example}`}
+                        placeholder={t('placeholder', { example: example || '' })}
                         className={`w-full h-32 p-5 rounded-2xl border-2 resize-none text-lg transition-all focus:ring-2 focus:ring-indigo-500 outline-none ${isDark
-                                ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500'
-                                : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-indigo-500'
+                            ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500'
+                            : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-indigo-500'
                             }`}
                         autoFocus
                     />
@@ -194,7 +220,7 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
                         <HelpCircle size={18} className="text-gray-400 mt-0.5" />
                         <div>
                             <span className={`block text-xs font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                                Good Example
+                                {t('exampleLabel')}
                             </span>
                             <p className={`text-sm italic ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                 "{example}"
@@ -211,31 +237,31 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
                     className={`px-6 py-3 rounded-xl font-medium transition ${isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
                         }`}
                 >
-                    Back
+                    {t('back')}
                 </button>
                 <button
                     onClick={nextStep}
                     disabled={content[currentField].length < 5}
                     className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-white transition-all ${content[currentField].length < 5
-                            ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70'
-                            : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30 hover:scale-105'
+                        ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70'
+                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30 hover:scale-105'
                         }`}
                 >
                     {step === 4 ? (
                         isGenerating ? (
                             <>
                                 <RefreshCw size={20} className="animate-spin" />
-                                Assembling...
+                                {t('assembling')}
                             </>
                         ) : (
                             <>
-                                Finish & Create
+                                {t('finish')}
                                 <Sparkles size={20} />
                             </>
                         )
                     ) : (
                         <>
-                            Next Step
+                            {t('next')}
                             <ArrowRight size={20} />
                         </>
                     )}
@@ -244,3 +270,4 @@ export default function STARBuilder({ onSave, onCancel, isDark = false }: STARBu
         </div>
     );
 }
+

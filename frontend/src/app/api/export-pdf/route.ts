@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'HTML content missing' }, { status: 400 });
         }
 
-        console.log("PDF generation requested. Mocking response due to Cloudflare limits.");
+
 
         // Return a mock PDF or error explaining limitation
         // For now, we return a simple text file as PDF just to satisfy the interface or an error.

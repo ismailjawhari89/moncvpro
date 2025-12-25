@@ -25,6 +25,7 @@ export const TemplateSchema = z.object({
     name: z.string(),
     description: z.string().optional(),
     thumbnail: z.string(),
+    category: z.string().optional(), // Added for template categorization
     metadata: z.object({
         layout: z.enum(["one-column", "two-column", "sidebar"]),
         version: z.string().optional(),

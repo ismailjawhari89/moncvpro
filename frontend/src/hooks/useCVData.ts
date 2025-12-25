@@ -58,8 +58,15 @@ export const useCVData = () => {
         // Template
         changeTemplate: store.setSelectedTemplate,
 
+        // Cloud
+        saveToCloud: store.saveToCloud,
+        loadFromCloud: store.loadFromCloud,
+        cloudStatus: store.cloud.status,
+        lastSavedAt: store.cloud.lastSavedAt,
+        cloudError: store.cloud.error,
+
         // Utilities
-        save: () => console.log('Save handled by persist middleware'),
+        save: store.saveToCloud, // Now maps to Cloud Save
         undo: store.undo,
         redo: store.redo,
         canUndo: store.canUndo,
@@ -67,6 +74,5 @@ export const useCVData = () => {
 
         // Full Store Access - Deprecated/Mapped
         setCurrentCV: (data: CVData) => store.applyTemplate(data), // Approximation
-        loadFromCloud: () => console.warn('loadFromCloud not implemented in store'),
     };
 };

@@ -4,13 +4,19 @@ import React, { useRef, useState } from 'react';
 import { useCVStore } from '@/stores/useCVStore';
 import { InputField, TextAreaField } from '@/components/ui/FormFields';
 import { Camera, Upload, X, User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PersonalInfoFormProps {
     isDark?: boolean;
+    onEnhancePhoto?: () => void;
 }
 
-export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
+import { compressImage } from '@/utils/imageUtils';
+
+export default function PersonalInfoForm({ isDark, onEnhancePhoto }: PersonalInfoFormProps) {
+    const t = useTranslations('cv-form.personal');
     const personalInfo = useCVStore((state) => state.cvData.personalInfo);
+    // ...
     const summary = useCVStore((state) => state.cvData.summary);
     const updatePersonalInfo = useCVStore((state) => state.updatePersonalInfo);
     const updateSummary = useCVStore((state) => state.updateSummary);
@@ -23,18 +29,19 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
     };
 
     const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // ... (existing implementation)
         const file = event.target.files?.[0];
         if (!file) return;
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            alert('Please select an image file');
+            alert(t('alerts.selectImage'));
             return;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-            alert('Image size should be less than 5MB');
+            alert(t('alerts.imageSize'));
             return;
         }
 
@@ -42,12 +49,22 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
 
         // Convert to base64 for local storage
         const reader = new FileReader();
-        reader.onloadend = () => {
-            updatePersonalInfo({ photoUrl: reader.result as string });
-            setIsUploading(false);
+        reader.onloadend = async () => {
+            try {
+                const base64 = reader.result as string;
+                // Compress!
+                const compressed = await compressImage(base64);
+                updatePersonalInfo({ photoUrl: compressed });
+            } catch (e) {
+                console.error('Image compression error', e);
+                // Fallback
+                updatePersonalInfo({ photoUrl: reader.result as string });
+            } finally {
+                setIsUploading(false);
+            }
         };
         reader.onerror = () => {
-            alert('Failed to read image');
+            alert(t('alerts.readFailed'));
             setIsUploading(false);
         };
         reader.readAsDataURL(file);
@@ -71,7 +88,7 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
                         {personalInfo.photoUrl ? (
                             <img
                                 src={personalInfo.photoUrl}
-                                alt="Profile"
+                                alt={t('photo')}
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -98,7 +115,7 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
                         <button
                             onClick={handleRemovePhoto}
                             className="absolute -top-1 -right-1 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
-                            title="Remove photo"
+                            title={t('remove')}
                         >
                             <X size={16} />
                         </button>
@@ -114,85 +131,99 @@ export default function PersonalInfoForm({ isDark }: PersonalInfoFormProps) {
                     className="hidden"
                 />
 
-                {/* Upload Button */}
-                <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isDark
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                        }`}
-                >
-                    <Upload size={18} />
-                    {personalInfo.photoUrl ? 'Change Photo' : 'Upload Photo'}
-                </button>
+                <div className="flex gap-2 mt-4">
+                    {/* Upload Button */}
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isDark
+                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                            }`}
+                    >
+                        <Upload size={18} />
+                        {personalInfo.photoUrl ? t('change') : t('upload')}
+                    </button>
+
+                    {/* AI Enhance Button */}
+                    {personalInfo.photoUrl && onEnhancePhoto && (
+                        <button
+                            onClick={onEnhancePhoto}
+                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all hover:scale-105"
+                        >
+                            <User size={18} />
+                            {t('enhance')}
+                        </button>
+                    )}
+                </div>
+
                 <p className={`mt-2 text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                    JPG, PNG or GIF (max 5MB)
+                    {t('photoLimit')}
                 </p>
             </div>
 
             {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
-                    label="Full Name"
+                    label={t('fullName')}
                     value={personalInfo.fullName}
                     onChange={(val) => handleChange('fullName', val)}
-                    placeholder="John Doe"
+                    placeholder={t('placeholders.fullName')}
                     isDark={isDark}
                     required
                 />
                 <InputField
-                    label="Professional Title"
+                    label={t('profession')}
                     value={personalInfo.profession || ''}
                     onChange={(val) => handleChange('profession', val)}
-                    placeholder="Senior Software Engineer"
+                    placeholder={t('placeholders.profession')}
                     isDark={isDark}
                     required
                 />
                 <InputField
-                    label="Email"
+                    label={t('email')}
                     type="email"
                     value={personalInfo.email}
                     onChange={(val) => handleChange('email', val)}
-                    placeholder="john@example.com"
+                    placeholder={t('placeholders.email')}
                     isDark={isDark}
                     required
                 />
                 <InputField
-                    label="Phone"
+                    label={t('phone')}
                     type="tel"
                     value={personalInfo.phone}
                     onChange={(val) => handleChange('phone', val)}
-                    placeholder="+1 (555) 123-4567"
+                    placeholder={t('placeholders.phone')}
                     isDark={isDark}
                 />
                 <InputField
-                    label="Address / Location"
+                    label={t('location')}
                     value={personalInfo.address}
                     onChange={(val) => handleChange('address', val)}
-                    placeholder="New York, NY"
+                    placeholder={t('placeholders.location')}
                     isDark={isDark}
                 />
                 <InputField
-                    label="LinkedIn"
+                    label={t('linkedin')}
                     value={personalInfo.linkedin || ''}
                     onChange={(val) => handleChange('linkedin', val)}
-                    placeholder="linkedin.com/in/johndoe"
+                    placeholder={t('placeholders.linkedin')}
                     isDark={isDark}
                 />
                 <InputField
-                    label="GitHub"
+                    label={t('github')}
                     value={personalInfo.github || ''}
                     onChange={(val) => handleChange('github', val)}
-                    placeholder="github.com/johndoe"
+                    placeholder={t('placeholders.github')}
                     isDark={isDark}
                 />
             </div>
 
             <TextAreaField
-                label="Professional Summary"
+                label={t('summary')}
                 value={summary}
                 onChange={(val) => updateSummary(val)}
-                placeholder="Brief overview of your professional background and goals..."
+                placeholder={t('placeholders.summary')}
                 rows={5}
                 isDark={isDark}
             />

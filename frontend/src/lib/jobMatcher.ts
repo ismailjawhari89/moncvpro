@@ -107,9 +107,7 @@ const EXPERIENCE_PATTERNS = [
 /**
  * Main Job Matching Function
  */
-export function matchJobDescription(cvData: CVData, jobDescription: string): JobMatchResult {
-    const jdLower = jobDescription.toLowerCase();
-
+export function matchJobDescription(cvData: CVData, jobDescription: string, locale: string = 'en'): JobMatchResult {
     // Extract requirements from job description
     const extractedRequirements = extractRequirements(jobDescription);
 
@@ -158,13 +156,13 @@ export function matchJobDescription(cvData: CVData, jobDescription: string): Job
     });
 
     // Get match grade
-    const { grade, label } = getMatchGrade(matchScore);
+    const { grade, label } = getMatchGrade(matchScore, locale);
 
     // Generate priority actions
-    const priorityActions = generatePriorityActions(missingSkills, missingKeywords, experienceMatch, educationMatch, extractedRequirements);
+    const priorityActions = generatePriorityActions(missingSkills, missingKeywords, experienceMatch, educationMatch, extractedRequirements, locale);
 
     // Generate insights
-    const insights = generateInsights(matchingSkills, missingSkills, matchingKeywords, missingKeywords, experienceMatch, cvData);
+    const insights = generateInsights(matchingSkills, missingSkills, matchingKeywords, missingKeywords, experienceMatch, cvData, locale);
 
     return {
         matchScore,
@@ -408,7 +406,6 @@ function calculateMatchScore(data: {
     totalRequirements: JobMatchResult['extractedRequirements'];
 }): number {
     let score = 0;
-    let maxScore = 0;
 
     // Skills (40% weight)
     const totalSkills = data.matchingSkills.length + data.missingSkills.length;
@@ -418,7 +415,6 @@ function calculateMatchScore(data: {
     } else {
         score += 20; // No skills requirements = assume 50%
     }
-    maxScore += 40;
 
     // Keywords (25% weight)
     const totalKeywords = data.matchingKeywords.length + data.missingKeywords.length;
@@ -428,7 +424,6 @@ function calculateMatchScore(data: {
     } else {
         score += 12.5;
     }
-    maxScore += 25;
 
     // Experience (20% weight)
     switch (data.experienceMatch.status) {
@@ -437,7 +432,6 @@ function calculateMatchScore(data: {
         case 'close': score += 12; break;
         case 'lacking': score += 5; break;
     }
-    maxScore += 20;
 
     // Education (15% weight)
     switch (data.educationMatch.status) {
@@ -445,7 +439,6 @@ function calculateMatchScore(data: {
         case 'partial': score += 10; break;
         case 'lacking': score += 3; break;
     }
-    maxScore += 15;
 
     return Math.round(score);
 }
@@ -453,12 +446,20 @@ function calculateMatchScore(data: {
 /**
  * Get match grade from score
  */
-function getMatchGrade(score: number): { grade: 'A' | 'B' | 'C' | 'D' | 'F'; label: string } {
-    if (score >= 85) return { grade: 'A', label: 'Excellent Match' };
-    if (score >= 70) return { grade: 'B', label: 'Strong Match' };
-    if (score >= 55) return { grade: 'C', label: 'Moderate Match' };
-    if (score >= 40) return { grade: 'D', label: 'Weak Match' };
-    return { grade: 'F', label: 'Poor Match' };
+function getMatchGrade(score: number, locale: string): { grade: 'A' | 'B' | 'C' | 'D' | 'F'; label: string } {
+    const labels = {
+        en: { A: 'Excellent Match', B: 'Strong Match', C: 'Moderate Match', D: 'Weak Match', F: 'Poor Match' },
+        ar: { A: 'مطابقة ممتازة', B: 'مطابقة قوية', C: 'مطابقة متوسطة', D: 'مطابقة ضعيفة', F: 'مطابقة سيئة' },
+        fr: { A: 'Excellente correspondance', B: 'Forte correspondance', C: 'Correspondance modérée', D: 'Faible correspondance', F: 'Mauvaise correspondance' }
+    };
+
+    const l = labels[locale as keyof typeof labels] || labels.en;
+
+    if (score >= 85) return { grade: 'A', label: l.A };
+    if (score >= 70) return { grade: 'B', label: l.B };
+    if (score >= 55) return { grade: 'C', label: l.C };
+    if (score >= 40) return { grade: 'D', label: l.D };
+    return { grade: 'F', label: l.F };
 }
 
 /**
@@ -469,16 +470,46 @@ function generatePriorityActions(
     missingKeywords: string[],
     experienceMatch: JobMatchResult['experienceMatch'],
     educationMatch: JobMatchResult['educationMatch'],
-    requirements: JobMatchResult['extractedRequirements']
+    requirements: JobMatchResult['extractedRequirements'],
+    locale: string
 ): JobMatchResult['priorityActions'] {
     const actions: JobMatchResult['priorityActions'] = [];
+
+    const t = {
+        en: {
+            addSkill: (s: string) => `Add "${s}" to your skills section`,
+            addKeyword: (k: string) => `Include "${k}" in your experience descriptions`,
+            expGap: (r: string) => `Highlight relevant projects or freelance work to compensate for ${r} experience`,
+            eduGap: `Consider adding relevant certifications to compensate for education requirements`,
+            certSuggest: (c: string) => `This role may prefer: ${c}`,
+            softSkill: (s: string) => `Demonstrate "${s}" in your experience bullets`
+        },
+        ar: {
+            addSkill: (s: string) => `أضف "${s}" إلى قسم المهارات الخاص بك`,
+            addKeyword: (k: string) => `قم بتضمين "${k}" في أوصاف خبرتك`,
+            expGap: (r: string) => `سلط الضوء على المشاريع ذات الصلة أو العمل الحر للتعويض عن خبرة ${r}`,
+            eduGap: `فكر في إضافة شهادات ذات صلة للتعويض عن المتطلبات التعليمية`,
+            certSuggest: (c: string) => `قد يفضل هذا الدور: ${c}`,
+            softSkill: (s: string) => `أظهر "${s}" في نقاط خبرتك`
+        },
+        fr: {
+            addSkill: (s: string) => `Ajoutez "${s}" à votre section compétences`,
+            addKeyword: (k: string) => `Incluez "${k}" dans vos descriptions d'expérience`,
+            expGap: (r: string) => `Mettez en valeur des projets pertinents ou du travail indépendant pour compenser l'expérience ${r}`,
+            eduGap: `Envisagez d'ajouter des certifications pertinentes pour compenser les exigences de formation`,
+            certSuggest: (c: string) => `Ce rôle peut préférer : ${c}`,
+            softSkill: (s: string) => `Démontrez "${s}" dans vos points d'expérience`
+        }
+    };
+
+    const loc = t[locale as keyof typeof t] || t.en;
 
     // High priority: Missing hard skills
     const techMissing = missingSkills.filter(s => TECH_SKILLS_DB.includes(s.toLowerCase()));
     techMissing.slice(0, 3).forEach(skill => {
         actions.push({
             category: 'skill',
-            action: `Add "${skill}" to your skills section`,
+            action: loc.addSkill(skill),
             priority: 'high',
             canAutoFix: true
         });
@@ -488,7 +519,7 @@ function generatePriorityActions(
     missingKeywords.slice(0, 3).forEach(keyword => {
         actions.push({
             category: 'keyword',
-            action: `Include "${keyword}" in your experience descriptions`,
+            action: loc.addKeyword(keyword),
             priority: 'medium',
             canAutoFix: true
         });
@@ -498,7 +529,7 @@ function generatePriorityActions(
     if (experienceMatch.status === 'lacking') {
         actions.push({
             category: 'experience',
-            action: `Highlight relevant projects or freelance work to compensate for ${experienceMatch.required || 'required'} experience`,
+            action: loc.expGap(experienceMatch.required || (locale === 'ar' ? 'المطلوبة' : 'required')),
             priority: 'high',
             canAutoFix: false
         });
@@ -508,7 +539,7 @@ function generatePriorityActions(
     if (educationMatch.status === 'lacking' && requirements.education.length > 0) {
         actions.push({
             category: 'education',
-            action: `Consider adding relevant certifications to compensate for education requirements`,
+            action: loc.eduGap,
             priority: 'medium',
             canAutoFix: false
         });
@@ -518,7 +549,7 @@ function generatePriorityActions(
     if (requirements.certifications.length > 0) {
         actions.push({
             category: 'certification',
-            action: `This role may prefer: ${requirements.certifications.slice(0, 2).join(', ')}`,
+            action: loc.certSuggest(requirements.certifications.slice(0, 2).join(', ')),
             priority: 'medium',
             canAutoFix: false
         });
@@ -529,7 +560,7 @@ function generatePriorityActions(
     if (softMissing.length > 0) {
         actions.push({
             category: 'skill',
-            action: `Demonstrate "${softMissing[0]}" in your experience bullets`,
+            action: loc.softSkill(softMissing[0]),
             priority: 'medium',
             canAutoFix: true
         });
@@ -547,26 +578,68 @@ function generateInsights(
     matchingKeywords: string[],
     missingKeywords: string[],
     experienceMatch: JobMatchResult['experienceMatch'],
-    cvData: CVData
+    cvData: CVData,
+    locale: string
 ): JobMatchResult['insights'] {
     const strongPoints: string[] = [];
     const gapAreas: string[] = [];
     let competitiveAdvantage: string | null = null;
 
+    const t = {
+        en: {
+            strongTech: (n: number) => `Strong technical alignment with ${n} matching skills`,
+            expExceeds: (y: number) => `Experience exceeds requirements (${y} years)`,
+            expMeets: `Experience meets requirements`,
+            keywordOpt: `Good keyword optimization for ATS`,
+            uniqueSkills: (n: number) => `${n} additional relevant skills that may set you apart`,
+            missingSkills: (n: number) => `Missing ${n} required skills`,
+            expGap: (y: number, r: string) => `Experience gap: you have ${y}yr vs ${r} required`,
+            keywordGap: `Many important keywords missing - consider customizing your CV`,
+            advExp: 'Your experience level is a key differentiator',
+            advSkills: 'Your skill set is highly aligned with this role'
+        },
+        ar: {
+            strongTech: (n: number) => `توافق تقني قوي مع ${n} مهارات مطابقة`,
+            expExceeds: (y: number) => `الخبرة تتجاوز المتطلبات (${y} سنوات)`,
+            expMeets: `الخبرة تلبي المتطلبات`,
+            keywordOpt: `تحسين جيد للكلمات الرئيسية لـ ATS`,
+            uniqueSkills: (n: number) => `${n} مهارات إضافية ذات صلة قد تميزك`,
+            missingSkills: (n: number) => `تفتقد ${n} مهارات مطلوبة`,
+            expGap: (y: number, r: string) => `فجوة في الخبرة: لديك ${y} سنوات مقابل ${r} مطلوبة`,
+            keywordGap: `العديد من الكلمات الرئيسية المهمة مفقودة - فكر في تخصيص سيرتك الذاتية`,
+            advExp: 'مستوى خبرتك هو عامل تمييز رئيسي',
+            advSkills: 'مجموعة مهاراتك متوافقة للغاية مع هذا الدور'
+        },
+        fr: {
+            strongTech: (n: number) => `Alignement technique fort avec ${n} compétences correspondantes`,
+            expExceeds: (y: number) => `L'expérience dépasse les exigences (${y} ans)`,
+            expMeets: `L'expérience répond aux exigences`,
+            keywordOpt: `Bonne optimisation des mots-clés pour l'ATS`,
+            uniqueSkills: (n: number) => `${n} compétences pertinentes supplémentaires qui peuvent vous distinguer`,
+            missingSkills: (n: number) => `Manque ${n} compétences requises`,
+            expGap: (y: number, r: string) => `Fait d'expérience : vous avez ${y} ans contre ${r} requis`,
+            keywordGap: `De nombreux mots-clés importants manquent - envisagez de personnaliser votre CV`,
+            advExp: "Votre niveau d'expérience est un différenciateur clé",
+            advSkills: 'Votre ensemble de compétences est très aligné avec ce rôle'
+        }
+    };
+
+    const loc = t[locale as keyof typeof t] || t.en;
+
     // Strong points
     if (matchingSkills.length >= 5) {
-        strongPoints.push(`Strong technical alignment with ${matchingSkills.length} matching skills`);
+        strongPoints.push(loc.strongTech(matchingSkills.length));
     }
 
     if (experienceMatch.status === 'exceeds') {
-        strongPoints.push(`Experience exceeds requirements (${experienceMatch.yours} years)`);
-        competitiveAdvantage = 'Your experience level is a key differentiator';
+        strongPoints.push(loc.expExceeds(experienceMatch.yours));
+        competitiveAdvantage = loc.advExp;
     } else if (experienceMatch.status === 'meets') {
-        strongPoints.push(`Experience meets requirements`);
+        strongPoints.push(loc.expMeets);
     }
 
     if (matchingKeywords.length >= 5) {
-        strongPoints.push('Good keyword optimization for ATS');
+        strongPoints.push(loc.keywordOpt);
     }
 
     // Check for unique skills
@@ -576,25 +649,25 @@ function generateInsights(
     ) || [];
 
     if (uniqueSkills.length >= 3) {
-        strongPoints.push(`${uniqueSkills.length} additional relevant skills that may set you apart`);
+        strongPoints.push(loc.uniqueSkills(uniqueSkills.length));
     }
 
     // Gap areas
     if (missingSkills.length > matchingSkills.length) {
-        gapAreas.push(`Missing ${missingSkills.length} required skills`);
+        gapAreas.push(loc.missingSkills(missingSkills.length));
     }
 
     if (experienceMatch.status === 'lacking') {
-        gapAreas.push(`Experience gap: you have ${experienceMatch.yours}yr vs ${experienceMatch.required} required`);
+        gapAreas.push(loc.expGap(experienceMatch.yours, experienceMatch.required || ''));
     }
 
     if (missingKeywords.length > 5) {
-        gapAreas.push('Many important keywords missing - consider customizing your CV');
+        gapAreas.push(loc.keywordGap);
     }
 
     // Competitive advantage
     if (!competitiveAdvantage && matchingSkills.length >= 8) {
-        competitiveAdvantage = 'Your skill set is highly aligned with this role';
+        competitiveAdvantage = loc.advSkills;
     }
 
     return {

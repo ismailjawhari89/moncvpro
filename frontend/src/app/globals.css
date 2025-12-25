@@ -3,6 +3,7 @@
 @theme {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-roboto-mono);
+  --font-arabic: var(--font-cairo);
 }
 
 :root {
@@ -21,4 +22,197 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============ RTL Support ============ */
+
+/* Arabic font for RTL */
+html[dir="rtl"] body {
+  font-family: var(--font-cairo), 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* RTL text alignment */
+html[dir="rtl"] {
+  text-align: right;
+}
+
+/* Flip icons and directional elements */
+html[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* RTL spacing utilities */
+html[dir="rtl"] .ml-auto {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+html[dir="rtl"] .mr-auto {
+  margin-right: unset;
+  margin-left: auto;
+}
+
+/* RTL flex direction */
+html[dir="rtl"] .rtl-reverse {
+  flex-direction: row-reverse;
+}
+
+/* RTL border radius */
+html[dir="rtl"] .rounded-l-lg {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+html[dir="rtl"] .rounded-r-lg {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+/* RTL transitions for sidebars */
+html[dir="rtl"] .translate-x-full {
+  --tw-translate-x: -100%;
+}
+
+html[dir="rtl"] .-translate-x-full {
+  --tw-translate-x: 100%;
+}
+
+
+/* RTL scroll direction */
+html[dir="rtl"] .scroll-rtl {
+  direction: rtl;
+}
+
+/* CV Preview RTL adjustments */
+html[dir="rtl"] .cv-preview {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .cv-preview .section-icon {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* Form inputs RTL */
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+html[dir="rtl"] input::placeholder,
+html[dir="rtl"] textarea::placeholder {
+  text-align: right;
+}
+
+/* Modal RTL */
+html[dir="rtl"] .modal-close {
+  left: 1rem;
+  right: unset;
+}
+
+/* Navigation RTL */
+html[dir="rtl"] .nav-item {
+  text-align: right;
+}
+
+/* Template Gallery RTL */
+html[dir="rtl"] .template-card {
+  text-align: right;
+}
+
+html[dir="rtl"] .template-badge {
+  left: 0.75rem;
+  right: unset;
+}
+
+/* Skills progress bar RTL */
+html[dir="rtl"] .skill-progress {
+  transform-origin: right;
+}
+
+/* Timeline RTL for experience */
+html[dir="rtl"] .timeline-line {
+  right: 0;
+  left: unset;
+}
+
+html[dir="rtl"] .timeline-dot {
+  right: -5px;
+  left: unset;
+}
+
+/* ============ Print Styles ============ */
+@media print {
+
+  /* Hide non-printable elements */
+  header,
+  .no-print,
+  button:not(.print-visible),
+  .language-switcher {
+    display: none !important;
+  }
+
+  /* Reset page */
+  body {
+    background: white !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Main content optimization */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* CV Preview print optimization */
+  .cv-preview {
+    width: 100% !important;
+    min-height: auto !important;
+    transform: none !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* RTL print support */
+  html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  html[dir="rtl"] .cv-preview {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* A4 page setup */
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  /* Avoid page breaks in sections */
+  .experience-item,
+  .education-item,
+  .skills-section {
+    page-break-inside: avoid;
+  }
+
+  /* Proper sidebar printing for two-column layouts */
+  .sidebar {
+    background: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* RTL sidebar positioning */
+  html[dir="rtl"] .sidebar {
+    float: right !important;
+  }
+
+  /* Ensure colors print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

@@ -30,12 +30,14 @@ interface ATSDashboardProps {
     isDark?: boolean;
 }
 
-const CATEGORY_CONFIG: Record<MetricCategory, { label: string; labelAr: string; icon: any; color: string }> = {
-    content: { label: 'Content Quality', labelAr: 'جودة المحتوى', icon: FileText, color: 'blue' },
-    formatting: { label: 'Formatting', labelAr: 'التنسيق', icon: BarChart3, color: 'purple' },
-    keywords: { label: 'Keywords', labelAr: 'الكلمات المفتاحية', icon: Search, color: 'green' },
-    impact: { label: 'Impact', labelAr: 'التأثير', icon: Zap, color: 'orange' },
-    completeness: { label: 'Completeness', labelAr: 'الاكتمال', icon: Shield, color: 'cyan' }
+import { useTranslations, useLocale } from 'next-intl';
+
+const CATEGORY_CONFIG: Record<MetricCategory, { labelKey: string; icon: any; color: string }> = {
+    content: { labelKey: 'metrics', icon: FileText, color: 'blue' },
+    formatting: { labelKey: 'formatting', icon: BarChart3, color: 'purple' },
+    keywords: { labelKey: 'keywords', icon: Search, color: 'green' },
+    impact: { labelKey: 'impact', icon: Zap, color: 'orange' },
+    completeness: { labelKey: 'completeness', icon: Shield, color: 'cyan' }
 };
 
 const GRADE_COLORS = {
@@ -47,10 +49,25 @@ const GRADE_COLORS = {
 };
 
 export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark = false }: ATSDashboardProps) {
+    const t = useTranslations('ats');
+    const tCommon = useTranslations('cvBuilder.tabs');
+    const locale = useLocale();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysis, setAnalysis] = useState<ATSAnalysisResult | null>(null);
     const [expandedCategory, setExpandedCategory] = useState<MetricCategory | null>(null);
     const [showAllMetrics, setShowAllMetrics] = useState(false);
+
+    // Helper to get localized string from analyzer result
+    const getLocalized = (item: any, field: string) => {
+        if (field === 'details') {
+            if (locale === 'ar') return item.detailsAr || item.details;
+            if (locale === 'fr') return item.detailsFr || item.details;
+            return item.details;
+        }
+        if (locale === 'ar') return item[`${field}Ar`];
+        if (locale === 'fr') return item[`${field}Fr`];
+        return item[field];
+    };
 
     // Run analysis
     const runAnalysis = () => {
@@ -99,12 +116,12 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
         return (
             <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 <Target className="mx-auto mb-4 opacity-50" size={48} />
-                <p>Click to analyze your CV</p>
+                <p>{t('clickToAnalyze')}</p>
                 <button
                     onClick={runAnalysis}
                     className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
-                    Analyze Now
+                    {t('analyzeNow')}
                 </button>
             </div>
         );
@@ -119,10 +136,10 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                     <Target className="absolute inset-0 m-auto text-blue-600" size={32} />
                 </div>
                 <p className={`mt-6 text-lg font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Analyzing your CV...
+                    {t('analyzing')}
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                    Checking 18 ATS compatibility metrics
+                    {t('checkingMetrics')}
                 </p>
             </div>
         );
@@ -160,7 +177,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
                                 <span className="text-5xl font-bold text-white">{analysis.overallScore}</span>
-                                <span className="text-white/80 text-sm font-medium">out of 100</span>
+                                <span className="text-white/80 text-sm font-medium">{t('outOf100')}</span>
                             </div>
                         </div>
 
@@ -169,20 +186,20 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
                                 <span className="text-6xl font-black text-white">{analysis.grade}</span>
                                 <div className="px-4 py-1 bg-white/20 rounded-full">
-                                    <span className="text-white font-semibold">{analysis.gradeLabel}</span>
+                                    <span className="text-white font-semibold">{getLocalized(analysis, 'gradeLabel')}</span>
                                 </div>
                             </div>
                             <p className="text-white/90 text-lg">
                                 {analysis.overallScore >= 80
-                                    ? "Excellent! Your CV is ATS-ready."
+                                    ? t('excellent')
                                     : analysis.overallScore >= 60
-                                        ? "Good progress, but there's room for improvement."
-                                        : "Your CV needs optimization to pass ATS systems."}
+                                        ? t('goodProgress')
+                                        : t('needsOptimization')}
                             </p>
                             <div className="mt-4 flex items-center gap-2 justify-center sm:justify-start">
                                 <Shield className="text-white/80" size={18} />
                                 <span className="text-white/80 text-sm">
-                                    Estimated ATS pass rate: <strong className="text-white">{analysis.estimatedPassRate}%</strong>
+                                    {t('passRate')} <strong className="text-white">{analysis.estimatedPassRate}%</strong>
                                 </span>
                             </div>
                         </div>
@@ -194,7 +211,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                     onClick={runAnalysis}
                     disabled={isAnalyzing}
                     className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 rounded-full transition text-white"
-                    title="Re-analyze"
+                    title={t('reAnalyze')}
                 >
                     <RefreshCw size={18} className={isAnalyzing ? 'animate-spin' : ''} />
                 </button>
@@ -222,7 +239,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             <div className="flex items-center gap-2 mb-2">
                                 <Icon size={18} className={`text-${config.color}-500`} />
                                 <span className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                    {config.label}
+                                    {tCommon(config.labelKey)}
                                 </span>
                             </div>
                             <div className="flex items-end justify-between">
@@ -246,11 +263,11 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
             {expandedCategory && (
                 <div className={`rounded-xl border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-5 animate-in slide-in-from-top-2`}>
                     <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {CATEGORY_CONFIG[expandedCategory].label} Metrics
+                        {tCommon(CATEGORY_CONFIG[expandedCategory].labelKey)} {t('metrics')}
                     </h3>
                     <div className="space-y-3">
                         {metricsByCategory[expandedCategory]?.map(metric => (
-                            <MetricRow key={metric.id} metric={metric} isDark={isDark} onImprove={onImprove} />
+                            <MetricRow key={metric.id} metric={metric} isDark={isDark} onImprove={onImprove} locale={locale} />
                         ))}
                     </div>
                 </div>
@@ -264,7 +281,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                             <AlertTriangle className="text-amber-600" size={20} />
                         </div>
                         <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            Priority Improvements
+                            {t('priorityImprovements')}
                         </h3>
                     </div>
                     <div className="space-y-3">
@@ -283,7 +300,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                            {metric.name}
+                                            {getLocalized(metric, 'name')}
                                         </span>
                                         <span className={`text-xs px-2 py-0.5 rounded-full ${metric.status === 'fail'
                                             ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -293,7 +310,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                                         </span>
                                     </div>
                                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        {metric.tip}
+                                        {getLocalized(metric, 'tip')}
                                     </p>
                                 </div>
                                 {onImprove && (
@@ -302,7 +319,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                                         className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition flex items-center gap-1"
                                     >
                                         <Sparkles size={14} />
-                                        Fix
+                                        {t('fix')}
                                     </button>
                                 )}
                             </div>
@@ -318,7 +335,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                     } flex items-center justify-center gap-2 transition`}
             >
                 <span className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {showAllMetrics ? 'Hide' : 'Show'} All 18 Metrics
+                    {showAllMetrics ? t('hideAll') : t('showAll')}
                 </span>
                 {showAllMetrics ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
@@ -327,7 +344,7 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
             {showAllMetrics && (
                 <div className="grid sm:grid-cols-2 gap-4 animate-in slide-in-from-top-2">
                     {analysis.metrics.map(metric => (
-                        <MetricCard key={metric.id} metric={metric} isDark={isDark} onImprove={onImprove} />
+                        <MetricCard key={metric.id} metric={metric} isDark={isDark} onImprove={onImprove} locale={locale} />
                     ))}
                 </div>
             )}
@@ -335,17 +352,17 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
             {/* Strengths & Weaknesses */}
             <div className="grid md:grid-cols-2 gap-4">
                 {/* Strengths */}
-                {analysis.strengths.length > 0 && (
+                {getLocalized(analysis, 'strengths').length > 0 && (
                     <div className={`rounded-xl border p-5 ${isDark ? 'bg-green-900/20 border-green-800' : 'bg-green-50 border-green-200'
                         }`}>
                         <div className="flex items-center gap-2 mb-3">
                             <CheckCircle2 className="text-green-600" size={20} />
                             <h4 className={`font-bold ${isDark ? 'text-green-400' : 'text-green-800'}`}>
-                                Strengths
+                                {t('strengths')}
                             </h4>
                         </div>
                         <ul className="space-y-2">
-                            {analysis.strengths.slice(0, 5).map((s, i) => (
+                            {getLocalized(analysis, 'strengths').slice(0, 5).map((s: string, i: number) => (
                                 <li key={i} className={`text-sm flex items-start gap-2 ${isDark ? 'text-green-300' : 'text-green-700'
                                     }`}>
                                     <span className="text-green-500">✓</span>
@@ -357,17 +374,17 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
                 )}
 
                 {/* Weaknesses */}
-                {analysis.weaknesses.length > 0 && (
+                {getLocalized(analysis, 'weaknesses').length > 0 && (
                     <div className={`rounded-xl border p-5 ${isDark ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200'
                         }`}>
                         <div className="flex items-center gap-2 mb-3">
                             <XCircle className="text-red-600" size={20} />
                             <h4 className={`font-bold ${isDark ? 'text-red-400' : 'text-red-800'}`}>
-                                Areas to Improve
+                                {t('weaknesses')}
                             </h4>
                         </div>
                         <ul className="space-y-2">
-                            {analysis.weaknesses.slice(0, 5).map((w, i) => (
+                            {getLocalized(analysis, 'weaknesses').slice(0, 5).map((w: string, i: number) => (
                                 <li key={i} className={`text-sm flex items-start gap-2 ${isDark ? 'text-red-300' : 'text-red-700'
                                     }`}>
                                     <span className="text-red-500">✗</span>
@@ -383,7 +400,14 @@ export default function ATSDashboard({ cvData, jobDescription, onImprove, isDark
 }
 
 // Individual Metric Row Component
-function MetricRow({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: boolean; onImprove?: (id: string) => void }) {
+function MetricRow({ metric, isDark, onImprove, locale }: { metric: ATSMetric; isDark: boolean; onImprove?: (id: string) => void; locale: string }) {
+    const t = useTranslations('ats');
+    const getLocalized = (m: any, field: string) => {
+        if (locale === 'ar') return m[`${field}Ar`];
+        if (locale === 'fr') return m[`${field}Fr`];
+        return m[field];
+    };
+
     return (
         <div className={`flex items-center gap-4 p-3 rounded-lg ${isDark ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${metric.status === 'pass' ? 'bg-green-100 dark:bg-green-900/30' :
@@ -401,12 +425,12 @@ function MetricRow({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: b
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                     <span className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {metric.name}
+                        {getLocalized(metric, 'name')}
                     </span>
-                    <span className="text-xs text-gray-500">Weight: {metric.weight}</span>
+                    <span className="text-xs text-gray-500">{t('weight')} {metric.weight}</span>
                 </div>
                 <p className={`text-sm truncate ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {metric.message}
+                    {getLocalized(metric, 'message')}
                 </p>
             </div>
             <div className="flex items-center gap-3">
@@ -431,8 +455,14 @@ function MetricRow({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: b
 }
 
 // Individual Metric Card Component
-function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: boolean; onImprove?: (id: string) => void }) {
+function MetricCard({ metric, isDark, onImprove, locale }: { metric: ATSMetric; isDark: boolean; onImprove?: (id: string) => void; locale: string }) {
+    const t = useTranslations('ats');
     const [showDetails, setShowDetails] = useState(false);
+    const getLocalized = (m: any, field: string) => {
+        if (locale === 'ar') return m[`${field}Ar`];
+        if (locale === 'fr') return m[`${field}Fr`];
+        return m[field];
+    };
 
     return (
         <div className={`rounded-xl border overflow-hidden transition-all ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
@@ -453,7 +483,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                             )}
                         </div>
                         <h4 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            {metric.name}
+                            {getLocalized(metric, 'name')}
                         </h4>
                     </div>
                     <span className={`text-2xl font-bold ${metric.score >= 70 ? 'text-green-600' :
@@ -474,7 +504,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                 </div>
 
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {metric.message}
+                    {getLocalized(metric, 'message')}
                 </p>
 
                 {/* Details Toggle */}
@@ -484,7 +514,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                         className={`mt-3 text-sm flex items-center gap-1 ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline`}
                     >
                         <Info size={14} />
-                        {showDetails ? 'Hide' : 'Show'} details
+                        {showDetails ? t('hideDetails') : t('showDetails')}
                     </button>
                 )}
             </div>
@@ -501,7 +531,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                     </ul>
                     <div className={`p-3 rounded-lg ${isDark ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
                         <p className={`text-sm font-medium ${isDark ? 'text-blue-300' : 'text-blue-800'}`}>
-                            💡 {metric.tip}
+                            💡 {getLocalized(metric, 'tip')}
                         </p>
                     </div>
                 </div>
@@ -515,7 +545,7 @@ function MetricCard({ metric, isDark, onImprove }: { metric: ATSMetric; isDark: 
                         className="w-full flex items-center justify-center gap-2 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition"
                     >
                         <Sparkles size={16} />
-                        Auto-Fix This
+                        {t('autoFix')}
                     </button>
                 </div>
             )}

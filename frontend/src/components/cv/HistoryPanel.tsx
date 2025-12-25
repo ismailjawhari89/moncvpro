@@ -21,6 +21,7 @@ import {
     AlertTriangle
 } from 'lucide-react';
 import { useCVStore } from '@/stores/useCVStore';
+import { useTranslations } from 'next-intl';
 
 interface HistoryPanelProps {
     isDark?: boolean;
@@ -29,6 +30,7 @@ interface HistoryPanelProps {
 }
 
 export default function HistoryPanel({ isDark = false, isOpen, onClose }: HistoryPanelProps) {
+    const t = useTranslations('history');
     const history = useCVStore(state => state.history);
     const historyIndex = useCVStore(state => state.historyIndex);
     const canUndo = useCVStore(state => state.canUndo);
@@ -63,11 +65,11 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        if (diffMins < 1) return t('time.justNow');
+        if (diffMins < 60) return t('time.minutesAgo', { count: diffMins });
+        if (diffHours < 24) return t('time.hoursAgo', { count: diffHours });
+        if (diffDays < 7) return t('time.daysAgo', { count: diffDays });
+        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     };
 
     // Check if action is AI-related
@@ -100,10 +102,10 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                         </div>
                         <div>
                             <h2 className={`font-bold text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Change History
+                                {t('title')}
                             </h2>
                             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {history.length} actions • Step {historyIndex + 1} of {history.length}
+                                {t('subtitle', { count: history.length, index: historyIndex + 1, total: history.length })}
                             </p>
                         </div>
                     </div>
@@ -122,27 +124,27 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                         onClick={undo}
                         disabled={!canUndo}
                         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${canUndo
-                                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
-                                : isDark
-                                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
+                            : isDark
+                                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             }`}
                     >
                         <Undo2 size={18} />
-                        <span>Undo</span>
+                        <span>{t('undo')}</span>
                     </button>
                     <button
                         onClick={redo}
                         disabled={!canRedo}
                         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${canRedo
-                                ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl'
-                                : isDark
-                                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl'
+                            : isDark
+                                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             }`}
                     >
                         <Redo2 size={18} />
-                        <span>Redo</span>
+                        <span>{t('redo')}</span>
                     </button>
                 </div>
 
@@ -151,8 +153,8 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                     {history.length === 0 ? (
                         <div className={`text-center py-12 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                             <Clock className="mx-auto mb-3 opacity-50" size={40} />
-                            <p className="font-medium">No history yet</p>
-                            <p className="text-sm mt-1">Start editing your CV to see changes here</p>
+                            <p className="font-medium">{t('empty.title')}</p>
+                            <p className="text-sm mt-1">{t('empty.desc')}</p>
                         </div>
                     ) : (
                         <div className="space-y-2">
@@ -165,18 +167,18 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                                     <div
                                         key={`${entry.timestamp}-${actualIndex}`}
                                         className={`group relative p-4 rounded-xl border transition-all ${isCurrent
-                                                ? isDark
-                                                    ? 'bg-blue-900/30 border-blue-500'
-                                                    : 'bg-blue-50 border-blue-300'
-                                                : isDark
-                                                    ? 'bg-gray-800/50 border-gray-700 hover:bg-gray-800'
-                                                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                                            ? isDark
+                                                ? 'bg-blue-900/30 border-blue-500'
+                                                : 'bg-blue-50 border-blue-300'
+                                            : isDark
+                                                ? 'bg-gray-800/50 border-gray-700 hover:bg-gray-800'
+                                                : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                                             }`}
                                     >
                                         {/* AI Badge */}
                                         {isAI && (
                                             <div className="absolute -top-2 -right-2 px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white text-xs font-medium shadow-lg">
-                                                AI
+                                                {t('ai')}
                                             </div>
                                         )}
 
@@ -192,11 +194,11 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                                                 <div className="flex items-center gap-2">
                                                     <p className={`font-medium truncate ${isDark ? 'text-white' : 'text-gray-900'
                                                         }`}>
-                                                        {entry.action}
+                                                        {t(`actions.${entry.action}`, { defaultValue: entry.action })}
                                                     </p>
                                                     {isCurrent && (
                                                         <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full">
-                                                            Current
+                                                            {t('current')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -220,10 +222,10 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                                                                 }
                                                             }}
                                                             className={`p-2 rounded-lg transition-colors ${isDark
-                                                                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                                                                    : 'bg-white hover:bg-gray-200 text-gray-600'
+                                                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                                                : 'bg-white hover:bg-gray-200 text-gray-600'
                                                                 }`}
-                                                            title="Restore this state"
+                                                            title={t('restore')}
                                                         >
                                                             <RotateCcw size={16} />
                                                         </button>
@@ -237,10 +239,10 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                                                                 }
                                                             }}
                                                             className={`p-2 rounded-lg transition-colors ${isDark
-                                                                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                                                                    : 'bg-white hover:bg-gray-200 text-gray-600'
+                                                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                                                : 'bg-white hover:bg-gray-200 text-gray-600'
                                                                 }`}
-                                                            title="Go to this state"
+                                                            title={t('goto')}
                                                         >
                                                             <Redo2 size={16} />
                                                         </button>
@@ -263,27 +265,27 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                                 <div className="flex items-center gap-3 mb-3">
                                     <AlertTriangle className="text-red-500" size={20} />
                                     <p className={`font-medium ${isDark ? 'text-red-300' : 'text-red-700'}`}>
-                                        Clear all history?
+                                        {t('clear.confirmTitle')}
                                     </p>
                                 </div>
                                 <p className={`text-sm mb-4 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
-                                    This will permanently delete all {history.length} history entries. You won't be able to undo past changes.
+                                    {t('clear.confirmDesc', { count: history.length })}
                                 </p>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => setShowConfirmClear(false)}
                                         className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${isDark
-                                                ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                                                : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                                            ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                                            : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                                             }`}
                                     >
-                                        Cancel
+                                        {t('clear.cancel')}
                                     </button>
                                     <button
                                         onClick={handleClearHistory}
                                         className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                                     >
-                                        Clear History
+                                        {t('clear.confirm')}
                                     </button>
                                 </div>
                             </div>
@@ -291,12 +293,12 @@ export default function HistoryPanel({ isDark = false, isOpen, onClose }: Histor
                             <button
                                 onClick={() => setShowConfirmClear(true)}
                                 className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors ${isDark
-                                        ? 'bg-gray-800 hover:bg-gray-700 text-red-400 hover:text-red-300'
-                                        : 'bg-gray-100 hover:bg-gray-200 text-red-600 hover:text-red-700'
+                                    ? 'bg-gray-800 hover:bg-gray-700 text-red-400 hover:text-red-300'
+                                    : 'bg-gray-100 hover:bg-gray-200 text-red-600 hover:text-red-700'
                                     }`}
                             >
                                 <RotateCcw size={18} />
-                                <span>Clear All History</span>
+                                <span>{t('clear.button')}</span>
                             </button>
                         )}
                     </div>

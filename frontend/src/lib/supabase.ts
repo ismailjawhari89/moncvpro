@@ -1,15 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-console.log('Supabase Config:', {
-    url: supabaseUrl ? 'Defined' : 'Missing',
-    key: supabaseAnonKey ? 'Defined' : 'Missing'
-});
-
+// Supabase Client Configuration
+// Ensure environment variables are set in .env.local and Cloudflare Pages
 if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('CRITICAL: Supabase environment variables are missing!');
+    if (process.env.NODE_ENV === 'production') {
+        console.warn('⚠️ WARNING: Supabase environment variables are missing! API calls will fail.');
+    }
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+// Provide fallback placeholders to avoid crashing the build process
+export const supabase = createClient(
+    supabaseUrl || 'https://placeholder-project.supabase.co',
+    supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy'
+);

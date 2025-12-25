@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
     Target,
     Search,
@@ -10,12 +10,9 @@ import {
     Sparkles,
     ChevronDown,
     ChevronUp,
-    Briefcase,
     GraduationCap,
-    Award,
     Zap,
     Copy,
-    ArrowRight,
     TrendingUp,
     TrendingDown,
     Star,
@@ -27,6 +24,7 @@ import {
 } from 'lucide-react';
 import { matchJobDescription, type JobMatchResult } from '@/lib/jobMatcher';
 import type { CVData } from '@/types/cv';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface JobMatcherProps {
     cvData: CVData;
@@ -44,6 +42,8 @@ const GRADE_STYLES = {
 };
 
 export default function JobMatcher({ cvData, onAddSkill, onAddKeyword, isDark = false }: JobMatcherProps) {
+    const t = useTranslations('jobMatcher');
+    const locale = useLocale();
     const [jobDescription, setJobDescription] = useState('');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [result, setResult] = useState<JobMatchResult | null>(null);
@@ -56,7 +56,7 @@ export default function JobMatcher({ cvData, onAddSkill, onAddKeyword, isDark = 
         setIsAnalyzing(true);
         // Simulate processing delay for UX
         setTimeout(() => {
-            const matchResult = matchJobDescription(cvData, jobDescription);
+            const matchResult = matchJobDescription(cvData, jobDescription, locale);
             setResult(matchResult);
             setIsAnalyzing(false);
         }, 1000);
@@ -101,10 +101,10 @@ export default function JobMatcher({ cvData, onAddSkill, onAddKeyword, isDark = 
                         </div>
                         <div className="flex-1">
                             <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Job Description Matcher
+                                {t('title')}
                             </h3>
                             <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Paste a job description to see how well your CV matches and get personalized suggestions.
+                                {t('description')}
                             </p>
                         </div>
                     </div>
@@ -114,30 +114,27 @@ export default function JobMatcher({ cvData, onAddSkill, onAddKeyword, isDark = 
                 <div className={`rounded-2xl border overflow-hidden ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                     <div className={`flex items-center justify-between px-4 py-3 border-b ${isDark ? 'border-gray-700 bg-gray-700/50' : 'border-gray-100 bg-gray-50'}`}>
                         <span className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Job Description
+                            {t('input.label')}
                         </span>
                         <button
                             onClick={handlePaste}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition ${isDark
-                                    ? 'bg-gray-600 hover:bg-gray-500 text-gray-200'
-                                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                                ? 'bg-gray-600 hover:bg-gray-500 text-gray-200'
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                                 }`}
                         >
                             <Clipboard size={14} />
-                            Paste from Clipboard
+                            {t('input.paste')}
                         </button>
                     </div>
                     <textarea
                         value={jobDescription}
                         onChange={(e) => setJobDescription(e.target.value)}
-                        placeholder="Paste the full job description here...
-
-Example:
-We are looking for a Senior Full Stack Developer with 5+ years of experience in React, Node.js, and TypeScript. The ideal candidate should have strong problem-solving skills, experience with AWS, and excellent communication abilities..."
+                        placeholder={t('input.placeholder')}
                         rows={10}
                         className={`w-full px-4 py-4 resize-none outline-none ${isDark
-                                ? 'bg-gray-800 text-white placeholder-gray-500'
-                                : 'bg-white text-gray-900 placeholder-gray-400'
+                            ? 'bg-gray-800 text-white placeholder-gray-500'
+                            : 'bg-white text-gray-900 placeholder-gray-400'
                             }`}
                     />
                 </div>
@@ -147,28 +144,30 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                     onClick={handleAnalyze}
                     disabled={!jobDescription.trim() || isAnalyzing}
                     className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 ${jobDescription.trim() && !isAnalyzing
-                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                 >
                     {isAnalyzing ? (
                         <>
                             <RefreshCw size={22} className="animate-spin" />
-                            Analyzing Match...
+                            {t('analyze.processing')}
                         </>
                     ) : (
                         <>
                             <Search size={22} />
-                            Analyze Match
+                            {t('analyze.button')}
                         </>
                     )}
                 </button>
 
                 {/* Tips */}
                 <div className={`flex items-start gap-3 p-4 rounded-xl ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
-                    <Info size={18} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                    <div className="flex-shrink-0">
+                        <Info size={18} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+                    </div>
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <strong>Pro tip:</strong> Copy the entire job posting including requirements, qualifications, and responsibilities for the most accurate analysis.
+                        <strong>{t('tips.pro')}</strong> {t('tips.desc')}
                     </p>
                 </div>
             </div>
@@ -182,9 +181,9 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
         <div className="space-y-6">
             {/* Match Score Header */}
             <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${gradeStyle.bg} p-6 text-white`}>
-                <div className="flex items-center gap-6">
+                <div className="flex flex-col md:flex-row items-center gap-6">
                     {/* Score Circle */}
-                    <div className="relative">
+                    <div className="relative flex-shrink-0">
                         <svg className="w-28 h-28 transform -rotate-90">
                             <circle
                                 cx="56" cy="56" r="48"
@@ -208,19 +207,19 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                     </div>
 
                     {/* Match Info */}
-                    <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                    <div className="flex-1 text-center md:text-left rtl:md:text-right">
+                        <div className="flex flex-col md:flex-row items-center gap-3 mb-2">
                             <span className="text-5xl font-black">{result.matchGrade}</span>
                             <span className="px-4 py-1 bg-white/20 rounded-full font-semibold">
-                                {result.matchLabel}
+                                {t(`results.grades.${result.matchGrade}`)}
                             </span>
                         </div>
                         <p className="text-white/90">
                             {result.matchScore >= 70
-                                ? "Great match! Your CV aligns well with this position."
+                                ? t('results.messages.great')
                                 : result.matchScore >= 50
-                                    ? "Moderate match. Some adjustments can improve your chances."
-                                    : "This role requires skills you may be missing. See suggestions below."}
+                                    ? t('results.messages.moderate')
+                                    : t('results.messages.poor')}
                         </p>
                     </div>
                 </div>
@@ -229,7 +228,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                 <button
                     onClick={() => setResult(null)}
                     className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 rounded-full transition"
-                    title="Analyze new job"
+                    title={t('results.analyzeNew')}
                 >
                     <RefreshCw size={18} />
                 </button>
@@ -240,29 +239,29 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                 <StatCard
                     icon={CheckCircle2}
                     iconColor="text-green-500"
-                    label="Matching Skills"
+                    label={t('results.stats.matchingSkills')}
                     value={result.matchingSkills.length}
                     isDark={isDark}
                 />
                 <StatCard
                     icon={XCircle}
                     iconColor="text-red-500"
-                    label="Missing Skills"
+                    label={t('results.stats.missingSkills')}
                     value={result.missingSkills.length}
                     isDark={isDark}
                 />
                 <StatCard
                     icon={result.experienceMatch.status === 'exceeds' || result.experienceMatch.status === 'meets' ? TrendingUp : TrendingDown}
                     iconColor={result.experienceMatch.status === 'exceeds' || result.experienceMatch.status === 'meets' ? 'text-green-500' : 'text-amber-500'}
-                    label="Experience"
+                    label={t('results.stats.experience')}
                     value={`${result.experienceMatch.yours}yr`}
-                    sublabel={result.experienceMatch.required || 'Any'}
+                    sublabel={result.experienceMatch.required ? t('results.stats.req', { value: result.experienceMatch.required }) : undefined}
                     isDark={isDark}
                 />
                 <StatCard
                     icon={GraduationCap}
                     iconColor={result.educationMatch.status === 'meets' ? 'text-green-500' : 'text-amber-500'}
-                    label="Education"
+                    label={t('results.stats.education')}
                     value={result.educationMatch.status === 'meets' ? '✓' : '○'}
                     isDark={isDark}
                 />
@@ -275,7 +274,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                     <Star className="text-emerald-500 flex-shrink-0" size={24} />
                     <div>
                         <span className={`font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
-                            Competitive Advantage:
+                            {t('sections.insights.title')}
                         </span>
                         <span className={`ml-2 ${isDark ? 'text-emerald-300' : 'text-emerald-600'}`}>
                             {result.insights.competitiveAdvantage}
@@ -286,7 +285,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
 
             {/* Skills Match Section */}
             <CollapsibleSection
-                title="Skills Analysis"
+                title={t('sections.skills.title')}
                 icon={Zap}
                 isExpanded={expandedSections.has('skills')}
                 onToggle={() => toggleSection('skills')}
@@ -299,7 +298,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                         <div>
                             <h4 className={`text-sm font-semibold mb-2 flex items-center gap-2 ${isDark ? 'text-green-400' : 'text-green-700'}`}>
                                 <CheckCircle2 size={16} />
-                                Matching Skills ({result.matchingSkills.length})
+                                {t('sections.skills.matching', { count: result.matchingSkills.length })}
                             </h4>
                             <div className="flex flex-wrap gap-2">
                                 {result.matchingSkills.map((skill, i) => (
@@ -318,7 +317,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                             <div className="flex items-center justify-between mb-2">
                                 <h4 className={`text-sm font-semibold flex items-center gap-2 ${isDark ? 'text-red-400' : 'text-red-700'}`}>
                                     <XCircle size={16} />
-                                    Missing Skills ({result.missingSkills.length})
+                                    {t('sections.skills.missing', { count: result.missingSkills.length })}
                                 </h4>
                                 <button
                                     onClick={handleCopySkills}
@@ -326,7 +325,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                                         }`}
                                 >
                                     <Copy size={12} />
-                                    {copied ? 'Copied!' : 'Copy all'}
+                                    {copied ? t('sections.skills.copied') : t('sections.skills.copyAll')}
                                 </button>
                             </div>
                             <div className="flex flex-wrap gap-2">
@@ -335,10 +334,10 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                                         key={i}
                                         onClick={() => onAddSkill?.(skill)}
                                         className={`group flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition ${isDark
-                                                ? 'bg-red-900/30 text-red-300 hover:bg-blue-900/50 hover:text-blue-300'
-                                                : 'bg-red-100 text-red-700 hover:bg-blue-100 hover:text-blue-700'
+                                            ? 'bg-red-900/30 text-red-300 hover:bg-blue-900/50 hover:text-blue-300'
+                                            : 'bg-red-100 text-red-700 hover:bg-blue-100 hover:text-blue-700'
                                             }`}
-                                        title={onAddSkill ? 'Click to add to your CV' : skill}
+                                        title={onAddSkill ? t('sections.skills.addHint') : skill}
                                     >
                                         <span className="group-hover:hidden">✗</span>
                                         <Plus size={14} className="hidden group-hover:block" />
@@ -348,7 +347,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                             </div>
                             {onAddSkill && (
                                 <p className={`text-xs mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                                    Click on a skill to add it to your CV
+                                    {t('sections.skills.addHint')}
                                 </p>
                             )}
                         </div>
@@ -358,7 +357,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
 
             {/* Keywords Section */}
             <CollapsibleSection
-                title="Keywords Analysis"
+                title={t('sections.keywords.title')}
                 icon={Search}
                 isExpanded={expandedSections.has('keywords')}
                 onToggle={() => toggleSection('keywords')}
@@ -369,7 +368,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                     {result.matchingKeywords.length > 0 && (
                         <div>
                             <h4 className={`text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Found in your CV
+                                {t('sections.keywords.found')}
                             </h4>
                             <div className="flex flex-wrap gap-2">
                                 {result.matchingKeywords.map((kw, i) => (
@@ -384,7 +383,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                     {result.missingKeywords.length > 0 && (
                         <div>
                             <h4 className={`text-sm font-semibold mb-2 ${isDark ? 'text-amber-400' : 'text-amber-700'}`}>
-                                Consider adding these keywords
+                                {t('sections.keywords.suggested')}
                             </h4>
                             <div className="flex flex-wrap gap-2">
                                 {result.missingKeywords.map((kw, i) => (
@@ -401,7 +400,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
 
             {/* Priority Actions */}
             <CollapsibleSection
-                title="Priority Improvements"
+                title={t('sections.priority.title')}
                 icon={Sparkles}
                 isExpanded={expandedSections.has('actions')}
                 onToggle={() => toggleSection('actions')}
@@ -416,26 +415,26 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                                 }`}
                         >
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${action.priority === 'high'
-                                    ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                                    : action.priority === 'medium'
-                                        ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
-                                        : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                                ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                                : action.priority === 'medium'
+                                    ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+                                    : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
                                 }`}>
                                 {i + 1}
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <span className={`text-xs px-2 py-0.5 rounded font-medium ${action.category === 'skill' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                                            action.category === 'keyword' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                                                action.category === 'experience' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                                                    'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
+                                        action.category === 'keyword' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            action.category === 'experience' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
                                         }`}>
-                                        {action.category}
+                                        {t(`sections.priority.categories.${action.category}`)}
                                     </span>
                                     <span className={`text-xs ${action.priority === 'high' ? 'text-red-500' :
-                                            action.priority === 'medium' ? 'text-amber-500' : 'text-blue-500'
+                                        action.priority === 'medium' ? 'text-amber-500' : 'text-blue-500'
                                         }`}>
-                                        {action.priority} priority
+                                        {t('sections.priority.priorityLevel', { level: t(`sections.priority.levels.${action.priority}`) })}
                                     </span>
                                 </div>
                                 <p className={isDark ? 'text-gray-200' : 'text-gray-800'}>
@@ -454,7 +453,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
                                     className="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition flex items-center gap-1 flex-shrink-0"
                                 >
                                     <Plus size={14} />
-                                    Add
+                                    {t('sections.priority.add')}
                                 </button>
                             )}
                         </div>
@@ -464,7 +463,7 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
 
             {/* Extracted Requirements (collapsed by default) */}
             <CollapsibleSection
-                title="Extracted Requirements"
+                title={t('sections.requirements.title')}
                 icon={FileText}
                 isExpanded={expandedSections.has('requirements')}
                 onToggle={() => toggleSection('requirements')}
@@ -472,32 +471,32 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
             >
                 <div className="grid sm:grid-cols-2 gap-4 text-sm">
                     <RequirementList
-                        title="Technical Skills"
+                        title={t('sections.requirements.categories.hardSkills')}
                         items={result.extractedRequirements.hardSkills}
                         isDark={isDark}
                     />
                     <RequirementList
-                        title="Soft Skills"
+                        title={t('sections.requirements.categories.softSkills')}
                         items={result.extractedRequirements.softSkills}
                         isDark={isDark}
                     />
                     <RequirementList
-                        title="Experience"
+                        title={t('sections.requirements.categories.experience')}
                         items={result.extractedRequirements.experience}
                         isDark={isDark}
                     />
                     <RequirementList
-                        title="Education"
+                        title={t('sections.requirements.categories.education')}
                         items={result.extractedRequirements.education}
                         isDark={isDark}
                     />
                     <RequirementList
-                        title="Tools"
+                        title={t('sections.requirements.categories.tools')}
                         items={result.extractedRequirements.tools}
                         isDark={isDark}
                     />
                     <RequirementList
-                        title="Certifications"
+                        title={t('sections.requirements.categories.certifications')}
                         items={result.extractedRequirements.certifications}
                         isDark={isDark}
                     />
@@ -508,12 +507,12 @@ We are looking for a Senior Full Stack Developer with 5+ years of experience in 
             <button
                 onClick={() => setResult(null)}
                 className={`w-full py-4 rounded-xl font-bold border-2 transition ${isDark
-                        ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
-                        : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
                     }`}
             >
                 <RefreshCw size={18} className="inline mr-2" />
-                Analyze Another Job Description
+                {t('analyzeAnother')}
             </button>
         </div>
     );
@@ -537,7 +536,7 @@ function StatCard({ icon: Icon, iconColor, label, value, sublabel, isDark }: {
             </div>
             <div className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{value}</div>
             {sublabel && (
-                <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>req: {sublabel}</div>
+                <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{sublabel}</div>
             )}
         </div>
     );

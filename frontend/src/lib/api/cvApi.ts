@@ -24,13 +24,14 @@ export const cvApi = {
     // Save CV to database
     saveCV: async (cvData: CVData, cvId?: string): Promise<ApiResponse> => {
         const token = localStorage.getItem('token');
+        const idToUse = cvId || cvData.id;
         const response = await fetch(`${API_BASE_URL}/cvs/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ cvId, data: cvData })
+            body: JSON.stringify({ cvId: idToUse, data: cvData })
         });
         return response.json();
     },

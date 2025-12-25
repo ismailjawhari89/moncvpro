@@ -1,36 +1,1316 @@
 {
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "search": "Search",
+        "filter": "Filter",
+        "clear": "Clear",
+        "clearAll": "Clear All",
+        "loading": "Loading...",
+        "preview": "Preview",
+        "download": "Download",
+        "export": "Export",
+        "free": "Free",
+        "premium": "Premium",
+        "all": "All",
+        "favorites": "Favorites",
+        "recent": "Recent",
+        "popular": "Popular",
+        "useTemplate": "Use This Template",
+        "viewPreview": "View Preview"
+    },
+    "nav": {
+        "home": "Home",
+        "templates": "Templates",
+        "cvBuilder": "CV Builder",
+        "examples": "Examples",
+        "pricing": "Pricing",
+        "about": "About Us"
+    },
+    "hero": {
+        "title": "Create a Professional CV with AI",
+        "subtitle": "Get an exceptional resume that boosts your hiring chances. Professional templates, auto-optimization, and bilingual English/French support.",
+        "cta": "Start Now - Free",
+        "features": {
+            "ats": "ATS Friendly",
+            "ai": "AI Powered",
+            "templates": "Pro Templates"
+        }
+    },
     "cv-form": {
         "personal": {
             "title": "Personal Information",
             "fullName": "Full Name",
             "email": "Email",
-            "phone": "Phone",
+            "phone": "Phone Number",
+            "address": "Address",
             "location": "City, Country",
-            "summary": "Professional Summary"
+            "profession": "Job Title",
+            "linkedin": "LinkedIn URL",
+            "github": "GitHub URL",
+            "website": "Website",
+            "photo": "Profile Photo",
+            "summary": "Professional Summary",
+            "upload": "Upload",
+            "change": "Change",
+            "remove": "Remove photo",
+            "enhance": "Enhance AI",
+            "photoLimit": "JPG, PNG or GIF (max 5MB)",
+            "placeholders": {
+                "fullName": "John Doe",
+                "profession": "Senior Software Engineer",
+                "email": "john@example.com",
+                "phone": "+1 (555) 123-4567",
+                "location": "New York, NY",
+                "linkedin": "linkedin.com/in/johndoe",
+                "github": "github.com/johndoe",
+                "summary": "Brief overview of your professional background and goals..."
+            },
+            "alerts": {
+                "selectImage": "Please select an image file",
+                "imageSize": "Image size should be less than 5MB",
+                "readFailed": "Failed to read image"
+            }
         },
         "experience": {
-            "title": "Professional Experience",
+            "title": "Work Experience",
             "add": "Add Experience",
-            "empty": "No experience added"
+            "empty": "No experience added",
+            "company": "Company Name",
+            "position": "Job Title",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "current": "I currently work here",
+            "description": "Responsibilities and Achievements",
+            "achievements": "Key Achievements",
+            "placeholders": {
+                "position": "Software Engineer",
+                "company": "Tech Corp",
+                "description": "Describe your responsibilities and achievements..."
+            }
         },
         "education": {
             "title": "Education",
             "add": "Add Education",
-            "empty": "No education added"
+            "empty": "No education added",
+            "institution": "Institution",
+            "degree": "Degree",
+            "field": "Field of Study",
+            "graduationYear": "Graduation Year",
+            "gpa": "GPA",
+            "placeholders": {
+                "institution": "Stanford University",
+                "degree": "Bachelor's",
+                "field": "Computer Science"
+            }
         },
         "skills": {
             "title": "Skills",
             "add": "Add Skill",
-            "empty": "No skills added"
+            "empty": "No skills added",
+            "name": "Skill Name",
+            "level": "Proficiency Level",
+            "category": "Category",
+            "categories": {
+                "technical": "Technical",
+                "soft": "Soft Skills",
+                "language": "Language"
+            },
+            "placeholders": {
+                "name": "React.js"
+            }
         },
         "languages": {
             "title": "Languages",
             "add": "Add Language",
-            "empty": "No languages added"
+            "empty": "No languages added",
+            "name": "Language",
+            "proficiency": "Proficiency Level",
+            "levels": {
+                "native": "Native",
+                "fluent": "Fluent",
+                "conversational": "Conversational",
+                "basic": "Basic"
+            }
         }
     },
-    "hero": {
-        "title": "Create a Professional CV with AI",
-        "subtitle": "Get an exceptional CV that boosts your hiring chances. Professional templates, automatic improvement, and bilingual support."
+    "templates": {
+        "pageTitle": "Professional CV Templates",
+        "pageSubtitle": "Choose from our curated collection of ATS-optimized templates designed for every industry",
+        "search": "Search templates...",
+        "all": "All",
+        "count": "templates available",
+        "atsOptimized": "ATS Optimized",
+        "free100": "100% Free",
+        "topRated": "Top Rated - High ATS Score",
+        "atsScore": "ATS Score",
+        "atsCompatibility": "ATS Compatibility",
+        "bestFor": "Best For",
+        "keyFeatures": "Key Features",
+        "sectionsIncluded": "Included Sections",
+        "proTips": "Pro Tips",
+        "colorPalette": "Color Palette",
+        "difficulty": {
+            "easy": "Easy",
+            "medium": "Medium",
+            "advanced": "Advanced"
+        },
+        "categories": {
+            "all": "All Templates",
+            "tech": "Tech & Programming",
+            "business": "Business & Management",
+            "creative": "Creative & Design",
+            "medical": "Medical & Health",
+            "education": "Education & Academia",
+            "engineering": "Engineering"
+        },
+        "styles": {
+            "modern": "Modern",
+            "minimalist": "Minimalist",
+            "creative": "Creative",
+            "professional": "Professional",
+            "bold": "Bold"
+        },
+        "levels": {
+            "entry": "Entry Level",
+            "mid": "Mid Level",
+            "senior": "Senior Level",
+            "executive": "Executive Level"
+        },
+        "sortBy": {
+            "popularity": "Most Popular",
+            "atsScore": "ATS Score",
+            "rating": "Rating",
+            "name": "Name"
+        },
+        "filters": {
+            "category": "Category",
+            "style": "Style",
+            "experience": "Experience Level",
+            "photoPosition": "Photo Position",
+            "designStyle": "Design Style"
+        },
+        "photoPositions": {
+            "topLeft": "Top Left",
+            "topRight": "Top Right",
+            "center": "Center",
+            "sidebar": "Sidebar",
+            "circular": "Circular",
+            "noPhoto": "No Photo",
+            "minimal": "Minimalist"
+        },
+        "designStyles": {
+            "modern": "Modern",
+            "classic": "Classic",
+            "creative": "Creative",
+            "executive": "Executive",
+            "academic": "Academic",
+            "technical": "Technical"
+        },
+        "emptyState": {
+            "noTemplates": "No templates found",
+            "noFavorites": "No favorites saved yet",
+            "noRecent": "No recent templates used",
+            "adjustFilters": "Try adjusting your search or filters",
+            "resetFilters": "Reset Filters"
+        },
+        "actions": {
+            "preview": "Preview",
+            "use": "Use Template",
+            "select": "Select"
+        },
+        "names": {
+            "tech-modern-developer": "Modern Developer",
+            "tech-full-stack": "Full Stack Developer",
+            "tech-data-scientist": "Data Scientist",
+            "tech-devops-engineer": "DevOps Engineer",
+            "tech-ui-ux-designer": "UI/UX Designer",
+            "business-executive": "Executive Leader",
+            "business-manager": "Modern Manager",
+            "business-consultant": "Strategic Consultant",
+            "business-sales": "Sales Champion",
+            "creative-graphic-designer": "Creative Designer",
+            "creative-marketing": "Marketing Specialist",
+            "medical-doctor": "Medical Professional",
+            "medical-nurse": "Specialized Nurse",
+            "education-teacher": "Professional Teacher",
+            "education-researcher": "Academic Researcher",
+            "classic-simple": "Classic Simple",
+            "minimalist-elegant": "Minimalist Elegant"
+        },
+        "descriptions": {
+            "tech-modern-developer": "Clean and professional template ideal for software developers. Features a modern two-column layout with prominent skills section.",
+            "tech-full-stack": "Comprehensive design to showcase front-end and back-end expertise. Ideal for developers working across the stack.",
+            "tech-data-scientist": "Highlight your expertise in data analysis, ML, and publications. Designed for data professionals.",
+            "tech-devops-engineer": "Perfect for DevOps, SRE, and Cloud engineers. Focuses on infrastructure, automation, and CI/CD.",
+            "tech-ui-ux-designer": "Portfolio-style CV for designers. Balances creativity with ATS compatibility.",
+            "business-executive": "Premium template for executives and senior leaders. Clean, authoritative design that commands attention.",
+            "business-manager": "Ideal for project managers and team leads. Highlights leadership, KPIs, and team achievements.",
+            "business-consultant": "Perfect for consultants and business analysts. Showcases client work and consulting frameworks.",
+            "business-sales": "Highlight your sales achievements and targets met. Numbers-focused design for sales professionals.",
+            "creative-graphic-designer": "Bold and colorful template for graphic designers. Showcases creativity while maintaining professionalism.",
+            "creative-marketing": "Dynamic template for marketing pros. Highlights campaigns, ROI, and social stats.",
+            "medical-doctor": "Professional template for doctors and health practitioners. Focuses on qualifications, specialties, and clinical experience.",
+            "classic-simple": "The most ATS-friendly classic template. Simple and effective design suitable for all industries."
+        },
+        "tips": {
+            "tech": [
+                "Highlight your tech stack prominently in the skills section",
+                "Add links to GitHub and portfolio projects",
+                "Quantify achievements (performance improvements, user count)"
+            ],
+            "business": [
+                "Start with strategic impact, not daily tasks",
+                "Include team size and budget responsibility",
+                "Quantify Key Performance Indicators (KPIs)"
+            ],
+            "creative": [
+                "Add a link to your online portfolio",
+                "Showcase your design process, not just results",
+                "List design tools: Figma, Adobe XD"
+            ],
+            "medical": [
+                "List all medical licenses and certifications",
+                "Include published research and conferences",
+                "Specify clinical specialties and expertise"
+            ]
+        }
+    },
+    "cvBuilder": {
+        "title": "CV Builder",
+        "livePreview": "Live Preview",
+        "printReady": "Print Ready",
+        "realTimeUpdates": "Real-time Updates",
+        "autoSave": "Auto Save",
+        "saving": "Saving...",
+        "saved": "Saved",
+        "undo": "Undo",
+        "redo": "Redo",
+        "history": "History",
+        "menu": "Menu",
+        "demo": "Demo",
+        "loadingPreview": "Loading Preview...",
+        "applyingTemplate": "Applying template...",
+        "confirmLoadDemo": "This will load professional demo data for the current template. Your existing data will be merged. Continue?",
+        "demoLoaded": "Demo data loaded successfully!",
+        "toasts": {
+            "templateApplied": "Template applied successfully!",
+            "cvSaved": "CV saved to cloud successfully!",
+            "savedLocally": "Saved locally (offline mode)",
+            "saveFailed": "Failed to save.",
+            "resetSuccess": "CV reset to blank form",
+            "analysisComplete": "AI Analysis complete!",
+            "analysisFailed": "AI Analysis failed",
+            "contentApplied": "AI content applied!",
+            "photoEnhanced": "Photo enhanced with AI!"
+        },
+        "confirmations": {
+            "reset": "Are you sure you want to reset all data? This action cannot be undone."
+        },
+        "templateConfig": {
+            "title": "Configurator",
+            "clickToCustomize": "Click to customize",
+            "tabs": {
+                "templates": "Templates",
+                "colors": "Colors",
+                "fonts": "Fonts",
+                "spacing": "Spacing"
+            },
+            "colors": {
+                "primary": "Primary Color",
+                "custom": "Custom Color",
+                "placeholder": "#3b82f6"
+            },
+            "fonts": {
+                "system": "System UI",
+                "serif": "Serif (Georgia)",
+                "sans": "Sans-serif (Inter)",
+                "mono": "Monospace (JetBrains)"
+            },
+            "spacing": {
+                "compact": "Compact",
+                "normal": "Normal",
+                "spacious": "Spacious"
+            },
+            "premium": {
+                "title": "Unlock All Templates",
+                "subtitle": "Access premium templates with Pro",
+                "upgrade": "Upgrade"
+            }
+        },
+        "export": {
+            "button": "Export",
+            "title": "Export your CV",
+            "subtitle": "Choose an export format",
+            "tip": "Tip: PDF format is recommended for online applications.",
+            "formats": {
+                "pdf": {
+                    "label": "PDF",
+                    "desc": "Most common format, ideal for applications"
+                },
+                "pdfAts": {
+                    "label": "PDF (Text / ATS)",
+                    "desc": "Optimized for ATS (Selectable text)"
+                },
+                "pdf-hq": {
+                    "label": "High Performance (Vector PDF)",
+                    "desc": "Fast, small file, and ATS-friendly"
+                },
+                "docx": {
+                    "label": "Word (DOCX)",
+                    "desc": "Editable in Microsoft Word or Google Docs"
+                },
+                "txt": {
+                    "label": "Plain Text",
+                    "desc": "Simple format, compatible with all ATS systems"
+                },
+                "json": {
+                    "label": "JSON",
+                    "desc": "Data backup for import/export"
+                }
+            }
+        },
+        "tabs": {
+            "personal": "Personal",
+            "experience": "Experience",
+            "education": "Education",
+            "skills": "Skills",
+            "languages": "Languages",
+            "templates": "Templates",
+            "ai": "AI Assistant",
+            "editor": "Editor",
+            "preview": "Preview",
+            "analysis": "Analysis",
+            "metrics": "ATS Metrics",
+            "smartFix": "Smart Fix",
+            "formatting": "Formatting",
+            "keywords": "Keywords",
+            "impact": "Impact",
+            "completeness": "Completeness"
+        },
+        "templates": {
+            "title": "Professional Templates",
+            "subtitle": "ATS Optimized Templates",
+            "proTemplates": "Pro Templates",
+            "atsOptimized": "ATS Optimized",
+            "avgAts": "Avg ATS",
+            "searchPlaceholder": "Search..."
+        },
+        "ai": {
+            "title": "AI Assistant",
+            "improve": "Improve Content",
+            "generate": "Generate Content",
+            "suggestions": "AI Suggestions",
+            "apply": "Apply",
+            "dismiss": "Dismiss"
+        },
+        "loadSampleData": "Load Sample Data",
+        "clearAll": "Clear All",
+        "startFresh": "Start Fresh",
+        "save": "Save",
+        "preview": "Preview",
+        "loading": {
+            "title": "Loading CV Builder...",
+            "subtitle": "Preparing your professional CV editor with AI assistance"
+        },
+        "sync": {
+            "offline": "Offline",
+            "syncing": "Syncing...",
+            "synced": "Synced",
+            "error": "Sync Error",
+            "unsynced": "Unsynced changes",
+            "upToDate": "Up to date",
+            "never": "Never",
+            "title": "Cloud Sync Status",
+            "connection": "Connection:",
+            "online": "Online",
+            "lastSync": "Last sync:",
+            "pending": "Pending:",
+            "items": "{count} item(s)",
+            "syncNow": "Sync now",
+            "localMode": "Local Mode",
+            "saving": "Saving...",
+            "saved": "Saved",
+            "lastSaved": "Last saved: {time}"
+        },
+        "smartFix": {
+            "title": "AI Smart Fix",
+            "improvements": "{count} Improvements",
+            "apply": "Apply",
+            "dismiss": "Dismiss",
+            "dismissAll": "Dismiss All",
+            "fixAll": "Fix All Issues",
+            "footer": "Review and improve your CV instantly",
+            "ready": "{count} Smart Fixes Ready"
+        },
+        "streaming": {
+            "status": "AI is Thinking...",
+            "ready": "Suggested Improvements Ready",
+            "stop": "Stop AI",
+            "apply": "Apply All Improvements",
+            "reject": "Discard Suggestions"
+        }
+    },
+    "errors": {
+        "required": "This field is required",
+        "invalidEmail": "Invalid email address",
+        "invalidPhone": "Invalid phone number",
+        "invalidUrl": "Invalid URL",
+        "loadError": "Error loading data",
+        "saveError": "Error saving data",
+        "exportError": "Error exporting file"
+    },
+    "landing": {
+        "badge": "100% Free Forever • No Credit Card Required",
+        "viewTemplates": "View Templates",
+        "trust": {
+            "noWatermarks": "No watermarks",
+            "unlimitedExports": "Unlimited exports",
+            "noSignup": "No signup required"
+        },
+        "stats": {
+            "users": "Happy Users",
+            "cvs": "CVs Created",
+            "success": "Success Rate",
+            "rating": "User Rating"
+        },
+        "features": {
+            "title": "Everything You Need to Succeed",
+            "subtitle": "Powerful features that help you create a CV that gets noticed",
+            "items": {
+                "ai": {
+                    "title": "AI-Powered Content",
+                    "description": "Let AI write compelling bullet points and summaries tailored to your experience."
+                },
+                "ats": {
+                    "title": "ATS-Friendly Templates",
+                    "description": "All templates are optimized to pass Applicant Tracking Systems used by recruiters."
+                },
+                "preview": {
+                    "title": "Instant Preview",
+                    "description": "See changes in real-time with our live preview feature. What you see is what you get."
+                },
+                "export": {
+                    "title": "Export Anywhere",
+                    "description": "Download your CV as PDF or DOCX. No watermarks, no limits, completely free."
+                },
+                "privacy": {
+                    "title": "Privacy First",
+                    "description": "Your data stays private. We never share your information with third parties."
+                },
+                "quality": {
+                    "title": "Professional Quality",
+                    "description": "Create CVs that stand out with our professionally designed templates."
+                }
+            }
+        },
+        "howItWorks": {
+            "title": "How It Works",
+            "subtitle": "Three simple steps to your perfect CV",
+            "steps": {
+                "1": {
+                    "title": "Choose a Template",
+                    "description": "Select from our collection of ATS-friendly, professional templates."
+                },
+                "2": {
+                    "title": "Fill Your Details",
+                    "description": "Add your information with AI assistance for compelling content."
+                },
+                "3": {
+                    "title": "Download & Apply",
+                    "description": "Export your CV and start applying to your dream jobs."
+                }
+            }
+        },
+        "testimonials": {
+            "title": "Loved by Job Seekers",
+            "subtitle": "See what our users have to say",
+            "at": "at",
+            "items": {
+                "1": {
+                    "name": "Sarah Johnson",
+                    "role": "Software Engineer",
+                    "company": "Tech Corp",
+                    "text": "MonCVPro helped me land my dream job! The AI suggestions were incredibly helpful."
+                },
+                "2": {
+                    "name": "Michael Chen",
+                    "role": "Marketing Manager",
+                    "company": "Digital Agency",
+                    "text": "Best free CV builder I've used. The templates are modern and professional."
+                },
+                "3": {
+                    "name": "Emma Williams",
+                    "role": "Data Analyst",
+                    "company": "Finance Inc",
+                    "text": "The ATS optimization feature gave me confidence that my CV would be seen."
+                }
+            }
+        },
+        "finalCta": {
+            "title": "Ready to Land Your Dream Job?",
+            "subtitle": "Join thousands of professionals who created their perfect CV with MonCVPro",
+            "button": "Create Your CV Now — It's Free",
+            "footer": "No credit card required • No hidden fees • No watermarks"
+        }
+    },
+    "footer": {
+        "tagline": "Build professional CVs with AI-powered tools",
+        "links": {
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Service",
+            "contact": "Contact Us"
+        },
+        "copyright": "All rights reserved."
+    },
+    "privacy-policy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last updated: December 24, 2025",
+        "summaryTitle": "Your Privacy Matters",
+        "summaryDescription": "At MonCVPro, we are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, and safeguard your data.",
+        "sections": {
+            "collect": {
+                "title": "1. Information We Collect",
+                "provide": {
+                    "title": "1.1 Information You Provide",
+                    "items": [
+                        "Account information (name, email address)",
+                        "CV content (work experience, education, skills)",
+                        "Contact form submissions",
+                        "Feedback and survey responses"
+                    ]
+                },
+                "automated": {
+                    "title": "1.2 Automatically Collected Information",
+                    "items": [
+                        "Device information (browser type, operating system)",
+                        "Usage data (pages visited, features used)",
+                        "Cookies and similar tracking technologies",
+                        "IP address and location data"
+                    ]
+                }
+            },
+            "usage": {
+                "title": "2. How We Use Your Information",
+                "description": "We use the collected information for the following purposes:",
+                "items": [
+                    "To provide and maintain our CV building service",
+                    "To personalize your experience and save your CVs",
+                    "To improve our website and develop new features",
+                    "To communicate with you about updates and support",
+                    "To display relevant advertisements (Google AdSense)",
+                    "To ensure security and prevent fraud",
+                    "To comply with legal obligations"
+                ]
+            },
+            "security": {
+                "title": "3. Data Storage and Security",
+                "paragraph1": "We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.",
+                "paragraph2": "Your CV data is stored securely using industry-standard encryption. We use Supabase (PostgreSQL) for data storage, which provides enterprise-grade security and compliance.",
+                "paragraph3": "However, no method of transmission over the Internet is 100% secure. While we strive to protect your data, we cannot guarantee absolute security."
+            },
+            "thirdParty": {
+                "title": "4. Third-Party Services",
+                "description": "We use the following third-party services:",
+                "googleAdsense": {
+                    "name": "Google AdSense",
+                    "text": "For displaying advertisements. Google may use cookies to serve ads based on your interests.",
+                    "linkText": "Google Ads Settings"
+                },
+                "supabase": {
+                    "name": "Supabase",
+                    "text": "For secure data storage and authentication."
+                },
+                "cloudflare": {
+                    "name": "Cloudflare",
+                    "text": "For content delivery and security."
+                }
+            },
+            "yourRights": {
+                "title": "5. Your Rights (GDPR)",
+                "description": "If you are located in the European Economic Area (EEA), you have the following rights:",
+                "access": {
+                    "title": "Right to Access",
+                    "text": "Request copies of your personal data"
+                },
+                "rectification": {
+                    "title": "Right to Rectification",
+                    "text": "Request correction of inaccurate data"
+                },
+                "erasure": {
+                    "title": "Right to Erasure",
+                    "text": "Request deletion of your personal data"
+                },
+                "restrictProcessing": {
+                    "title": "Right to Restrict Processing",
+                    "text": "Request limitation of data processing"
+                },
+                "dataPortability": {
+                    "title": "Right to Data Portability",
+                    "text": "Request transfer of your data"
+                },
+                "object": {
+                    "title": "Right to Object",
+                    "text": "Object to processing of your data"
+                },
+                "contactText": "To exercise these rights, please contact us at:"
+            },
+            "cookies": {
+                "title": "6. Cookies",
+                "paragraph1": "We use cookies and similar tracking technologies to improve your experience. Cookies are small files stored on your device that help us remember your preferences and analyze site usage.",
+                "paragraph2": "You can control cookies through your browser settings. However, disabling cookies may limit some features of our website.",
+                "paragraph3": "For more information, please see our",
+                "linkText": "Cookies Policy"
+            },
+            "dataRetention": {
+                "title": "7. Data Retention",
+                "paragraph1": "We retain your personal information only for as long as necessary to provide our services and fulfill the purposes outlined in this Privacy Policy.",
+                "paragraph2": "When you delete your account, we will delete your personal data within 30 days, except where we are required to retain it for legal compliance."
+            },
+            "childrenPrivacy": {
+                "title": "8. Children's Privacy",
+                "text": "Our service is not intended for children under 16 years of age. We do not knowingly collect personal information from children. If you believe we have collected data from a child, please contact us immediately."
+            },
+            "changesToPolicy": {
+                "title": "9. Changes to This Policy",
+                "text": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'Last updated' date."
+            },
+            "contact": {
+                "title": "10. Contact Us",
+                "description": "If you have questions about this Privacy Policy, please contact us:",
+                "emailLabel": "Email",
+                "websiteLabel": "Website",
+                "websiteLinkText": "Contact Form"
+            }
+        }
+    },
+    "ai-resume-review": {
+        "hero": {
+            "title": "AI Resume Review",
+            "subtitle": "Check ATS compatibility, keywords, and formatting issues instantly.",
+            "stats": "50,000+ CVs Analyzed • 98% Accuracy",
+            "privacyNote": "Your data is secure and private. We don't share your CV with anyone."
+        },
+        "uploadSection": {
+            "tabs": {
+                "upload": "Upload File",
+                "text": "Paste Text"
+            },
+            "dropzone": {
+                "title": "Drag & Drop your CV here",
+                "subtitle": "or click to browse (PDF, DOCX, TXT)",
+                "button": "Select File"
+            },
+            "text": {
+                "placeholder": "Paste your CV content here...",
+                "characterCount": "{count} characters"
+            },
+            "file": {
+                "remove": "Remove file"
+            },
+            "errors": {
+                "selectFile": "Please select a file first.",
+                "minCharacters": "Please enter at least 50 characters."
+            },
+            "analyzing": "Analyzing...",
+            "analyzeButton": "Analyze My CV Now"
+        },
+        "howItWorks": {
+            "title": "How It Works",
+            "subtitle": "Three simple steps to a better resume and more interviews.",
+            "steps": {
+                "1": {
+                    "title": "Upload or Paste",
+                    "description": "Upload your PDF/DOCX resume or paste the text directly."
+                },
+                "2": {
+                    "title": "AI Analysis",
+                    "description": "Our AI scans your CV for 50+ checks including ATS & keywords."
+                },
+                "3": {
+                    "title": "Get Results",
+                    "description": "Receive a detailed score and actionable tips to improve."
+                }
+            }
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "subtitle": "Everything you need to know about our AI Resume Review.",
+            "items": [
+                {
+                    "question": "How does the AI Resume Review work?",
+                    "answer": "Our advanced AI analyzes your resume against thousands of successful job applications and industry standards. It checks for ATS compatibility, keyword optimization, formatting issues, and content quality to provide you with actionable feedback."
+                },
+                {
+                    "question": "Is this service really free?",
+                    "answer": "Yes, our basic AI Resume Review is completely free. You can upload your CV and get an instant analysis score and key recommendations without paying a cent."
+                },
+                {
+                    "question": "Is my data safe and private?",
+                    "answer": "Absolutely. We prioritize your privacy. Your uploaded CV is processed securely and is not shared with third parties or recruiters without your explicit permission."
+                },
+                {
+                    "question": "What file formats do you support?",
+                    "answer": "We currently support PDF, DOCX (Word), and TXT files. For the best analysis results, we recommend uploading a PDF or DOCX file."
+                },
+                {
+                    "question": "Can I edit my CV after the analysis?",
+                    "answer": "Yes! After the analysis, you can use our CV Builder to make improvements directly. We'll guide you through fixing the issues identified by the AI."
+                },
+                {
+                    "question": "How accurate is the ATS score?",
+                    "answer": "Our ATS score is highly accurate and simulates the parsing algorithms used by major Applicant Tracking Systems. A high score (80+) significantly increases your chances of passing the initial screening."
+                }
+            ]
+        },
+        "results": {
+            "title": "Analysis Results",
+            "subtitle": "Here's what our AI found in your resume.",
+            "reportTitle": "AI Analysis Report",
+            "generationTime": "Generated in 1.2s",
+            "scoreLabel": "ATS Score",
+            "summaryTitle": "Analysis Summary",
+            "metrics": {
+                "contact": "Contact Information",
+                "keywords": "Keywords Usage",
+                "results": "Measurable Results"
+            },
+            "recommendationsTitle": "Top Recommendations",
+            "recommendations": [
+                "Add more industry-specific keywords (e.g., 'Project Management', 'Agile')",
+                "Quantify your achievements with numbers and percentages",
+                "Improve formatting consistency in the Experience section"
+            ],
+            "ctaButton": "Fix These Issues Now"
+        },
+        "testimonials": {
+            "title": "Success Stories",
+            "subtitle": "See how others landed their dream jobs with MonCVPro.",
+            "items": [
+                {
+                    "id": 1,
+                    "name": "Sarah Jenkins",
+                    "role": "Marketing Manager",
+                    "text": "I was applying for months with no response. After using MonCVPro's AI review, I realized my CV wasn't ATS friendly. I fixed it and got 3 interviews the next week!",
+                    "metric": "3 Interviews in 1 week"
+                },
+                {
+                    "id": 2,
+                    "name": "David Chen",
+                    "role": "Software Engineer",
+                    "text": "The keyword optimization feature is a game changer. It told me exactly what skills I was missing compared to the job description. Highly recommended.",
+                    "metric": "Landed job at TechGiant"
+                },
+                {
+                    "id": 3,
+                    "name": "Emily Wilson",
+                    "role": "Recent Graduate",
+                    "text": "As a fresh grad, I didn't know how to structure my CV. The AI gave me specific tips on how to highlight my projects and internships effectively.",
+                    "metric": "First job offer secured"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Ready to Land More Interviews?",
+            "description": "Don't let a bad CV hold you back. Upload your resume now and get instant, actionable feedback to improve your chances.",
+            "button": "Start Free Analysis",
+            "cvBuilder": "Explore CV Builder",
+            "noCreditCard": "No credit card required",
+            "instantResults": "Instant results"
+        }
+    },
+    "aiAssistant": {
+        "title": "AI Assistant",
+        "beta": "Beta",
+        "triggerButton": "AI Assistant",
+        "dailyLimit": "{used}/{limit} used",
+        "undo": "Undo (Ctrl+Z)",
+        "redo": "Redo (Ctrl+Y)",
+        "history": "View History",
+        "preview": "Preview Changes",
+        "previewSubtitle": "Review AI suggestions before applying",
+        "assistantSubtitle": "Your intelligent CV optimization companion",
+        "tabs": {
+            "generate": "Generate",
+            "analyze": "ATS Analysis",
+            "match": "Job Match",
+            "star": "STAR Builder",
+            "improve": "Smart Improve",
+            "letter": "Cover Letter"
+        },
+        "coverLetter": {
+            "title": "AI Cover Letter Generator",
+            "description": "Generate a tailored, high-impact cover letter based on your CV and target job.",
+            "button": "Generate Letter",
+            "generating": "Writing your letter...",
+            "copy": "Copy to Clipboard",
+            "copied": "Copied!",
+            "download": "Download PDF",
+            "placeholder": "Your generated cover letter will appear here...",
+            "tailorNote": "Pro Tip: Make sure you've entered a Target Job Description in the 'Smart Improve' tab for better results.",
+            "tones": {
+                "label": "Select Tone",
+                "professional": "Professional",
+                "confident": "Confident",
+                "friendly": "Friendly"
+            }
+        },
+        "success": {
+            "applied": "Changes applied successfully!",
+            "hint": "AI helped improve your CV —"
+        },
+        "unlock": "unlock unlimited AI with Pro",
+        "previewMode": {
+            "title": "Preview Mode",
+            "description": "Review the AI-generated changes before they're applied to your CV.",
+            "warning": "Nothing is saved until you confirm!",
+            "changes": "Proposed Changes",
+            "changesCount": "Proposed Changes ({count})",
+            "before": "Before",
+            "after": "After",
+            "discard": "Discard",
+            "apply": "Apply Changes",
+            "empty": "Empty",
+            "noExperiences": "No experiences"
+        },
+        "generate": {
+            "title": "AI-Powered Generation",
+            "description": "Enter your target job title and let AI generate professional content.",
+            "warning": "You'll preview changes before they're applied!",
+            "info": {
+                "title": "AI-Powered Generation",
+                "description": "Enter your target job title and let AI generate professional content.",
+                "warning": "You'll preview changes before they're applied!"
+            },
+            "jobTitle": "Target Job Title",
+            "jobDescription": "Job Description",
+            "optional": "(Optional)",
+            "placeholder": "e.g. Senior Software Engineer",
+            "placeholderDesc": "Paste the job description here for better results...",
+            "button": "Generate & Preview",
+            "generating": "Generating..."
+        },
+        "improve": {
+            "title": "Smart Improvements",
+            "description": "AI analyzes your CV and applies improvements automatically.",
+            "warning": "Use Undo to revert any changes!",
+            "targetJob": {
+                "title": "Target Job Description",
+                "placeholder": "Paste the job description here to tailor your CV improvements...",
+                "tip": "Adding a job description helps the AI perform Keyword Injection and tailor your achievements to what recruiters are looking for."
+            },
+            "applied": "Applied Improvements",
+            "quick": "Quick Improvements",
+            "grammar": {
+                "title": "Fix Grammar & Spelling",
+                "desc": "Correct typos and grammatical errors"
+            },
+            "verbs": {
+                "title": "Add Action Verbs",
+                "desc": "Replace weak verbs with impactful action words"
+            },
+            "keywords": {
+                "title": "Optimize Keywords",
+                "desc": "Add industry-specific keywords for ATS"
+            },
+            "metrics": {
+                "title": "Quantify Achievements",
+                "desc": "Add numbers and metrics to showcase impact"
+            },
+            "custom": {
+                "title": "Custom Improvements",
+                "apply": "Apply Custom Improvements",
+                "actionVerbs": "Action Verbs",
+                "atsKeywords": "ATS Keywords",
+                "expandSummary": "Expand Summary",
+                "suggestSkills": "Suggest Skills"
+            },
+            "all": {
+                "button": "Auto-Improve All Sections",
+                "applying": "Applying Improvements..."
+            }
+        },
+        "limitModal": {
+            "titleReached": "You’ve reached today’s AI limit",
+            "descReached": "You've used all your AI credits for today. Join the waitlist for unlimited access.",
+            "titlePro": "Join Pro Waitlist",
+            "descPro": "Unlock unlimited AI tools, ATS optimization, and premium features. Be the first to access.",
+            "unlockBtn": "Unlock Unlimited AI 🚀",
+            "continueBtn": "Continue Tomorrow"
+        },
+        "feedback": {
+            "strengths": {
+                "personal": "Complete personal information",
+                "contact": "Contact information provided",
+                "summary": "Professional summary included",
+                "experience": "{count} work experiences listed",
+                "verbs": "Uses strong action verbs",
+                "education": "Education history provided",
+                "skills": "{count} skills listed",
+                "metrics": "Includes quantifiable achievements"
+            },
+            "weaknesses": {
+                "name": "Missing full name",
+                "contact": "Incomplete contact information",
+                "summary": "No professional summary",
+                "experience": "Limited work history",
+                "verbs": "Limited use of action verbs",
+                "education": "No education information",
+                "skills": "Limited skills listed",
+                "metrics": "Lacks quantifiable results"
+            },
+            "suggestions": {
+                "name": "Add your full name",
+                "contact": "Add email and phone number",
+                "summary": "Add a compelling professional summary (150-200 words)",
+                "experience": "Add at least 2-3 relevant work experiences",
+                "verbs": "Use action verbs: Led, Managed, Developed, Achieved, etc.",
+                "education": "Add your educational background",
+                "skills": "Add at least 5-8 relevant skills",
+                "metrics": "Add numbers and metrics to show your impact"
+            },
+            "keywords": {
+                "industry": "Industry-specific skills",
+                "verbs": [
+                    "Led",
+                    "Managed",
+                    "Developed",
+                    "Achieved"
+                ]
+            }
+        },
+        "sections": {
+            "summary": "Professional Summary",
+            "experience": "Work Experience",
+            "skills": "Skills",
+            "newPosition": "New Position",
+            "newExperienceAdded": "New experience added",
+            "skillsAdded": "{count} skills (+{new} new)",
+            "latestExperience": "Latest Experience",
+            "currentDescription": "Current description...",
+            "keyExpertise": "Key Expertise",
+            "fixedGrammar": "Fixed grammar & spelling",
+            "aiEnhanced": "AI Enhanced description",
+            "addedKeywords": "Added {count} AI keywords"
+        },
+        "errors": {
+            "noJobTitle": "Please enter a job title",
+            "generateFailed": "Failed to generate content. Please try again.",
+            "improveFailed": "Failed to apply smart improvements",
+            "noImprovements": "No significant improvements found. Your content is already strong! 💪"
+        }
+    },
+    "history": {
+        "title": "Change History",
+        "subtitle": "{count} actions • Step {index} of {total}",
+        "undo": "Undo",
+        "redo": "Redo",
+        "empty": {
+            "title": "No history yet",
+            "desc": "Start editing your CV to see changes here"
+        },
+        "current": "Current",
+        "ai": "AI",
+        "goto": "Go to this state",
+        "actions": {
+            "Update Personal Info": "Update Personal Info",
+            "Update Summary": "Update Summary",
+            "Add Experience": "Add Experience",
+            "Remove Experience": "Remove Experience",
+            "Reorder Experiences": "Reorder Experiences",
+            "Add Education": "Add Education",
+            "Remove Education": "Remove Education",
+            "Add Skill": "Add Skill",
+            "Remove Skill": "Remove Skill",
+            "Add Language": "Add Language",
+            "Remove Language": "Remove Language",
+            "Apply Template": "Apply Template",
+            "Apply Template with Sample Data": "Apply Template with Sample Data",
+            "Load Sample Data": "Load Sample Data",
+            "Clear Sample Data": "Reset to Blank",
+            "Reset CV": "Reset CV",
+            "AI Suggestion Applied": "AI Suggestion Applied",
+            "Improve Experience with Action Verbs": "Improve Experience with Action Verbs",
+            "Improve Summary with Keywords": "Improve Summary with Keywords",
+            "Add Quantifiable Metrics": "Add Quantifiable Metrics",
+            "Auto Improve All Sections": "Auto Improve All Sections",
+            "AI Enhanced": "AI Enhanced",
+            "Proposed Changes Applied": "Proposed Changes Applied"
+        },
+        "clear": {
+            "button": "Clear All History",
+            "confirmTitle": "Clear all history?",
+            "confirmDesc": "This will permanently delete all {count} history entries. You won't be able to undo past changes.",
+            "cancel": "Cancel",
+            "confirm": "Clear History"
+        },
+        "time": {
+            "justNow": "Just now",
+            "minutesAgo": "{count}m ago",
+            "hoursAgo": "{count}h ago",
+            "daysAgo": "{count}d ago"
+        }
+    },
+    "jobMatcher": {
+        "title": "Job Description Matcher",
+        "description": "Paste a job description to see how well your CV matches and get personalized suggestions.",
+        "input": {
+            "label": "Job Description",
+            "placeholder": "Paste the full job description here...\n\nExample:\nWe are looking for a Senior Full Stack Developer with 5+ years of experience in React, Node.js, and TypeScript...",
+            "paste": "Paste from Clipboard"
+        },
+        "analyze": {
+            "button": "Analyze Match",
+            "processing": "Analyzing Match..."
+        },
+        "tips": {
+            "pro": "Pro tip:",
+            "desc": "Copy the entire job posting including requirements, qualifications, and responsibilities for the most accurate analysis."
+        },
+        "results": {
+            "score": "Match Score",
+            "analyzeNew": "Analyze new job",
+            "messages": {
+                "great": "Great match! Your CV aligns well with this position.",
+                "moderate": "Moderate match. Some adjustments can improve your chances.",
+                "poor": "This role requires skills you may be missing. See suggestions below."
+            },
+            "grades": {
+                "A": "Excellent Match",
+                "B": "Strong Match",
+                "C": "Moderate Match",
+                "D": "Weak Match",
+                "F": "Poor Match"
+            },
+            "stats": {
+                "matchingSkills": "Matching Skills",
+                "missingSkills": "Missing Skills",
+                "experience": "Experience",
+                "education": "Education",
+                "req": "req: {value}"
+            }
+        },
+        "sections": {
+            "insights": {
+                "title": "Competitive Advantage:"
+            },
+            "skills": {
+                "title": "Skills Analysis",
+                "matching": "Matching Skills ({count})",
+                "missing": "Missing Skills ({count})",
+                "copyAll": "Copy all",
+                "copied": "Copied!",
+                "addHint": "Click on a skill to add it to your CV"
+            },
+            "keywords": {
+                "title": "Keywords Analysis",
+                "found": "Found in your CV",
+                "suggested": "Consider adding these keywords"
+            },
+            "priority": {
+                "title": "Priority Improvements",
+                "priorityLevel": "{level} priority",
+                "levels": {
+                    "high": "high",
+                    "medium": "medium",
+                    "low": "low"
+                },
+                "categories": {
+                    "skill": "skill",
+                    "keyword": "keyword",
+                    "experience": "experience",
+                    "education": "education",
+                    "certification": "certification"
+                },
+                "add": "Add"
+            },
+            "requirements": {
+                "title": "Extracted Requirements",
+                "categories": {
+                    "hardSkills": "Technical Skills",
+                    "softSkills": "Soft Skills",
+                    "experience": "Experience",
+                    "education": "Education",
+                    "tools": "Tools",
+                    "certifications": "Certifications"
+                }
+            }
+        },
+        "analyzeAnother": "Analyze Another Job Description"
+    },
+    "star": {
+        "title": "STAR Method Builder",
+        "description": "Create powerful, results-oriented bullet points by following the <strong class=\"text-indigo-600\">Situation, Task, Action, Result</strong> framework.",
+        "changeTemplate": "Choose different template",
+        "back": "Back",
+        "next": "Next Step",
+        "assembling": "Assembling...",
+        "finish": "Finish & Create",
+        "exampleLabel": "Good Example",
+        "placeholder": "Example: {example}",
+        "labels": {
+            "situation": "Situation",
+            "task": "Task",
+            "action": "Action",
+            "result": "Result"
+        },
+        "templates": {
+            "technical-project": {
+                "label": "Technical Project",
+                "prompts": {
+                    "situation": "What was the problem or challenge you faced?",
+                    "task": "What was your specific role or goal?",
+                    "action": "What technical solution did you implement? (languages, tools)",
+                    "result": "What was the quantifiable outcome? (performance, cost, users)"
+                },
+                "example": {
+                    "situation": "Legacy e-commerce platform was suffering from 5s load times.",
+                    "task": "I needed to optimize frontend performance to improve conversions.",
+                    "action": "Rebuilt the core page using Next.js and aggressive caching.",
+                    "result": "Reduced load time by 60% and increased conversion by 15%."
+                }
+            },
+            "optimization": {
+                "label": "Process Optimization",
+                "prompts": {
+                    "situation": "Describe an inefficient process or bottleneck.",
+                    "task": "What was the goal of the optimization?",
+                    "action": "What specific steps did you take to improve it?",
+                    "result": "How much time or money was saved?"
+                },
+                "example": {
+                    "situation": "Manual data entry for reports took 20 hours per week.",
+                    "task": "Automate the reporting pipeline to save engineering time.",
+                    "action": "Developed a Python script using Pandas to auto-generate reports.",
+                    "result": "Saved 80+ hours monthly and eliminated entry errors."
+                }
+            },
+            "leadership": {
+                "label": "Leadership & Mentoring",
+                "prompts": {
+                    "situation": "What was the team context or challenge?",
+                    "task": "What was your leadership goal?",
+                    "action": "How did you mentor, guide, or lead the team?",
+                    "result": "What was the impact on performance or morale?"
+                },
+                "example": {
+                    "situation": "Junior developers were struggling with complex codebase.",
+                    "task": "Improve the onboarding process and code quality.",
+                    "action": "Implemented pair programming and created documentation.",
+                    "result": "Reduced onboarding time by 50% and decreased bug rate."
+                }
+            },
+            "sales": {
+                "label": "Revenue & Sales",
+                "prompts": {
+                    "situation": "What was the market condition or sales target?",
+                    "task": "What was your individual or team target?",
+                    "action": "What strategy did you use to close deals?",
+                    "result": "How much revenue did you generate?"
+                },
+                "example": {
+                    "situation": "Sales targets were at risk due to new competitor.",
+                    "task": "Exceed the annual revenue target of $1M.",
+                    "action": "Developed new outreach targeting enterprise clients.",
+                    "result": "Generated $1.2M in revenue (120% of quota)."
+                }
+            }
+        }
+    },
+    "ats": {
+        "title": "ATS Analysis",
+        "analyzing": "Analyzing your CV...",
+        "checkingMetrics": "Checking 18 ATS compatibility metrics",
+        "clickToAnalyze": "Click to analyze your CV",
+        "analyzeNow": "Analyze Now",
+        "outOf100": "out of 100",
+        "excellent": "Excellent! Your CV is ATS-ready.",
+        "goodProgress": "Good progress, but there's room for improvement.",
+        "needsOptimization": "Your CV needs optimization to pass ATS systems.",
+        "passRate": "Estimated ATS pass rate:",
+        "priorityImprovements": "Priority Improvements",
+        "fix": "Fix",
+        "showAll": "Show All 18 Metrics",
+        "hideAll": "Hide Metrics",
+        "strengths": "Strengths",
+        "weaknesses": "Areas to Improve",
+        "weight": "Weight:",
+        "autoFix": "Auto-Fix This",
+        "showDetails": "Show details",
+        "hideDetails": "Hide details",
+        "reAnalyze": "Re-analyze",
+        "metrics": "Metrics"
+    },
+    "aiPhotoEditor": {
+        "title": "AI Photo Studio",
+        "subtitle": "Transform your photo",
+        "tabs": {
+            "enhance": "Enhance",
+            "outfit": "Outfit",
+            "background": "Background"
+        },
+        "upload": {
+            "title": "Upload Your Photo",
+            "description": "Choose a photo to transform with AI-powered enhancements",
+            "button": "Select Image"
+        },
+        "processing": {
+            "title": "AI is working its magic...",
+            "action": "{action}"
+        },
+        "adjustments": {
+            "title": "Adjustments",
+            "zoom": "Zoom",
+            "rotate": "Rotate"
+        },
+        "enhanceTab": {
+            "description": "Automatically improve your photo quality",
+            "button": "AI Auto-Enhance",
+            "tip": "Automatically fixes lighting, sharpness, and color balance"
+        },
+        "outfitTab": {
+            "description": "Change your outfit with AI",
+            "colorTitle": "Outfit Color",
+            "chooseTitle": "Choose Outfit"
+        },
+        "backgroundTab": {
+            "description": "Change or remove your background"
+        },
+        "actions": {
+            "undo": "Undo",
+            "reset": "Reset",
+            "cancel": "Cancel",
+            "save": "Save Photo"
+        },
+        "outfits": {
+            "formal-suit": "Formal Suit",
+            "blazer": "Smart Casual",
+            "professor": "Professor Style",
+            "shirt": "Dress Shirt",
+            "hoodie": "Tech Casual",
+            "scrubs": "Medical Scrubs"
+        },
+        "colors": {
+            "black": "Black",
+            "navy": "Navy Blue",
+            "charcoal": "Charcoal",
+            "burgundy": "Burgundy",
+            "white": "White",
+            "beige": "Beige"
+        },
+        "backgrounds": {
+            "white": "Studio White",
+            "gradient": "Soft Gradient",
+            "office": "Office",
+            "blur": "Blur Current"
+        },
+        "notifications": {
+            "success": "Image generated successfully!",
+            "demo": "Demo Mode: {message}",
+            "error": "Using Demo Mode (API Error/Missing)."
+        }
     }
 }
