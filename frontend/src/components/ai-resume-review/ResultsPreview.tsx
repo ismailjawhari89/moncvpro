@@ -3,15 +3,18 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, AlertTriangle, XCircle, ArrowRight, BarChart2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useCVStore } from '@/stores/useCVStore';
+import { CVAIService } from '@/services/cvAI.service';
 
 export default function ResultsPreview() {
+    const t = useTranslations('ai-resume-review.results');
     const router = useRouter();
+    const { cvData, addAISuggestions, clearAISuggestions } = useCVStore();
     const [score, setScore] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         // Animate score on mount
-        setIsVisible(true);
         const interval = setInterval(() => {
             setScore(prev => {
                 if (prev >= 78) {
@@ -24,6 +27,20 @@ export default function ResultsPreview() {
         return () => clearInterval(interval);
     }, []);
 
+    const handleFixIssues = () => {
+        // 1. Clear old suggestions
+        clearAISuggestions();
+
+        // 2. Generate new structured suggestions
+        const suggestions = CVAIService.generateSmartFixSuggestions(cvData);
+
+        // 3. Add to store
+        addAISuggestions(suggestions);
+
+        // 4. Redirect to builder
+        router.push('/cv-builder?smartFix=true');
+    };
+
     return (
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="bg-gray-900 p-4 flex items-center justify-between">
@@ -33,9 +50,9 @@ export default function ResultsPreview() {
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                     </div>
-                    <span className="text-gray-400 text-sm ml-2">AI Analysis Report</span>
+                    <span className="text-gray-400 text-sm ml-2">{t('reportTitle')}</span>
                 </div>
-                <div className="text-xs text-gray-500">Generated in 1.2s</div>
+                <div className="text-xs text-gray-500">{t('generationTime')}</div>
             </div>
 
             <div className="p-6 sm:p-8">
@@ -66,31 +83,31 @@ export default function ResultsPreview() {
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                             <span className="text-4xl font-bold text-gray-900">{score}</span>
-                            <span className="text-sm text-gray-500 uppercase tracking-wider">ATS Score</span>
+                            <span className="text-sm text-gray-500 uppercase tracking-wider">{t('scoreLabel')}</span>
                         </div>
                     </div>
 
                     <div className="flex-1 w-full">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">Analysis Summary</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">{t('summaryTitle')}</h3>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
                                 <div className="flex items-center gap-3">
                                     <CheckCircle className="text-green-600" size={20} />
-                                    <span className="text-gray-700 font-medium">Contact Information</span>
+                                    <span className="text-gray-700 font-medium">{t('metrics.contact')}</span>
                                 </div>
                                 <span className="text-green-700 font-bold">100%</span>
                             </div>
                             <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-100">
                                 <div className="flex items-center gap-3">
                                     <AlertTriangle className="text-yellow-600" size={20} />
-                                    <span className="text-gray-700 font-medium">Keywords Usage</span>
+                                    <span className="text-gray-700 font-medium">{t('metrics.keywords')}</span>
                                 </div>
                                 <span className="text-yellow-700 font-bold">65%</span>
                             </div>
                             <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
                                 <div className="flex items-center gap-3">
                                     <XCircle className="text-red-600" size={20} />
-                                    <span className="text-gray-700 font-medium">Measurable Results</span>
+                                    <span className="text-gray-700 font-medium">{t('metrics.results')}</span>
                                 </div>
                                 <span className="text-red-700 font-bold">40%</span>
                             </div>
@@ -101,28 +118,26 @@ export default function ResultsPreview() {
                 <div className="border-t border-gray-100 pt-6">
                     <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <BarChart2 size={18} className="text-blue-600" />
-                        Top Recommendations
+                        {t('recommendationsTitle')}
                     </h4>
                     <ul className="space-y-3 mb-6">
-                        <li className="flex gap-3 text-sm text-gray-600">
-                            <span className="w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                            Add more industry-specific keywords (e.g., "Project Management", "Agile")
-                        </li>
-                        <li className="flex gap-3 text-sm text-gray-600">
-                            <span className="w-6 h-6 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
-                            Quantify your achievements with numbers and percentages
-                        </li>
-                        <li className="flex gap-3 text-sm text-gray-600">
-                            <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
-                            Improve formatting consistency in the Experience section
-                        </li>
+                        {t.raw('recommendations').map((rec: string, i: number) => (
+                            <li key={i} className="flex gap-3 text-sm text-gray-600">
+                                <span className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${i === 0 ? 'bg-red-100 text-red-600' :
+                                        i === 1 ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600'
+                                    }`}>
+                                    {i + 1}
+                                </span>
+                                {rec}
+                            </li>
+                        ))}
                     </ul>
 
                     <button
-                        onClick={() => router.push('/cv-builder')}
+                        onClick={handleFixIssues}
                         className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                     >
-                        Fix These Issues Now
+                        {t('ctaButton')}
                         <ArrowRight size={18} />
                     </button>
                 </div>

@@ -1,36 +1,1051 @@
 {
+    "common": {
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "edit": "Modifier",
+        "add": "Ajouter",
+        "search": "Rechercher",
+        "filter": "Filtrer",
+        "clear": "Effacer",
+        "clearAll": "Tout effacer",
+        "loading": "Chargement...",
+        "preview": "Aperçu",
+        "download": "Télécharger",
+        "export": "Exporter",
+        "free": "Gratuit",
+        "premium": "Premium",
+        "all": "Tout",
+        "favorites": "Favoris",
+        "recent": "Récents",
+        "popular": "Populaire",
+        "useTemplate": "Utiliser ce modèle",
+        "viewPreview": "Voir l'aperçu"
+    },
+    "nav": {
+        "home": "Accueil",
+        "templates": "Modèles",
+        "cvBuilder": "Créateur de CV",
+        "examples": "Exemples",
+        "pricing": "Tarifs",
+        "about": "À propos"
+    },
+    "hero": {
+        "title": "Créez un CV Professionnel avec l'IA",
+        "subtitle": "Obtenez un CV exceptionnel qui augmente vos chances d'embauche. Modèles professionnels, optimisation automatique et support bilingue arabe/français.",
+        "cta": "Commencer - Gratuitement",
+        "features": {
+            "ats": "Compatible ATS",
+            "ai": "Propulsé par l'IA",
+            "templates": "Modèles Pro"
+        }
+    },
     "cv-form": {
         "personal": {
             "title": "Informations Personnelles",
             "fullName": "Nom Complet",
             "email": "Email",
             "phone": "Téléphone",
+            "address": "Adresse",
             "location": "Ville, Pays",
-            "summary": "Résumé professionnel"
+            "profession": "Titre du poste",
+            "linkedin": "Lien LinkedIn",
+            "github": "Lien GitHub",
+            "website": "Site Web",
+            "photo": "Photo de profil",
+            "summary": "Résumé Professionnel",
+            "upload": "Charger",
+            "change": "Changer",
+            "remove": "Supprimer la photo",
+            "enhance": "Améliorer par IA",
+            "photoLimit": "JPG, PNG ou GIF (max 5 Mo)",
+            "placeholders": {
+                "fullName": "Jean Dupont",
+                "profession": "Ingénieur Logiciel Senior",
+                "email": "jean.dupont@exemple.com",
+                "phone": "+33 6 12 34 56 78",
+                "location": "Paris, France",
+                "linkedin": "linkedin.com/in/jeandupont",
+                "github": "github.com/jeandupont",
+                "summary": "Bref aperçu de votre parcours professionnel et de vos objectifs..."
+            },
+            "alerts": {
+                "selectImage": "Veuillez sélectionner un fichier image",
+                "imageSize": "La taille de l'image doit être inférieure à 5 Mo",
+                "readFailed": "Échec de la lecture de l'image"
+            }
         },
         "experience": {
             "title": "Expérience Professionnelle",
             "add": "Ajouter une expérience",
-            "empty": "Aucune expérience ajoutée"
+            "empty": "Aucune expérience ajoutée",
+            "company": "Nom de l'entreprise",
+            "position": "Poste occupé",
+            "startDate": "Date de début",
+            "endDate": "Date de fin",
+            "current": "Je travaille ici actuellement",
+            "description": "Responsabilités et Réalisations",
+            "achievements": "Réalisations Clés",
+            "placeholders": {
+                "position": "Ingénieur Logiciel",
+                "company": "Tech Corp",
+                "description": "Décrivez vos responsabilités et vos réalisations..."
+            }
         },
         "education": {
             "title": "Formation",
             "add": "Ajouter une formation",
-            "empty": "Aucune formation ajoutée"
+            "empty": "Aucune formation ajoutée",
+            "institution": "Établissement",
+            "degree": "Diplôme",
+            "field": "Domaine d'études",
+            "graduationYear": "Année d'obtention",
+            "gpa": "Moyenne (GPA)",
+            "placeholders": {
+                "institution": "Université Paris-Sorbonne",
+                "degree": "Master",
+                "field": "Informatique"
+            }
         },
         "skills": {
             "title": "Compétences",
             "add": "Ajouter une compétence",
-            "empty": "Aucune compétence ajoutée"
+            "empty": "Aucune compétence ajoutée",
+            "name": "Compétence",
+            "level": "Niveau de maîtrise",
+            "category": "Catégorie",
+            "categories": {
+                "technical": "Technique",
+                "soft": "Comportementale",
+                "language": "Linguistique"
+            },
+            "placeholders": {
+                "name": "React.js"
+            }
         },
         "languages": {
             "title": "Langues",
             "add": "Ajouter une langue",
-            "empty": "Aucune langue ajoutée"
+            "empty": "Aucune langue ajoutée",
+            "name": "Langue",
+            "proficiency": "Niveau",
+            "levels": {
+                "native": "Langue maternelle",
+                "fluent": "Courant",
+                "conversational": "Conversationnel",
+                "basic": "Débutant"
+            }
         }
     },
-    "hero": {
-        "title": "Créez un CV professionnel avec l'IA",
-        "subtitle": "Obtenez un CV exceptionnel qui augmente vos chances d'embauche. Modèles professionnels, amélioration automatique et support bilingue Arabe/Français."
+    "templates": {
+        "pageTitle": "Modèles de CV Professionnels",
+        "pageSubtitle": "Choisissez parmi notre collection de modèles optimisés pour les ATS et conçus pour tous les secteurs",
+        "search": "Rechercher des modèles...",
+        "all": "Tous",
+        "count": "modèles disponibles",
+        "atsOptimized": "Optimisé ATS",
+        "free100": "100% Gratuit",
+        "topRated": "Mieux notés - Score ATS élevé",
+        "atsScore": "Score ATS",
+        "atsCompatibility": "Compatibilité ATS",
+        "bestFor": "Idéal pour",
+        "keyFeatures": "Caractéristiques Clés",
+        "sectionsIncluded": "Sections Incluses",
+        "proTips": "Conseils Pro",
+        "colorPalette": "Palette de couleurs",
+        "difficulty": {
+            "easy": "Facile",
+            "medium": "Moyen",
+            "advanced": "Avancé"
+        },
+        "categories": {
+            "all": "Tous les modèles",
+            "tech": "Tech & Programmation",
+            "business": "Commerce & Gestion",
+            "creative": "Créatif & Design",
+            "medical": "Santé & Médical",
+            "education": "Éducation & Académique",
+            "engineering": "Ingénierie"
+        },
+        "styles": {
+            "modern": "Moderne",
+            "minimalist": "Minimaliste",
+            "creative": "Créatif",
+            "professional": "Professionnel",
+            "bold": "Audacieux"
+        },
+        "levels": {
+            "entry": "Débutant",
+            "mid": "Intermédiaire",
+            "senior": "Senior",
+            "executive": "Exécutif"
+        },
+        "sortBy": {
+            "popularity": "Plus Populaire",
+            "atsScore": "Score ATS",
+            "rating": "Note",
+            "name": "Nom"
+        },
+        "filters": {
+            "category": "Catégorie",
+            "style": "Style",
+            "experience": "Niveau d'expérience",
+            "photoPosition": "Position de la photo",
+            "designStyle": "Style de design"
+        },
+        "photoPositions": {
+            "topLeft": "En haut à gauche",
+            "topRight": "En haut à droite",
+            "center": "Centre",
+            "sidebar": "Barre latérale",
+            "circular": "Circulaire",
+            "noPhoto": "Sans photo",
+            "minimal": "Minimaliste"
+        },
+        "designStyles": {
+            "modern": "Moderne",
+            "classic": "Classique",
+            "creative": "Créatif",
+            "executive": "Exécutif",
+            "academic": "Académique",
+            "technical": "Technique"
+        },
+        "emptyState": {
+            "noTemplates": "Aucun modèle trouvé",
+            "noFavorites": "Aucun favori enregistré",
+            "noRecent": "Aucun modèle récent",
+            "adjustFilters": "Essayez de modifier votre recherche ou vos filtres",
+            "resetFilters": "Réinitialiser les filtres"
+        },
+        "actions": {
+            "preview": "Aperçu",
+            "use": "Utiliser",
+            "select": "Sélectionner"
+        },
+        "names": {
+            "tech-modern-developer": "Développeur Moderne",
+            "tech-full-stack": "Développeur Full Stack",
+            "tech-data-scientist": "Data Scientist",
+            "tech-devops-engineer": "Ingénieur DevOps",
+            "tech-ui-ux-designer": "Designer UI/UX",
+            "business-executive": "Leader Exécutif",
+            "business-manager": "Manager Moderne",
+            "business-consultant": "Consultant Stratégique",
+            "business-sales": "Champion des Ventes",
+            "creative-graphic-designer": "Designer Créatif",
+            "creative-marketing": "Spécialiste Marketing",
+            "medical-doctor": "Médecin Professionnel",
+            "medical-nurse": "Infirmier Spécialisé",
+            "education-teacher": "Enseignant Pro",
+            "education-researcher": "Chercheur Académique",
+            "classic-simple": "Classique Simple",
+            "minimalist-elegant": "Minimaliste Élégant"
+        },
+        "descriptions": {
+            "tech-modern-developer": "Modèle épuré et professionnel idéal pour les développeurs. Dispose d'un design moderne à deux colonnes avec une section compétences mise en avant.",
+            "tech-full-stack": "Conception complète pour présenter l'expertise front-end et back-end. Idéal pour les développeurs polyvalents.",
+            "tech-data-scientist": "Mettez en valeur votre expertise en analyse de données, ML et publications. Conçu pour les professionnels de la data.",
+            "tech-devops-engineer": "Parfait pour les ingénieurs DevOps, SRE et Cloud. Se concentre sur l'infrastructure, l'automatisation et le CI/CD.",
+            "tech-ui-ux-designer": "CV style portfolio pour les designers. Équilibre créativité et compatibilité ATS.",
+            "business-executive": "Modèle premium pour les cadres et dirigeants. Design épuré et autoritaire qui attire l'attention.",
+            "business-manager": "Idéal pour les chefs de projet et chefs d'équipe. Met en avant le leadership, les KPI et les réalisations d'équipe.",
+            "business-consultant": "Parfait pour les consultants et analystes d'affaires. Présente les travaux clients et les cadres de conseil.",
+            "business-sales": "Mettez en avant vos résultats de vente et objectifs atteints. Design axé sur les chiffres pour les commerciaux.",
+            "creative-graphic-designer": "Modèle audacieux et coloré pour les graphistes. Montre la créativité tout en restant professionnel.",
+            "creative-marketing": "Modèle dynamique pour les pros du marketing. Met en avant les campagnes, le ROI et les stats sociales.",
+            "medical-doctor": "Modèle professionnel pour médecins et praticiens. Se concentre sur les qualifications, spécialités et l'expérience clinique.",
+            "classic-simple": "Le modèle classique le plus compatible ATS. Design simple et efficace adapté à tous les secteurs."
+        },
+        "tips": {
+            "tech": [
+                "Mettez en avant votre stack technique dans la section compétences",
+                "Ajoutez des liens vers GitHub et vos projets",
+                "Chiffrez vos réalisations (amélioration des performances, nombre d'utilisateurs)"
+            ],
+            "business": [
+                "Commencez par l'impact stratégique, pas les tâches quotidiennes",
+                "Indiquez la taille de l'équipe et le budget géré",
+                "Chiffrez les indicateurs clés de performance (KPI)"
+            ],
+            "creative": [
+                "Ajoutez un lien vers votre portfolio en ligne",
+                "Montrez votre processus de design, pas seulement les résultats",
+                "Listez les outils de design : Figma, Adobe XD"
+            ],
+            "medical": [
+                "Listez toutes les licences et certifications médicales",
+                "Incluez les recherches publiées et les conférences",
+                "Précisez les spécialités et l'expertise clinique"
+            ]
+        }
+    },
+    "cvBuilder": {
+        "title": "Créateur de CV",
+        "livePreview": "Aperçu en direct",
+        "printReady": "Prêt à imprimer",
+        "realTimeUpdates": "Mises à jour temps réel",
+        "autoSave": "Sauvegarde auto",
+        "saving": "Enregistrement...",
+        "saved": "Enregistré",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "history": "Historique",
+        "menu": "Menu",
+        "demo": "Démo",
+        "loadingPreview": "Chargement de l'aperçu...",
+        "applyingTemplate": "Application du modèle...",
+        "confirmLoadDemo": "Cela chargera des données de démonstration professionnelles pour le modèle actuel. Vos données existantes seront fusionnées. Continuer ?",
+        "demoLoaded": "Données de démonstration chargées avec succès !",
+        "toasts": {
+            "templateApplied": "Modèle appliqué avec succès !",
+            "cvSaved": "CV enregistré sur le cloud avec succès !",
+            "savedLocally": "Enregistré localement (mode hors ligne)",
+            "saveFailed": "Échec de l'enregistrement.",
+            "resetSuccess": "CV réinitialisé avec succès",
+            "analysisComplete": "Analyse IA terminée !",
+            "analysisFailed": "L'analyse IA a échoué",
+            "contentApplied": "Contenu IA appliqué !",
+            "photoEnhanced": "Photo améliorée avec l'IA !"
+        },
+        "confirmations": {
+            "reset": "Êtes-vous sûr de vouloir réinitialiser toutes les données ? Cette action est irréversible."
+        },
+        "templateConfig": {
+            "title": "Configurateur",
+            "clickToCustomize": "Cliquez pour personnaliser",
+            "tabs": {
+                "templates": "Modèles",
+                "colors": "Couleurs",
+                "fonts": "Polices",
+                "spacing": "Espacement"
+            },
+            "colors": {
+                "primary": "Couleur principale",
+                "custom": "Couleur personnalisée",
+                "placeholder": "#3b82f6"
+            },
+            "fonts": {
+                "system": "Interface Système",
+                "serif": "Sérif (Georgia)",
+                "sans": "Sans-serif (Inter)",
+                "mono": "Monospace (JetBrains)"
+            },
+            "spacing": {
+                "compact": "Compact",
+                "normal": "Normal",
+                "spacious": "Aéré"
+            },
+            "premium": {
+                "title": "Débloquez tous les modèles",
+                "subtitle": "Accédez aux modèles premium avec Pro",
+                "upgrade": "Améliorer"
+            }
+        },
+        "export": {
+            "button": "Exporter",
+            "title": "Exporter votre CV",
+            "subtitle": "Choisissez un format d'export",
+            "tip": "💡 Conseil: Le format PDF est recommandé pour les candidatures en ligne.",
+            "formats": {
+                "pdf": {
+                    "label": "PDF",
+                    "desc": "Format le plus courant, idéal pour les candidatures"
+                },
+                "pdfAts": {
+                    "label": "PDF (Texte / ATS)",
+                    "desc": "Optimisé pour les ATS (Texte sélectionnable)"
+                },
+                "pdf-hq": {
+                    "label": "Haute Performance (Vector PDF)",
+                    "desc": "Rapide, fichier léger et compatible ATS"
+                },
+                "docx": {
+                    "label": "Word (DOCX)",
+                    "desc": "Modifiable dans Microsoft Word ou Google Docs"
+                },
+                "txt": {
+                    "label": "Texte brut",
+                    "desc": "Format simple, compatible avec tous les systèmes ATS"
+                },
+                "json": {
+                    "label": "JSON",
+                    "desc": "Sauvegarde des données pour import/export"
+                }
+            }
+        },
+        "tabs": {
+            "personal": "Personnel",
+            "experience": "Expérience",
+            "education": "Formation",
+            "skills": "Compétences",
+            "languages": "Langues",
+            "templates": "Modèles",
+            "ai": "Assistant IA",
+            "editor": "Éditeur",
+            "preview": "Aperçu",
+            "analysis": "Analyse",
+            "metrics": "Métriques ATS",
+            "smartFix": "Correction intelligente",
+            "formatting": "Formatage",
+            "keywords": "Mots-clés",
+            "impact": "Impact",
+            "completeness": "Complétude"
+        },
+        "templates": {
+            "title": "Modèles Professionnels",
+            "subtitle": "Optimisés pour ATS",
+            "proTemplates": "Modèles Pro",
+            "atsOptimized": "Optimisé ATS",
+            "avgAts": "Moyenne ATS",
+            "searchPlaceholder": "Rechercher..."
+        },
+        "ai": {
+            "title": "Assistant IA",
+            "improve": "Améliorer contenu",
+            "generate": "Générer contenu",
+            "suggestions": "Suggestions IA",
+            "apply": "Appliquer",
+            "dismiss": "Ignorer"
+        },
+        "loadSampleData": "Charger démo",
+        "clearAll": "Tout effacer",
+        "startFresh": "Recommencer",
+        "save": "Enregistrer",
+        "preview": "Aperçu",
+        "loading": {
+            "title": "Chargement du créateur de CV...",
+            "subtitle": "Préparation de votre éditeur de CV professionnel avec assistance IA"
+        },
+        "sync": {
+            "offline": "Hors ligne",
+            "syncing": "Synchronisation...",
+            "synced": "Synchronisé",
+            "error": "Erreur de sync",
+            "unsynced": "Modifications non sync.",
+            "upToDate": "À jour",
+            "never": "Jamais",
+            "title": "État de synchronisation",
+            "connection": "Connexion:",
+            "online": "En ligne",
+            "lastSync": "Dernière sync:",
+            "pending": "En attente:",
+            "items": "{count} élément(s)",
+            "syncNow": "Sync maintenant",
+            "localMode": "Mode Local",
+            "saving": "Enregistrement...",
+            "saved": "Enregistré",
+            "lastSaved": "Dernier enregistrement: {time}"
+        }
+    },
+    "errors": {
+        "required": "Ce champ est requis",
+        "invalidEmail": "Email invalide",
+        "invalidPhone": "Numéro de téléphone invalide",
+        "invalidUrl": "URL invalide",
+        "loadError": "Erreur de chargement",
+        "saveError": "Erreur d'enregistrement",
+        "exportError": "Erreur d'exportation"
+    },
+    "landing": {
+        "badge": "100% Gratuit • Aucune Carte Requise",
+        "viewTemplates": "Voir les Modèles",
+        "trust": {
+            "noWatermarks": "Pas de filigrane",
+            "unlimitedExports": "Exports illimités",
+            "noSignup": "Sans inscription"
+        },
+        "stats": {
+            "users": "Utilisateurs satisfaits",
+            "cvs": "CV créés",
+            "success": "Taux de succès",
+            "rating": "Note utilisateurs"
+        },
+        "features": {
+            "title": "Tout ce dont vous avez besoin pour réussir",
+            "subtitle": "Des fonctionnalités puissantes pour créer un CV qui se remarque",
+            "items": {
+                "ai": {
+                    "title": "Contenu propulsé par l'IA",
+                    "description": "Laissez l'IA rédiger des points clés et des résumés convaincants adaptés à votre expérience."
+                },
+                "ats": {
+                    "title": "Modèles compatibles ATS",
+                    "description": "Tous les modèles sont optimisés pour passer les systèmes de suivi des candidatures utilisés par les recruteurs."
+                },
+                "preview": {
+                    "title": "Aperçu instantané",
+                    "description": "Voyez les changements en temps réel avec notre fonctionnalité d'aperçu en direct. Ce que vous voyez est ce que vous obtenez."
+                },
+                "export": {
+                    "title": "Exportez partout",
+                    "description": "Téléchargez votre CV en PDF ou DOCX. Pas de filigrane, pas de limite, complètement gratuit."
+                },
+                "privacy": {
+                    "title": "La confidentialité d'abord",
+                    "description": "Vos données restent privées. Nous ne partageons jamais vos informations avec des tiers."
+                },
+                "quality": {
+                    "title": "Qualité professionnelle",
+                    "description": "Créez des CV qui sortent du lot avec nos modèles conçus par des professionnels."
+                }
+            }
+        },
+        "howItWorks": {
+            "title": "Comment ça marche",
+            "subtitle": "Trois étapes simples pour votre CV parfait",
+            "steps": {
+                "1": {
+                    "title": "Choisissez un modèle",
+                    "description": "Sélectionnez parmi notre collection de modèles professionnels et compatibles ATS."
+                },
+                "2": {
+                    "title": "Remplissez vos détails",
+                    "description": "Ajoutez vos informations avec l'aide de l'IA pour un contenu percutant."
+                },
+                "3": {
+                    "title": "Téléchargez et postulez",
+                    "description": "Exportez votre CV et commencez à postuler pour vos emplois de rêve."
+                }
+            }
+        },
+        "testimonials": {
+            "title": "Aimé par les chercheurs d'emploi",
+            "subtitle": "Découvrez ce que nos utilisateurs disent",
+            "at": "chez",
+            "items": {
+                "1": {
+                    "name": "Sarah Dubois",
+                    "role": "Ingénieure logicielle",
+                    "company": "Société Tech",
+                    "text": "MonCVPro m'a aidée à décrocher le job de mes rêves ! Les suggestions IA étaient incroyablement utiles."
+                },
+                "2": {
+                    "name": "Michel Martin",
+                    "role": "Responsable marketing",
+                    "company": "Agence digitale",
+                    "text": "Meilleur créateur de CV gratuit que j'ai utilisé. Les modèles sont modernes et professionnels."
+                },
+                "3": {
+                    "name": "Emma Bernard",
+                    "role": "Analyste de données",
+                    "company": "Société Financière",
+                    "text": "La fonctionnalité d'optimisation ATS m'a donné confiance que mon CV serait vu."
+                }
+            }
+        },
+        "finalCta": {
+            "title": "Prêt à décrocher le job de vos rêves ?",
+            "subtitle": "Rejoignez des milliers de professionnels qui ont créé leur CV parfait avec MonCVPro",
+            "button": "Créez votre CV maintenant — C'est gratuit",
+            "footer": "Aucune carte requise • Pas de frais cachés • Pas de filigrane"
+        }
+    },
+    "footer": {
+        "tagline": "Créez des CV professionnels avec des outils alimentés par l'IA",
+        "links": {
+            "privacy": "Politique de confidentialité",
+            "terms": "Conditions d'utilisation",
+            "contact": "Contactez-nous",
+            "support": "Support"
+        },
+        "copyright": "Tous droits réservés."
+    },
+    "aiAssistant": {
+        "title": "Assistant IA",
+        "beta": "Bêta",
+        "triggerButton": "Assistant IA",
+        "dailyLimit": "{used}/{limit} utilisés",
+        "undo": "Annuler (Ctrl+Z)",
+        "redo": "Refaire (Ctrl+Y)",
+        "history": "Voir l'historique",
+        "preview": "Aperçu des modifications",
+        "previewSubtitle": "Examinez les suggestions de l'IA avant de les appliquer",
+        "assistantSubtitle": "Votre compagnon intelligent d'optimisation de CV",
+        "tabs": {
+            "generate": "Générer",
+            "analyze": "Analyse ATS",
+            "match": "Correspondance d'emploi",
+            "star": "Constructeur STAR",
+            "improve": "Amélioration intelligente",
+            "letter": "Lettre de Motivation"
+        },
+        "coverLetter": {
+            "title": "Générateur de Lettre de Motivation IA",
+            "description": "Générez une lettre de motivation personnalisée et percutante basée sur votre CV et le poste visé.",
+            "button": "Générer la Lettre",
+            "generating": "Rédaction de votre lettre...",
+            "copy": "Copier dans le presse-papiers",
+            "copied": "Copié !",
+            "download": "Télécharger PDF",
+            "placeholder": "Votre lettre générée apparaîtra ici...",
+            "tailorNote": "Conseil de pro : Assurez-vous d'avoir saisi une description du poste cible dans l'onglet 'Amélioration intelligente' pour de meilleurs résultats.",
+            "tones": {
+                "label": "Choisir le ton",
+                "professional": "Professionnel",
+                "confident": "Confiant",
+                "friendly": "Amical"
+            }
+        },
+        "success": {
+            "applied": "Modifications appliquées avec succès !",
+            "unlockPro": "L'IA a aidé à améliorer votre CV — débloquez l'IA illimitée avec Pro"
+        },
+        "previewMode": {
+            "title": "Mode aperçu",
+            "description": "Examinez les modifications générées par l'IA avant qu'elles ne soient appliquées à votre CV.",
+            "warning": "Rien n'est enregistré tant que vous ne confirmez pas !",
+            "changes": "Modifications proposées",
+            "changesCount": "Modifications proposées ({count})",
+            "before": "Avant",
+            "after": "Après",
+            "discard": "Rejeter",
+            "apply": "Appliquer les modifications",
+            "empty": "Vide",
+            "noExperiences": "Aucune expérience"
+        },
+        "generate": {
+            "title": "Génération alimentée par l'IA",
+            "description": "Entrez le titre de votre emploi cible et laissez l'IA générer du contenu professionnel.",
+            "warning": "Vous prévisualiserez les modifications avant qu'elles ne soient appliquées !",
+            "info": {
+                "title": "Génération alimentée par l'IA",
+                "description": "Entrez le titre de votre emploi cible et laissez l'IA générer du contenu professionnel.",
+                "warning": "Vous prévisualiserez les modifications avant qu'elles ne soient appliquées !"
+            },
+            "jobTitle": "Titre de l'emploi cible",
+            "jobDescription": "Description de l'emploi",
+            "optional": "(Optionnel)",
+            "placeholder": "par ex. Ingénieur logiciel senior",
+            "placeholderDesc": "Collez la description de l'emploi ici pour de meilleurs résultats...",
+            "button": "Générer et prévisualiser",
+            "generating": "Génération..."
+        },
+        "improve": {
+            "title": "Améliorations intelligentes",
+            "description": "L'IA analyse votre CV et applique automatiquement des améliorations.",
+            "warning": "Utilisez Annuler pour revenir en arrière !",
+            "targetJob": {
+                "title": "Description du poste cible",
+                "placeholder": "Collez la description du poste ici pour personnaliser les améliorations...",
+                "tip": "L'ajout d'une description de poste permet à l'IA d'effectuer une injection de mots-clés et d'adapter vos réalisations à ce que recherchent les recruteurs."
+            },
+            "applied": "Améliorations appliquées",
+            "quick": "Améliorations rapides",
+            "grammar": {
+                "title": "Corriger la grammaire et l'orthographe",
+                "desc": "Corriger les fautes de frappe et les erreurs grammaticales"
+            },
+            "verbs": {
+                "title": "Ajouter des verbes d'action",
+                "desc": "Remplacer les verbes faibles par des mots d'action percutants"
+            },
+            "keywords": {
+                "title": "Optimiser les mots-clés",
+                "desc": "Ajouter des mots-clés spécifiques au secteur pour l'ATS"
+            },
+            "metrics": {
+                "title": "Quantifier les réalisations",
+                "desc": "Ajouter des chiffres et des mesures pour montrer l'impact"
+            },
+            "custom": {
+                "title": "Améliorations personnalisées",
+                "apply": "Appliquer les améliorations personnalisées",
+                "actionVerbs": "Verbes d'action",
+                "atsKeywords": "Mots-clés ATS",
+                "expandSummary": "Développer le résumé",
+                "suggestSkills": "Suggérer des compétences"
+            },
+            "all": {
+                "button": "Améliorer automatiquement toutes les sections",
+                "applying": "Application des améliorations..."
+            }
+        },
+        "limitModal": {
+            "titleReached": "Vous avez atteint la limite quotidienne de l'IA",
+            "descReached": "Vous avez utilisé tous vos crédits IA pour aujourd'hui. Rejoignez la liste d'attente pour un accès illimité.",
+            "titlePro": "Rejoindre la liste d'attente Pro",
+            "descPro": "Débloquez des outils IA illimités, l'optimisation ATS et des fonctionnalités premium. Soyez le premier à y accéder.",
+            "unlockBtn": "Débloquer l'IA illimitée 🚀",
+            "continueBtn": "Continuer demain"
+        },
+        "feedback": {
+            "strengths": {
+                "personal": "Informations personnelles complètes",
+                "contact": "Coordonnées fournies",
+                "summary": "Résumé professionnel inclus",
+                "experience": "{count} expériences professionnelles listées",
+                "verbs": "Utilise des verbes d'action forts",
+                "education": "Parcours académique fourni",
+                "skills": "{count} compétences listées",
+                "metrics": "Inclut des réalisations chiffrées"
+            },
+            "weaknesses": {
+                "name": "Nom complet manquant",
+                "contact": "Coordonnées incomplètes",
+                "summary": "Aucun résumé professionnel",
+                "experience": "Historique professionnel limité",
+                "verbs": "Utilisation limitée des verbes d'action",
+                "education": "Aucune information sur la formation",
+                "skills": "Liste de compétences limitée",
+                "metrics": "Manque de résultats quantifiables"
+            },
+            "suggestions": {
+                "name": "Ajoutez votre nom complet",
+                "contact": "Ajoutez l'email et le numéro de téléphone",
+                "summary": "Ajoutez un résumé professionnel percutant (150-200 mots)",
+                "experience": "Ajoutez au moins 2-3 expériences pertinentes",
+                "verbs": "Utilisez des verbes d'action : Dirigé, Géré, Développé, Atteint, etc.",
+                "education": "Ajoutez votre formation académique",
+                "skills": "Ajoutez au moins 5-8 compétences pertinentes",
+                "metrics": "Ajoutez des chiffres et des métriques pour montrer votre impact"
+            },
+            "keywords": {
+                "industry": "Compétences spécifiques au secteur",
+                "verbs": [
+                    "Dirigé",
+                    "Géré",
+                    "Développé",
+                    "Atteint"
+                ]
+            }
+        },
+        "sections": {
+            "summary": "Résumé Professionnel",
+            "experience": "Expériences Professionnelles",
+            "skills": "Compétences",
+            "newPosition": "Nouveau Poste",
+            "newExperienceAdded": "Nouvelle expérience ajoutée",
+            "skillsAdded": "{count} compétences (+{new} nouvelles)",
+            "latestExperience": "Dernière Expérience",
+            "currentDescription": "Description actuelle...",
+            "keyExpertise": "Expertise Clé",
+            "fixedGrammar": "Grammaire et orthographe corrigées",
+            "aiEnhanced": "Description améliorée par l'IA",
+            "addedKeywords": "{count} mots-clés IA ajoutés"
+        },
+        "errors": {
+            "noJobTitle": "Veuillez entrer un titre de poste",
+            "generateFailed": "Échec de la génération. Veuillez réessayer.",
+            "improveFailed": "Échec de l'application des améliorations",
+            "noImprovements": "Aucune amélioration significative trouvée. Votre contenu est déjà solide ! 💪"
+        },
+        "streaming": {
+            "status": "L'IA réfléchit...",
+            "ready": "Améliorations suggérées prêtes",
+            "stop": "Arrêter l'IA",
+            "apply": "Appliquer toutes les améliorations",
+            "reject": "Ignorer les suggestions"
+        }
+    },
+    "history": {
+        "title": "Historique des modifications",
+        "subtitle": "{count} actions • Étape {index} sur {total}",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "empty": {
+            "title": "Aucun historique pour le moment",
+            "desc": "Commencez à modifier votre CV pour voir les changements ici"
+        },
+        "current": "Actuel",
+        "ai": "IA",
+        "restore": "Restaurer cet état",
+        "goto": "Aller à cet état",
+        "actions": {
+            "Update Personal Info": "Mise à jour des infos personnelles",
+            "Update Summary": "Mise à jour du résumé",
+            "Add Experience": "Ajout d'expérience",
+            "Remove Experience": "Suppression d'expérience",
+            "Reorder Experiences": "Réorganisation des expériences",
+            "Add Education": "Ajout de formation",
+            "Remove Education": "Suppression de formation",
+            "Add Skill": "Ajout de compétence",
+            "Remove Skill": "Suppression de compétence",
+            "Add Language": "Ajout de langue",
+            "Remove Language": "Suppression de langue",
+            "Apply Template": "Application du modèle",
+            "Apply Template with Sample Data": "Modèle appliqué avec données d'exemple",
+            "Load Sample Data": "Chargement des données d'exemple",
+            "Clear Sample Data": "Réinitialisation à blanc",
+            "Reset CV": "Réinitialisation du CV",
+            "AI Suggestion Applied": "Suggestion IA appliquée",
+            "Improve Experience with Action Verbs": "Amélioration avec verbes d'action",
+            "Improve Summary with Keywords": "Amélioration avec mots-clés",
+            "Add Quantifiable Metrics": "Ajout de métriques chiffrées",
+            "Auto Improve All Sections": "Amélioration automatique globale",
+            "AI Enhanced": "Amélioré par l'IA",
+            "Proposed Changes Applied": "Changements proposés appliqués"
+        },
+        "clear": {
+            "button": "Effacer tout l'historique",
+            "confirmTitle": "Effacer tout l'historique ?",
+            "confirmDesc": "Cela supprimera définitivement toutes les {count} entrées d'historique. Vous ne pourrez pas annuler les modifications passées.",
+            "cancel": "Annuler",
+            "confirm": "Effacer l'historique"
+        },
+        "time": {
+            "justNow": "À l'instant",
+            "minutesAgo": "Il y a {count}m",
+            "hoursAgo": "Il y a {count}h",
+            "daysAgo": "Il y a {count}j"
+        }
+    },
+    "jobMatcher": {
+        "title": "Analyse de description de poste",
+        "description": "Collez une description de poste pour voir à quel point votre CV correspond et obtenez des suggestions personnalisées.",
+        "input": {
+            "label": "Description du poste",
+            "placeholder": "Collez la description complète du poste ici...\n\nExemple :\nNous recherchons un développeur Full Stack senior avec plus de 5 ans d'expérience en React, Node.js et TypeScript...",
+            "paste": "Coller depuis le presse-papiers"
+        },
+        "analyze": {
+            "button": "Analyser la correspondance",
+            "processing": "Analyse de la correspondance..."
+        },
+        "tips": {
+            "pro": "Conseil de pro :",
+            "desc": "Copiez l'intégralité de l'offre d'emploi, y compris les exigences, les qualifications et les responsabilités pour l'analyse la plus précise."
+        },
+        "results": {
+            "score": "Score de correspondance",
+            "analyzeNew": "Analyser un nouveau poste",
+            "messages": {
+                "great": "Excellente correspondance ! Votre CV est bien aligné avec ce poste.",
+                "moderate": "Correspondance modérée. Quelques ajustements peuvent améliorer vos chances.",
+                "poor": "Ce rôle nécessite des compétences que vous pourriez ne pas avoir. Voir les suggestions ci-dessous."
+            },
+            "grades": {
+                "A": "Excellente correspondance",
+                "B": "Forte correspondance",
+                "C": "Correspondance modérée",
+                "D": "Faible correspondance",
+                "F": "Mauvaise correspondance"
+            },
+            "stats": {
+                "matchingSkills": "Compétences correspondantes",
+                "missingSkills": "Compétences manquantes",
+                "experience": "Expérience",
+                "education": "Éducation",
+                "req": "req : {value}"
+            }
+        },
+        "sections": {
+            "insights": {
+                "title": "Avantage concurrentiel :"
+            },
+            "skills": {
+                "title": "Analyse des compétences",
+                "matching": "Compétences correspondantes ({count})",
+                "missing": "Compétences manquantes ({count})",
+                "copyAll": "Tout copier",
+                "copied": "Copié !",
+                "addHint": "Cliquez sur une compétence pour l'ajouter à votre CV"
+            },
+            "keywords": {
+                "title": "Analyse des mots-clés",
+                "found": "Trouvé dans votre CV",
+                "suggested": "Pensez à ajouter ces mots-clés"
+            },
+            "priority": {
+                "title": "Améliorations prioritaires",
+                "priorityLevel": "Priorité {level}",
+                "levels": {
+                    "high": "haute",
+                    "medium": "moyenne",
+                    "low": "basse"
+                },
+                "categories": {
+                    "skill": "compétence",
+                    "keyword": "mot-clé",
+                    "experience": "expérience",
+                    "education": "éducation",
+                    "certification": "certification"
+                },
+                "add": "Ajouter"
+            },
+            "requirements": {
+                "title": "Exigences extraites",
+                "categories": {
+                    "hardSkills": "Compétences techniques",
+                    "softSkills": "Compétences comportementales",
+                    "experience": "Expérience",
+                    "education": "Éducation",
+                    "tools": "Outils",
+                    "certifications": "Certifications"
+                }
+            }
+        },
+        "analyzeAnother": "Analyser une autre description de poste"
+    },
+    "star": {
+        "title": "Constructeur Méthode STAR",
+        "description": "Créez des points percutants et axés sur les résultats en suivant le cadre <strong class=\"text-indigo-600\">Situation, Tâche, Action, Résultat</strong>.",
+        "changeTemplate": "Choisir un autre modèle",
+        "back": "Retour",
+        "next": "Étape suivante",
+        "assembling": "Assemblage...",
+        "finish": "Terminer et Créer",
+        "exampleLabel": "Bon exemple",
+        "placeholder": "Exemple : {example}",
+        "labels": {
+            "situation": "Situation",
+            "task": "Tâche",
+            "action": "Action",
+            "result": "Résultat"
+        },
+        "templates": {
+            "technical-project": {
+                "label": "Projet Technique",
+                "prompts": {
+                    "situation": "Quel était le problème ou le défi auquel vous avez été confronté ?",
+                    "task": "Quel était votre rôle ou objectif spécifique ?",
+                    "action": "Quelle solution technique avez-vous mise en œuvre ? (langages, outils)",
+                    "result": "Quel a été le résultat quantifiable ? (performance, coût, utilisateurs)"
+                },
+                "example": {
+                    "situation": "L'ancienne plateforme souffrait de temps de chargement de 5s.",
+                    "task": "Je devais optimiser les performances pour améliorer les conversions.",
+                    "action": "J'ai reconstruit la page avec Next.js et du cache agressif.",
+                    "result": "Réduction du temps de charge de 60% et +15% de conversion."
+                }
+            },
+            "optimization": {
+                "label": "Optimisation de Processus",
+                "prompts": {
+                    "situation": "Décrivez un processus inefficace.",
+                    "task": "Quel était l'objectif de l'optimisation ?",
+                    "action": "Quelles étapes spécifiques avez-vous prises ?",
+                    "result": "Combien de temps ou d'argent a été économisé ?"
+                },
+                "example": {
+                    "situation": "La saisie manuelle des rapports prenait 20h par semaine.",
+                    "task": "Automatiser le flux pour gagner du temps.",
+                    "action": "Développement d'un script Python automatisé.",
+                    "result": "Gain de 80h par mois et élimination des erreurs."
+                }
+            },
+            "leadership": {
+                "label": "Leadership et Mentorat",
+                "prompts": {
+                    "situation": "Quel était le contexte de l'équipe ?",
+                    "task": "Quel était votre objectif de leadership ?",
+                    "action": "Comment avez-vous guidé l'équipe ?",
+                    "result": "Quel a été l'impact sur la performance ?"
+                },
+                "example": {
+                    "situation": "Les juniors avaient du mal avec le code complexe.",
+                    "task": "Améliorer l'intégration et la qualité du code.",
+                    "action": "Sessions de pair programming et documentation.",
+                    "result": "Temps d'intégration divisé par 2."
+                }
+            },
+            "sales": {
+                "label": "Revenus et Ventes",
+                "prompts": {
+                    "situation": "Quelle était la condition du marché ?",
+                    "task": "Quel était votre objectif ?",
+                    "action": "Quelle stratégie avez-vous utilisée ?",
+                    "result": "Quel chiffre d'affaires avez-vous généré ?"
+                },
+                "example": {
+                    "situation": "Les objectifs étaient menacés par un nouveau concurrent.",
+                    "task": "Dépasser l'objectif de 1M$.",
+                    "action": "Nouvelle stratégie de prospection Grands Comptes.",
+                    "result": "1.2M$ de revenus générés (120% de l'objectif)."
+                }
+            }
+        }
+    },
+    "ats": {
+        "title": "Analyse ATS",
+        "analyzing": "Analyse de votre CV...",
+        "checkingMetrics": "Vérification de 18 indicateurs de compatibilité ATS",
+        "clickToAnalyze": "Cliquez pour analyser votre CV",
+        "analyzeNow": "Analyser maintenant",
+        "outOf100": "sur 100",
+        "excellent": "Excellent ! Votre CV est prêt pour les ATS.",
+        "goodProgress": "Bonne progression, mais des améliorations sont possibles.",
+        "needsOptimization": "Votre CV a besoin d'optimisation pour passer les systèmes ATS.",
+        "passRate": "Taux de réussite ATS estimé :",
+        "priorityImprovements": "Améliorations prioritaires",
+        "fix": "Réparer",
+        "showAll": "Afficher les 18 indicateurs",
+        "hideAll": "Masquer les indicateurs",
+        "strengths": "Points forts",
+        "weaknesses": "Points à améliorer",
+        "weight": "Poids :",
+        "autoFix": "Auto-réparer",
+        "showDetails": "Afficher les détails",
+        "hideDetails": "Masquer les détails",
+        "reAnalyze": "Ré-analyser",
+        "metrics": "Indicateurs"
+    },
+    "aiPhotoEditor": {
+        "title": "Studio Photo IA",
+        "subtitle": "Transformez votre photo",
+        "tabs": {
+            "enhance": "Améliorer",
+            "outfit": "Tenue",
+            "background": "Fond"
+        },
+        "upload": {
+            "title": "Téléchargez votre photo",
+            "description": "Choisissez une photo à transformer avec les améliorations IA",
+            "button": "Sélectionner une image"
+        },
+        "processing": {
+            "title": "L'IA opère sa magie...",
+            "action": "{action}"
+        },
+        "adjustments": {
+            "title": "Ajustements",
+            "zoom": "Zoom",
+            "rotate": "Rotation"
+        },
+        "enhanceTab": {
+            "description": "Améliorez automatiquement la qualité de votre photo",
+            "button": "Auto-Amélioration IA",
+            "tip": "Corrige l'éclairage, la netteté et l'équilibre des couleurs"
+        },
+        "outfitTab": {
+            "description": "Changez de tenue avec l'IA",
+            "colorTitle": "Couleur de la tenue",
+            "chooseTitle": "Choisir la tenue"
+        },
+        "backgroundTab": {
+            "description": "Changez ou supprimez le fond"
+        },
+        "actions": {
+            "undo": "Annuler",
+            "reset": "Réinitialiser",
+            "cancel": "Annuler",
+            "save": "Enregistrer la photo"
+        },
+        "outfits": {
+            "formal-suit": "Costume formel",
+            "blazer": "Smart Casual",
+            "professor": "Style Professeur",
+            "shirt": "Chemise",
+            "hoodie": "Tech Casual",
+            "scrubs": "Médical"
+        },
+        "colors": {
+            "black": "Noir",
+            "navy": "Bleu Marine",
+            "charcoal": "Gris Anthracite",
+            "burgundy": "Bordeaux",
+            "white": "Blanc",
+            "beige": "Beige"
+        },
+        "backgrounds": {
+            "white": "Blanc Studio",
+            "gradient": "Dégradé doux",
+            "office": "Bureau",
+            "blur": "Flouter l'actuel"
+        },
+        "notifications": {
+            "success": "Image générée avec succès !",
+            "demo": "Mode Démo : {message}",
+            "error": "Utilisation du mode démo (Erreur API)."
+        }
     }
 }

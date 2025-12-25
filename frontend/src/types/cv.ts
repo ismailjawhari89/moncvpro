@@ -46,6 +46,14 @@ export interface Language {
     proficiency: 'basic' | 'conversational' | 'fluent' | 'native';
 }
 
+// Optional certification for professional templates
+export interface Certification {
+    id: string;
+    name: string;
+    issuer: string;
+    date: string;
+}
+
 export interface CVData {
     id?: string;
     personalInfo: PersonalInfo;
@@ -53,6 +61,7 @@ export interface CVData {
     education: Education[];
     skills: Skill[];
     languages: Language[];
+    certifications?: Certification[]; // Optional for professional templates
     summary: string;
     // System Data
     template: TemplateType;
@@ -62,8 +71,20 @@ export interface CVData {
         updatedAt: string;
         version: number;
         lastAutoSave: string;
+        lastModified: number; // For sync conflict resolution
     };
     contentLanguage: 'en' | 'ar' | 'fr'; // Language of the CV content
+    targetJob?: string; // Target job description for AI tailoring
+    coverLetter?: CoverLetterData;
+}
+
+export interface CoverLetterData {
+    content: string;
+    recipientName?: string;
+    recipientTitle?: string;
+    companyName?: string;
+    date?: string;
+    lastGenerated?: string;
 }
 
 export interface TemplateData {
@@ -80,7 +101,23 @@ export interface TemplateData {
     languages: Language[];
 }
 
-export type TemplateType = 'modern' | 'classic' | 'creative';
+export type TemplateType =
+    | 'modern'
+    | 'classic'
+    | 'creative'
+    | 'executive'
+    | 'minimalist'
+    | 'tech'
+    | 'modern-developer'
+    | 'medical-doctor'
+    | 'academic-professor'
+    | 'creative-designer'
+    | 'executive-manager'
+    | 'professional-chef'
+    | 'research-scientist'
+    | 'hr-manager'
+    | 'civil-engineer'
+    | 'artist-musician';
 
 export interface SavedCV {
     id: string;
@@ -88,4 +125,18 @@ export interface SavedCV {
     template: TemplateType;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface AISuggestion {
+    id: string;
+    type: 'personal' | 'summary' | 'experience' | 'education' | 'skill' | 'language' | 'general';
+    targetId?: string;
+    targetItemTitle?: string;
+    field?: string;
+    originalContent?: string;
+    suggestedContent: string;
+    improvementBrief: string;
+    reason: string;
+    applied: boolean;
+    timestamp: number;
 }

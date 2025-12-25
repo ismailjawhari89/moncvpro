@@ -1,15 +1,17 @@
-import React from 'react';
 import { useCVStore } from '@/stores/useCVStore';
 import { Language } from '@/types/cv';
 import { Card, InputField } from '@/components/ui/FormFields';
 import { Trash2, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface LanguagesSectionProps {
     isDark?: boolean;
 }
 
 export default function LanguagesSection({ isDark }: LanguagesSectionProps) {
+    const t = useTranslations('cv-form.languages');
     const languages = useCVStore((state) => state.cvData.languages);
+    // ...
     const addLanguage = useCVStore((state) => state.addLanguage);
     const removeLanguage = useCVStore((state) => state.removeLanguage);
     const updateLanguage = useCVStore((state) => state.updateLanguage);
@@ -32,7 +34,7 @@ export default function LanguagesSection({ isDark }: LanguagesSectionProps) {
                                 label=""
                                 value={lang.name}
                                 onChange={(val) => updateLanguage(lang.id, 'name', val)}
-                                placeholder="English, Spanish..."
+                                placeholder={t('name')}
                                 isDark={isDark}
                                 className="flex-1"
                             />
@@ -44,10 +46,10 @@ export default function LanguagesSection({ isDark }: LanguagesSectionProps) {
                                     : 'bg-white border-gray-300 text-gray-900'
                                     } focus:ring-2 focus:ring-blue-500 outline-none`}
                             >
-                                <option value="basic">Basic</option>
-                                <option value="conversational">Conversational</option>
-                                <option value="fluent">Fluent</option>
-                                <option value="native">Native</option>
+                                <option value="basic">{t('levels.basic')}</option>
+                                <option value="conversational">{t('levels.conversational')}</option>
+                                <option value="fluent">{t('levels.fluent')}</option>
+                                <option value="native">{t('levels.native')}</option>
                             </select>
                             <button
                                 onClick={() => removeLanguage(lang.id)}
@@ -67,7 +69,7 @@ export default function LanguagesSection({ isDark }: LanguagesSectionProps) {
                     } flex items-center justify-center gap-2 font-medium`}
             >
                 <Plus size={20} />
-                Add Language
+                {t('add')}
             </button>
         </div>
     );

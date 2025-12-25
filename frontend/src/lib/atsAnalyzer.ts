@@ -13,6 +13,7 @@ export interface ATSMetric {
     id: string;
     name: string;
     nameAr: string;
+    nameFr: string;
     category: MetricCategory;
     score: number;        // 0-100
     maxScore: number;     // Always 100
@@ -20,9 +21,13 @@ export interface ATSMetric {
     status: 'pass' | 'warning' | 'fail';
     message: string;
     messageAr: string;
+    messageFr: string;
     tip: string;
     tipAr: string;
+    tipFr: string;
     details?: string[];
+    detailsAr?: string[];
+    detailsFr?: string[];
 }
 
 // Full Analysis Result
@@ -31,56 +36,103 @@ export interface ATSAnalysisResult {
     grade: 'A' | 'B' | 'C' | 'D' | 'F';
     gradeLabel: string;
     gradeLabelAr: string;
+    gradeLabelFr: string;
     metrics: ATSMetric[];
     categoryScores: Record<MetricCategory, number>;
     strengths: string[];
+    strengthsAr: string[];
+    strengthsFr: string[];
     weaknesses: string[];
+    weaknessesAr: string[];
+    weaknessesFr: string[];
     priorityActions: string[];
+    priorityActionsAr: string[];
+    priorityActionsFr: string[];
     estimatedPassRate: number;
     timestamp: number;
 }
 
 // Action verbs for impact analysis
-const STRONG_ACTION_VERBS = [
-    'achieved', 'accomplished', 'accelerated', 'advanced', 'amplified',
-    'built', 'boosted', 'championed', 'consolidated', 'coordinated',
-    'created', 'delivered', 'designed', 'developed', 'directed',
-    'drove', 'enhanced', 'established', 'exceeded', 'executed',
-    'expanded', 'generated', 'grew', 'implemented', 'improved',
-    'increased', 'initiated', 'launched', 'led', 'managed',
-    'maximized', 'mentored', 'negotiated', 'optimized', 'orchestrated',
-    'overhauled', 'pioneered', 'produced', 'reduced', 'restructured',
-    'revolutionized', 'scaled', 'spearheaded', 'streamlined', 'strengthened',
-    'succeeded', 'surpassed', 'transformed', 'upgraded'
-];
+const STRONG_ACTION_VERBS = {
+    en: [
+        'achieved', 'accomplished', 'accelerated', 'advanced', 'amplified',
+        'built', 'boosted', 'championed', 'consolidated', 'coordinated',
+        'created', 'delivered', 'designed', 'developed', 'directed',
+        'drove', 'enhanced', 'established', 'exceeded', 'executed',
+        'expanded', 'generated', 'grew', 'implemented', 'improved',
+        'increased', 'initiated', 'launched', 'led', 'managed',
+        'maximized', 'mentored', 'negotiated', 'optimized', 'orchestrated',
+        'overhauled', 'pioneered', 'produced', 'reduced', 'restructured',
+        'revolutionized', 'scaled', 'spearheaded', 'streamlined', 'strengthened',
+        'succeeded', 'surpassed', 'transformed', 'upgraded'
+    ],
+    fr: [
+        'réalisé', 'accompli', 'accéléré', 'avancé', 'amplifié',
+        'construit', 'boosté', 'développé', 'consolidé', 'coordonné',
+        'créé', 'livré', 'conçu', 'dirigé', 'piloté',
+        'amélioré', 'établi', 'dépassé', 'exécuté',
+        'étendu', 'généré', 'accru', 'implémenté',
+        'augmenté', 'initié', 'lancé', 'dirigé', 'géré',
+        'maximisé', 'mentoré', 'négocié', 'optimisé', 'orchestré',
+        'révisé', 'pionnier', 'produit', 'réduit', 'restructuré',
+        'révolutionné', 'mis à l\'échelle', 'propulsé', 'simplifié', 'renforcé',
+        'réussi', 'surpassé', 'transformé', 'mis à jour'
+    ],
+    ar: [
+        'حققت', 'أنجزت', 'سرعت', 'طورت', 'عززت',
+        'بنيت', 'دعمت', 'قدت', 'وحدت', 'نسقت',
+        'أنشأت', 'سلمت', 'صممت', 'وجهت',
+        'حفزت', 'حسنت', 'أسست', 'تجاوزت', 'نفذت',
+        'وسعت', 'ولدت', 'نميت', 'طبقت',
+        'زدت', 'بادرت', 'أطلقت', 'أدرت',
+        'ضاعت', 'أرشدت', 'فاوضت', 'حسنت', 'نظمت',
+        'أصلحت', 'ابتكرت', 'أنتجت', 'قللت', 'أعدت هيكلة',
+        'أحدثت ثورة', 'وسعت نطاق', 'ترأست', 'بسطت', 'قويت',
+        'نجحت', 'تفوقت', 'حولت', 'حدثت'
+    ]
+};
 
 // Weak/passive words to avoid
-const WEAK_WORDS = [
-    'responsible for', 'duties included', 'helped', 'assisted',
-    'worked on', 'participated in', 'was involved', 'contributed to',
-    'handled', 'dealt with', 'was in charge of', 'took care of'
-];
+const WEAK_WORDS = {
+    en: [
+        'responsible for', 'duties included', 'helped', 'assisted',
+        'worked on', 'participated in', 'was involved', 'contributed to',
+        'handled', 'dealt with', 'was in charge of', 'took care of'
+    ],
+    fr: [
+        'responsable de', 'mes tâches incluaient', 'aidé', 'assisté',
+        'travaillé sur', 'participé à', 'impliqué', 'contribué à',
+        'géré', 'occupé de', 'en charge de'
+    ],
+    ar: [
+        'مسؤول عن', 'المهام شملت', 'ساعدت', 'ساهمت في',
+        'عملت على', 'شاركت في', 'كنت مشاركاً', 'تعاملت مع',
+        'توليت مسؤولية'
+    ]
+};
 
 // Quantifiable metrics patterns
 const METRICS_PATTERNS = [
     /\d+%/,                    // Percentages
     /\$[\d,]+/,                // Dollar amounts
     /€[\d,]+/,                 // Euro amounts
-    /[\d,]+\s*(MAD|DH)/i,      // Moroccan Dirhams
+    /[\d,]+\s*(MAD|DH|درهم)/i, // Moroccan Dirhams
     /\d+[KkMm]\+?/,            // K/M abbreviations
-    /\d+\s*(users|clients|customers|employees|projects|teams)/i,
+    /\d+\s*(users|clients|customers|employees|projects|teams|مستخدم|عميل|موظف|مشروع|فريق|utilisateurs|clients|employés|projets|équipes)/i,
     /\d+x/i,                   // Multipliers
-    /\d+\s*(hours|days|weeks|months|years)/i,
-    /increased.*by\s*\d+/i,
-    /reduced.*by\s*\d+/i,
-    /saved.*\d+/i,
-    /grew.*\d+/i
+    /\d+\s*(hours|days|weeks|months|years|ساعة|يوم|أسبوع|شهر|عام|سنة|heures|jours|semaines|mois|ans)/i,
+    /(increased|زدت|نسبة|augmenté).*by\s*\d+/i,
+    /(reduced|قللت|réduit).*by\s*\d+/i,
+    /(saved|وفرت|économisé).*\d+/i,
+    /(grew|نميت|accru).*\d+/i
 ];
 
 // ATS-friendly section headers
 const STANDARD_SECTIONS = [
     'summary', 'objective', 'experience', 'work experience', 'employment',
-    'education', 'skills', 'certifications', 'projects', 'languages'
+    'education', 'skills', 'certifications', 'projects', 'languages',
+    'ملخص', 'هدف', 'خبرة', 'خبرة عمل', 'توظيف', 'تعليم', 'مهارات', 'شهادات', 'مشاريع', 'لغات',
+    'résumé', 'objectif', 'expérience', 'éducation', 'compétences', 'certifications', 'projets', 'langues'
 ];
 
 /**
@@ -158,12 +210,6 @@ export function analyzeATS(cvData: CVData, jobDescription?: string): ATSAnalysis
     const weightedScore = metrics.reduce((sum, m) => sum + (m.score * m.weight), 0);
     const overallScore = Math.round(weightedScore / totalWeight);
 
-    // Calculate category scores
-    const categoryScores = calculateCategoryScores(metrics);
-
-    // Determine grade
-    const { grade, gradeLabel, gradeLabelAr } = getGrade(overallScore);
-
     // Extract insights
     const strengths = metrics
         .filter(m => m.status === 'pass')
@@ -182,6 +228,46 @@ export function analyzeATS(cvData: CVData, jobDescription?: string): ATSAnalysis
         .slice(0, 5)
         .map(m => m.tip);
 
+    const strengthsFr = metrics
+        .filter(m => m.status === 'pass')
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 5)
+        .map(m => m.messageFr);
+
+    const weaknessesFr = metrics
+        .filter(m => m.status === 'fail')
+        .sort((a, b) => b.weight - a.weight)
+        .map(m => m.messageFr);
+
+    const priorityActionsFr = metrics
+        .filter(m => m.status === 'fail' || m.status === 'warning')
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 5)
+        .map(m => m.tipFr);
+
+    const strengthsAr = metrics
+        .filter(m => m.status === 'pass')
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 5)
+        .map(m => m.messageAr);
+
+    const weaknessesAr = metrics
+        .filter(m => m.status === 'fail')
+        .sort((a, b) => b.weight - a.weight)
+        .map(m => m.messageAr);
+
+    const priorityActionsAr = metrics
+        .filter(m => m.status === 'fail' || m.status === 'warning')
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 5)
+        .map(m => m.tipAr);
+
+    // Calculate category scores
+    const categoryScores = calculateCategoryScores(metrics);
+
+    // Determine grade
+    const { grade, gradeLabel, gradeLabelAr, gradeLabelFr } = getGrade(overallScore);
+
     // Estimate pass rate (simplified model)
     const estimatedPassRate = Math.min(95, Math.max(5, overallScore - 10));
 
@@ -190,11 +276,18 @@ export function analyzeATS(cvData: CVData, jobDescription?: string): ATSAnalysis
         grade,
         gradeLabel,
         gradeLabelAr,
+        gradeLabelFr,
         metrics,
         categoryScores,
         strengths,
+        strengthsAr,
+        strengthsFr,
         weaknesses,
+        weaknessesAr,
+        weaknessesFr,
         priorityActions,
+        priorityActionsAr,
+        priorityActionsFr,
         estimatedPassRate,
         timestamp: Date.now()
     };
@@ -206,26 +299,69 @@ function analyzeContactInfo(cvData: CVData): ATSMetric {
     const { personalInfo } = cvData;
     let score = 0;
     const details: string[] = [];
+    const detailsAr: string[] = [];
+    const detailsFr: string[] = [];
 
-    if (personalInfo.fullName?.trim()) { score += 25; details.push('✓ Full name'); }
-    else details.push('✗ Missing full name');
+    if (personalInfo.fullName?.trim()) {
+        score += 25;
+        details.push('✓ Full name');
+        detailsAr.push('✓ الاسم الكامل');
+        detailsFr.push('✓ Nom complet');
+    } else {
+        details.push('✗ Missing full name');
+        detailsAr.push('✗ الاسم الكامل مفقود');
+        detailsFr.push('✗ Nom complet manquant');
+    }
 
-    if (personalInfo.email?.includes('@')) { score += 25; details.push('✓ Email address'); }
-    else details.push('✗ Missing or invalid email');
+    if (personalInfo.email?.includes('@')) {
+        score += 25;
+        details.push('✓ Email address');
+        detailsAr.push('✓ البريد الإلكتروني');
+        detailsFr.push('✓ Adresse e-mail');
+    } else {
+        details.push('✗ Missing or invalid email');
+        detailsAr.push('✗ بريد إلكتروني مفقود أو غير صالح');
+        detailsFr.push('✗ E-mail manquant ou invalide');
+    }
 
-    if (personalInfo.phone?.trim()) { score += 25; details.push('✓ Phone number'); }
-    else details.push('✗ Missing phone');
+    if (personalInfo.phone?.trim()) {
+        score += 25;
+        details.push('✓ Phone number');
+        detailsAr.push('✓ رقم الهاتف');
+        detailsFr.push('✓ Numéro de téléphone');
+    } else {
+        details.push('✗ Missing phone');
+        detailsAr.push('✗ رقم الهاتف مفقود');
+        detailsFr.push('✗ Téléphone manquant');
+    }
 
-    if (personalInfo.address?.trim()) { score += 15; details.push('✓ Location'); }
-    else details.push('○ Location (optional)');
+    if (personalInfo.address?.trim()) {
+        score += 15;
+        details.push('✓ Location');
+        detailsAr.push('✓ الموقع');
+        detailsFr.push('✓ Localisation');
+    } else {
+        details.push('○ Location (optional)');
+        detailsAr.push('○ الموقع (اختياري)');
+        detailsFr.push('○ Localisation (optionnel)');
+    }
 
-    if (personalInfo.profession?.trim()) { score += 10; details.push('✓ Job title'); }
-    else details.push('○ Job title');
+    if (personalInfo.profession?.trim()) {
+        score += 10;
+        details.push('✓ Job title');
+        detailsAr.push('✓ المسمى الوظيفي');
+        detailsFr.push('✓ Titre du poste');
+    } else {
+        details.push('○ Job title');
+        detailsAr.push('○ المسمى الوظيفي');
+        detailsFr.push('○ Titre du poste');
+    }
 
     return {
         id: 'contact-info',
         name: 'Contact Information',
         nameAr: 'معلومات الاتصال',
+        nameFr: 'Informations de Contact',
         category: 'completeness',
         score: Math.min(100, score),
         maxScore: 100,
@@ -233,9 +369,13 @@ function analyzeContactInfo(cvData: CVData): ATSMetric {
         status: score >= 75 ? 'pass' : score >= 50 ? 'warning' : 'fail',
         message: score >= 75 ? 'Complete contact information' : 'Contact information incomplete',
         messageAr: score >= 75 ? 'معلومات الاتصال مكتملة' : 'معلومات الاتصال غير مكتملة',
+        messageFr: score >= 75 ? 'Informations de contact complètes' : 'Informations de contact incomplètes',
         tip: 'Include full name, professional email, phone number, and city/country',
         tipAr: 'أضف الاسم الكامل، البريد الإلكتروني المهني، رقم الهاتف، والمدينة',
-        details
+        tipFr: 'Incluez nom complet, email pro, téléphone et ville',
+        details,
+        detailsAr,
+        detailsFr
     };
 }
 
@@ -244,28 +384,44 @@ function analyzeSummary(cvData: CVData): ATSMetric {
     const wordCount = summary.split(/\s+/).filter(w => w.length > 0).length;
     let score = 0;
     const details: string[] = [];
+    const detailsAr: string[] = [];
+    const detailsFr: string[] = [];
 
     // Length check (ideal: 50-150 words)
     if (wordCount >= 50 && wordCount <= 150) {
         score += 40;
         details.push(`✓ Good length (${wordCount} words)`);
+        detailsAr.push(`✓ طول جيد (${wordCount} كلمة)`);
+        detailsFr.push(`✓ Bonne longueur (${wordCount} mots)`);
     } else if (wordCount >= 30 && wordCount <= 200) {
         score += 25;
         details.push(`○ Acceptable length (${wordCount} words)`);
+        detailsAr.push(`○ طول مقبول (${wordCount} كلمة)`);
+        detailsFr.push(`○ Longueur acceptable (${wordCount} mots)`);
     } else if (wordCount > 0) {
         score += 10;
-        details.push(`✗ ${wordCount < 30 ? 'Too short' : 'Too long'} (${wordCount} words)`);
+        const msg = wordCount < 30 ? 'Too short' : 'Too long';
+        const msgAr = wordCount < 30 ? 'قصير جداً' : 'طويل جداً';
+        const msgFr = wordCount < 30 ? 'Trop court' : 'Trop long';
+        details.push(`✗ ${msg} (${wordCount} words)`);
+        detailsAr.push(`✗ ${msgAr} (${wordCount} كلمة)`);
+        detailsFr.push(`✗ ${msgFr} (${wordCount} mots)`);
     } else {
         details.push('✗ Missing summary');
+        detailsAr.push('✗ ملخص مفقود');
+        detailsFr.push('✗ Résumé manquant');
     }
 
     // Action verbs in summary
-    const hasActionVerbs = STRONG_ACTION_VERBS.some(verb =>
-        summary.toLowerCase().includes(verb)
+    const allActionVerbs = [...STRONG_ACTION_VERBS.en, ...STRONG_ACTION_VERBS.fr, ...STRONG_ACTION_VERBS.ar];
+    const hasActionVerbs = allActionVerbs.some(verb =>
+        summary.toLowerCase().includes(verb.toLowerCase())
     );
     if (hasActionVerbs) {
         score += 20;
         details.push('✓ Uses action verbs');
+        detailsAr.push('✓ يستخدم أفعال حركية');
+        detailsFr.push('✓ Utilise des verbes d\'action');
     }
 
     // Contains profession/role
@@ -273,6 +429,8 @@ function analyzeSummary(cvData: CVData): ATSMetric {
         summary.toLowerCase().includes(cvData.personalInfo.profession.toLowerCase().split(' ')[0])) {
         score += 20;
         details.push('✓ Mentions target role');
+        detailsAr.push('✓ يذكر الدور المستهدف');
+        detailsFr.push('✓ Mentionne le rôle cible');
     }
 
     // Contains quantifiable achievements
@@ -280,14 +438,19 @@ function analyzeSummary(cvData: CVData): ATSMetric {
     if (hasMetrics) {
         score += 20;
         details.push('✓ Includes metrics/numbers');
+        detailsAr.push('✓ يتضمن مقاييس/أرقام');
+        detailsFr.push('✓ Inclut des chiffres/métriques');
     } else {
         details.push('○ Consider adding metrics');
+        detailsAr.push('○ فكر في إضافة أرقام وإنجازات');
+        detailsFr.push('○ Pensez à ajouter des métriques');
     }
 
     return {
         id: 'summary-quality',
         name: 'Professional Summary',
         nameAr: 'الملخص المهني',
+        nameFr: 'Résumé Professionnel',
         category: 'content',
         score: Math.min(100, score),
         maxScore: 100,
@@ -295,9 +458,13 @@ function analyzeSummary(cvData: CVData): ATSMetric {
         status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
         message: score >= 60 ? 'Strong professional summary' : 'Summary needs improvement',
         messageAr: score >= 60 ? 'ملخص مهني قوي' : 'الملخص يحتاج تحسين',
+        messageFr: score >= 60 ? 'Résumé professionnel solide' : 'Le résumé doit être amélioré',
         tip: 'Write a 50-150 word summary highlighting your key achievements with numbers',
         tipAr: 'اكتب ملخصاً من 50-150 كلمة يسلط الضوء على إنجازاتك بأرقام',
-        details
+        tipFr: 'Rédigez un résumé de 50-150 mots soulignant vos succès avec des chiffres',
+        details,
+        detailsAr,
+        detailsFr
     };
 }
 
@@ -305,16 +472,24 @@ function analyzeExperienceDepth(cvData: CVData): ATSMetric {
     const experiences = cvData.experiences || [];
     let score = 0;
     const details: string[] = [];
+    const detailsAr: string[] = [];
+    const detailsFr: string[] = [];
 
     // Number of experiences
     if (experiences.length >= 3) {
         score += 30;
         details.push(`✓ ${experiences.length} work experiences`);
+        detailsAr.push(`✓ ${experiences.length} خبرات عمل`);
+        detailsFr.push(`✓ ${experiences.length} expériences professionnelles`);
     } else if (experiences.length >= 1) {
         score += 15;
         details.push(`○ Only ${experiences.length} experience(s)`);
+        detailsAr.push(`○ فقط ${experiences.length} خبرة(خبرات)`);
+        detailsFr.push(`○ Seulement ${experiences.length} expérience(s)`);
     } else {
         details.push('✗ No work experience listed');
+        detailsAr.push('✗ لم يتم إدراج أي خبرة عمل');
+        detailsFr.push('✗ Aucune expérience professionnelle');
     }
 
     // Description quality
@@ -324,11 +499,17 @@ function analyzeExperienceDepth(cvData: CVData): ATSMetric {
     if (avgDescLength >= 30) {
         score += 35;
         details.push('✓ Detailed descriptions');
+        detailsAr.push('✓ أوصاف تفصيلية');
+        detailsFr.push('✓ Descriptions détaillées');
     } else if (avgDescLength >= 15) {
         score += 20;
         details.push('○ Descriptions could be more detailed');
+        detailsAr.push('○ يمكن أن تكون الأوصاف أكثر تفصيلاً');
+        detailsFr.push('○ Les descriptions pourraient être plus détaillées');
     } else if (experiences.length > 0) {
         details.push('✗ Descriptions too brief');
+        detailsAr.push('✗ الأوصاف موجزة جداً');
+        detailsFr.push('✗ Descriptions trop brèves');
     }
 
     // Company and position filled
@@ -336,9 +517,13 @@ function analyzeExperienceDepth(cvData: CVData): ATSMetric {
     if (completedExps === experiences.length && experiences.length > 0) {
         score += 20;
         details.push('✓ All positions have company/title');
+        detailsAr.push('✓ جميع المناصب تحتوي على الشركة/المسمى');
+        detailsFr.push('✓ Tous les postes ont une entreprise/titre');
     } else if (completedExps > 0) {
         score += 10;
         details.push('○ Some positions missing details');
+        detailsAr.push('○ بعض المناصب تفتقد لبعض التفاصيل');
+        detailsFr.push('○ Certains postes manquent de détails');
     }
 
     // Date ranges
@@ -346,12 +531,15 @@ function analyzeExperienceDepth(cvData: CVData): ATSMetric {
     if (datedExps === experiences.length && experiences.length > 0) {
         score += 15;
         details.push('✓ All positions have dates');
+        detailsAr.push('✓ جميع المناصب تحتوي على تواريخ');
+        detailsFr.push('✓ Tous les postes ont des dates');
     }
 
     return {
         id: 'experience-depth',
         name: 'Work Experience',
         nameAr: 'الخبرة المهنية',
+        nameFr: 'Expérience Professionnelle',
         category: 'content',
         score: Math.min(100, score),
         maxScore: 100,
@@ -359,9 +547,13 @@ function analyzeExperienceDepth(cvData: CVData): ATSMetric {
         status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
         message: score >= 60 ? 'Solid work experience section' : 'Work experience needs more detail',
         messageAr: score >= 60 ? 'قسم الخبرة المهنية جيد' : 'قسم الخبرة يحتاج المزيد من التفاصيل',
+        messageFr: score >= 60 ? 'Section expérience solide' : 'L\'expérience manque de détails',
         tip: 'Include 2-4 recent positions with detailed bullet points (3-5 per role)',
         tipAr: 'أضف 2-4 وظائف حديثة مع نقاط تفصيلية (3-5 لكل وظيفة)',
-        details
+        tipFr: 'Incluez 2 à 4 postes récents avec 3 à 5 points détaillés par rôle',
+        details,
+        detailsAr,
+        detailsFr
     };
 }
 
@@ -369,19 +561,27 @@ function analyzeEducation(cvData: CVData): ATSMetric {
     const education = cvData.education || [];
     let score = 0;
     const details: string[] = [];
+    const detailsAr: string[] = [];
+    const detailsFr: string[] = [];
 
     if (education.length >= 1) {
         score += 50;
         details.push(`✓ ${education.length} education entry(s)`);
+        detailsAr.push(`✓ ${education.length} إدخالات تعليم`);
+        detailsFr.push(`✓ ${education.length} entrée(s) d'éducation`);
 
         // Check completeness
         const complete = education.filter(e => e.institution && e.degree).length;
         if (complete === education.length) {
             score += 30;
             details.push('✓ All entries complete');
+            detailsAr.push('✓ جميع الإدخالات مكتملة');
+            detailsFr.push('✓ Toutes les entrées sont complètes');
         } else {
             score += 15;
             details.push('○ Some entries incomplete');
+            detailsAr.push('○ بعض الإدخالات غير مكتملة');
+            detailsFr.push('○ Certaines entrées sont incomplètes');
         }
 
         // Graduation dates
@@ -389,15 +589,20 @@ function analyzeEducation(cvData: CVData): ATSMetric {
         if (dated === education.length) {
             score += 20;
             details.push('✓ Graduation dates included');
+            detailsAr.push('✓ تواريخ التخرج مدرجة');
+            detailsFr.push('✓ Dates de l\'obtention du diplôme incluses');
         }
     } else {
         details.push('✗ No education listed');
+        detailsAr.push('✗ لم يتم إدراج أي تعليم');
+        detailsFr.push('✗ Aucune formation listée');
     }
 
     return {
         id: 'education',
         name: 'Education',
         nameAr: 'التعليم',
+        nameFr: 'Éducation',
         category: 'completeness',
         score: Math.min(100, score),
         maxScore: 100,
@@ -405,9 +610,13 @@ function analyzeEducation(cvData: CVData): ATSMetric {
         status: score >= 50 ? 'pass' : score >= 25 ? 'warning' : 'fail',
         message: score >= 50 ? 'Education section complete' : 'Add education details',
         messageAr: score >= 50 ? 'قسم التعليم مكتمل' : 'أضف تفاصيل التعليم',
+        messageFr: score >= 50 ? 'Section éducation complète' : 'Ajoutez des détails sur vos études',
         tip: 'Include degree, institution name, and graduation year',
         tipAr: 'أضف الشهادة، اسم المؤسسة، وسنة التخرج',
-        details
+        tipFr: 'Incluez diplôme, nom de l\'établissement et année d\'obtention',
+        details,
+        detailsAr,
+        detailsFr
     };
 }
 
@@ -415,19 +624,29 @@ function analyzeSkills(cvData: CVData): ATSMetric {
     const skills = cvData.skills || [];
     let score = 0;
     const details: string[] = [];
+    const detailsAr: string[] = [];
+    const detailsFr: string[] = [];
 
     // Number of skills (ideal: 8-15)
     if (skills.length >= 8 && skills.length <= 15) {
         score += 50;
         details.push(`✓ Good skill count (${skills.length})`);
+        detailsAr.push(`✓ عدد مهارات جيد (${skills.length})`);
+        detailsFr.push(`✓ Bon nombre de compétences (${skills.length})`);
     } else if (skills.length >= 5) {
         score += 30;
         details.push(`○ ${skills.length} skills (aim for 8-15)`);
+        detailsAr.push(`○ ${skills.length} مهارات (استهدف 8-15)`);
+        detailsFr.push(`○ ${skills.length} compétences (visez 8-15)`);
     } else if (skills.length > 0) {
         score += 15;
         details.push(`✗ Only ${skills.length} skills listed`);
+        detailsAr.push(`✗ تم إدراج ${skills.length} مهارات فقط`);
+        detailsFr.push(`✗ Seulement ${skills.length} compétences listées`);
     } else {
         details.push('✗ No skills listed');
+        detailsAr.push('✗ لم يتم إدراج أي مهارات');
+        detailsFr.push('✗ Aucune compétence listée');
     }
 
     // Skill categories
@@ -437,9 +656,13 @@ function analyzeSkills(cvData: CVData): ATSMetric {
     if (technical >= 3 && soft >= 2) {
         score += 30;
         details.push('✓ Good mix of technical & soft skills');
+        detailsAr.push('✓ مزيج جيد من المهارات التقنية والناعمة');
+        detailsFr.push('✓ Bon mélange de compétences techniques et humaines');
     } else if (technical >= 2 || soft >= 2) {
         score += 15;
         details.push('○ Add more skill variety');
+        detailsAr.push('○ أضف المزيد من تنوع المهارات');
+        detailsFr.push('○ Ajoutez plus de variété de compétences');
     }
 
     // Skill levels defined
@@ -447,12 +670,15 @@ function analyzeSkills(cvData: CVData): ATSMetric {
     if (withLevels === skills.length && skills.length > 0) {
         score += 20;
         details.push('✓ All skills have proficiency levels');
+        detailsAr.push('✓ جميع المهارات تحتوي على مستويات إتقان');
+        detailsFr.push('✓ Toutes les compétences ont des niveaux de maîtrise');
     }
 
     return {
         id: 'skills',
         name: 'Skills Section',
         nameAr: 'قسم المهارات',
+        nameFr: 'Section Compétences',
         category: 'content',
         score: Math.min(100, score),
         maxScore: 100,
@@ -460,9 +686,13 @@ function analyzeSkills(cvData: CVData): ATSMetric {
         status: score >= 50 ? 'pass' : score >= 25 ? 'warning' : 'fail',
         message: score >= 50 ? 'Strong skills section' : 'Expand your skills section',
         messageAr: score >= 50 ? 'قسم مهارات قوي' : 'وسّع قسم المهارات',
+        messageFr: score >= 50 ? 'Section compétences solide' : 'Élargissez votre section compétences',
         tip: 'List 8-15 relevant skills with a mix of technical and soft skills',
         tipAr: 'أضف 8-15 مهارة ذات صلة مع مزيج من المهارات التقنية والناعمة',
-        details
+        tipFr: 'Listez 8 à 15 compétences variées (techniques et relationnelles)',
+        details,
+        detailsAr,
+        detailsFr
     };
 }
 
@@ -470,7 +700,8 @@ function analyzeActionVerbs(cvData: CVData): ATSMetric {
     const allText = getAllDescriptions(cvData);
     const words = allText.toLowerCase().split(/\s+/);
 
-    const actionVerbCount = STRONG_ACTION_VERBS.filter(verb =>
+    const allStrongActionVerbs = [...STRONG_ACTION_VERBS.en, ...STRONG_ACTION_VERBS.fr, ...STRONG_ACTION_VERBS.ar];
+    const actionVerbCount = allStrongActionVerbs.filter(verb =>
         words.includes(verb.toLowerCase())
     ).length;
 
@@ -483,6 +714,7 @@ function analyzeActionVerbs(cvData: CVData): ATSMetric {
         id: 'action-verbs',
         name: 'Action Verbs',
         nameAr: 'أفعال القوة',
+        nameFr: 'Verbes d\'Action',
         category: 'impact',
         score,
         maxScore: 100,
@@ -490,9 +722,13 @@ function analyzeActionVerbs(cvData: CVData): ATSMetric {
         status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
         message: score >= 60 ? `Strong action verbs used (${actionVerbCount} found)` : 'Need more action verbs',
         messageAr: score >= 60 ? `أفعال قوة ممتازة (${actionVerbCount} موجودة)` : 'تحتاج المزيد من أفعال القوة',
+        messageFr: score >= 60 ? `Bons verbes d'action utilisés (${actionVerbCount} trouvés)` : 'Utilisez plus de verbes d\'action',
         tip: 'Start bullet points with verbs like: Led, Developed, Achieved, Increased, Built',
         tipAr: 'ابدأ النقاط بأفعال مثل: قاد، طوّر، حقق، زاد، بنى',
-        details: [`Found ${actionVerbCount} action verbs (target: ${idealCount}+)`]
+        tipFr: 'Commencez vos points par : Dirigé, Développé, Réalisé, Augmenté',
+        details: [`Found ${actionVerbCount} action verbs (target: ${idealCount}+)`],
+        detailsAr: [`تم العثور على ${actionVerbCount} أفعال قوة (المستهدف: ${idealCount}+)`],
+        detailsFr: [`${actionVerbCount} verbes d'action trouvés (cible : ${idealCount}+)`]
     };
 }
 
@@ -514,6 +750,7 @@ function analyzeQuantifiableAchievements(cvData: CVData): ATSMetric {
         id: 'quantifiable',
         name: 'Quantifiable Results',
         nameAr: 'نتائج قابلة للقياس',
+        nameFr: 'Résultats Quantifiables',
         category: 'impact',
         score,
         maxScore: 100,
@@ -521,16 +758,21 @@ function analyzeQuantifiableAchievements(cvData: CVData): ATSMetric {
         status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
         message: score >= 60 ? `Great use of metrics (${metricsFound} found)` : 'Add more numbers and percentages',
         messageAr: score >= 60 ? `استخدام ممتاز للأرقام (${metricsFound} موجودة)` : 'أضف المزيد من الأرقام والنسب',
+        messageFr: score >= 60 ? `Bon usage des mesures (${metricsFound} trouvées)` : 'Ajoutez plus de chiffres et pourcentages',
         tip: 'Add percentages, dollar amounts, team sizes, and time savings to achievements',
         tipAr: 'أضف نسب مئوية، مبالغ مالية، أحجام فرق، وتوفير الوقت للإنجازات',
-        details: [`Found ${metricsFound} quantifiable metrics (target: ${idealCount}+ per experience)`]
+        tipFr: 'Ajoutez pourcentages, budgets, tailles d\'équipe et gains de temps',
+        details: [`Found ${metricsFound} quantifiable metrics (target: ${idealCount}+ per experience)`],
+        detailsAr: [`تم العثور على ${metricsFound} مقاييس قابلة للقياس (المستهدف: ${idealCount}+ لكل خبرة)`],
+        detailsFr: [`${metricsFound} mesures trouvées (cible : ${idealCount}+ par expérience)`]
     };
 }
 
 function analyzePassiveLanguage(cvData: CVData): ATSMetric {
     const allText = getAllDescriptions(cvData).toLowerCase();
 
-    const weakWordsFound = WEAK_WORDS.filter(phrase =>
+    const allWeakWords = [...WEAK_WORDS.en, ...WEAK_WORDS.fr, ...WEAK_WORDS.ar];
+    const weakWordsFound = allWeakWords.filter(phrase =>
         allText.includes(phrase.toLowerCase())
     );
 
@@ -542,6 +784,7 @@ function analyzePassiveLanguage(cvData: CVData): ATSMetric {
         id: 'passive-language',
         name: 'Active Voice',
         nameAr: 'الصوت النشط',
+        nameFr: 'Voix Active',
         category: 'impact',
         score,
         maxScore: 100,
@@ -549,23 +792,38 @@ function analyzePassiveLanguage(cvData: CVData): ATSMetric {
         status: score >= 70 ? 'pass' : score >= 40 ? 'warning' : 'fail',
         message: score >= 70 ? 'Good use of active voice' : 'Reduce passive phrases',
         messageAr: score >= 70 ? 'استخدام جيد للصوت النشط' : 'قلل العبارات السلبية',
+        messageFr: score >= 70 ? 'Bonne utilisation de la voix active' : 'Réduisez les phrases passives',
         tip: 'Replace "Responsible for..." with "Led...", "Managed...", "Delivered..."',
         tipAr: 'استبدل "مسؤول عن..." بـ "قاد..."، "أدار..."، "نفّذ..."',
+        tipFr: 'Remplacez "Responsable de..." par "Dirigé...", "Géré...", "Réalisé..."',
         details: weakWordsFound.length > 0
             ? [`Found weak phrases: ${weakWordsFound.slice(0, 3).join(', ')}`]
-            : ['No passive language detected']
+            : ['No passive language detected'],
+        detailsAr: weakWordsFound.length > 0
+            ? [`تم العثور على عبارات ضعيفة: ${weakWordsFound.slice(0, 3).join(', ')}`]
+            : ['لم يتم الكشف عن لغة سلبية'],
+        detailsFr: weakWordsFound.length > 0
+            ? [`Phrases passives trouvées : ${weakWordsFound.slice(0, 3).join(', ')}`]
+            : ['Aucun langage passif détecté']
     };
 }
 
 function analyzeAchievementRatio(cvData: CVData): ATSMetric {
     const allText = getAllDescriptions(cvData).toLowerCase();
 
-    // Achievement indicators
-    const achievementWords = ['achieved', 'increased', 'decreased', 'reduced', 'improved',
-        'generated', 'saved', 'delivered', 'launched', 'created', 'built', 'won'];
+    // Achievement indicators (expanded for multi-language)
+    const achievementWords = [
+        'achieved', 'increased', 'decreased', 'reduced', 'improved', 'generated', 'saved', 'delivered', 'launched', 'created', 'built', 'won',
+        'حققت', 'زدت', 'قللت', 'حسنت', 'ولدت', 'وفرت', 'سلمت', 'أطلقت', 'أنشأت', 'بنيت', 'فزت',
+        'réalisé', 'augmenté', 'diminué', 'réduit', 'amélioré', 'généré', 'économisé', 'livré', 'lancé', 'créé', 'construit', 'gagné'
+    ];
 
     // Responsibility indicators
-    const responsibilityWords = ['responsible', 'duties', 'managed', 'handled', 'maintained'];
+    const responsibilityWords = [
+        'responsible', 'duties', 'managed', 'handled', 'maintained',
+        'مسؤول', 'مهام', 'أشرفت', 'تعاملت', 'حافظت',
+        'responsable', 'tâches', 'géré', 'occupé', 'maintenu'
+    ];
 
     let achievementCount = 0;
     let responsibilityCount = 0;
@@ -588,436 +846,372 @@ function analyzeAchievementRatio(cvData: CVData): ATSMetric {
         id: 'achievement-ratio',
         name: 'Achievement Focus',
         nameAr: 'التركيز على الإنجازات',
+        nameFr: 'Focus sur les Réalisations',
         category: 'impact',
         score,
         maxScore: 100,
-        weight: 7,
-        status: score >= 60 ? 'pass' : score >= 40 ? 'warning' : 'fail',
-        message: score >= 60 ? 'Great achievement focus' : 'Too many responsibilities, not enough achievements',
-        messageAr: score >= 60 ? 'تركيز ممتاز على الإنجازات' : 'كثير من المسؤوليات، قليل من الإنجازات',
-        tip: 'Focus on what you ACHIEVED, not just what you were responsible for',
-        tipAr: 'ركز على ما أنجزته، وليس فقط ما كنت مسؤولاً عنه',
-        details: [`Achievement to responsibility ratio: ${Math.round(ratio)}%`]
+        weight: 8,
+        status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
+        message: score >= 60 ? 'Strong achievement-oriented content' : 'Focus more on results than duties',
+        messageAr: score >= 60 ? 'محتوى يركز على الإنجازات بقوة' : 'ركز أكثر على النتائج بدلاً من المهام',
+        messageFr: score >= 60 ? 'Contenu fortement orienté résultats' : 'Mettez plus l\'accent sur les résultats que sur les tâches',
+        tip: 'For every duty listed, try to add a result or achievement',
+        tipAr: 'لكل مهمة تذكرها، حاول إضافة نتيجة أو إنجاز',
+        tipFr: 'Pour chaque tâche listée, essayez d\'ajouter un résultat ou un succès',
+        details: [`Achievement vs Responsibility ratio: ${Math.round(ratio)}%`],
+        detailsAr: [`نسبة الإنجاز مقارنة بالمسؤولية: ${Math.round(ratio)}%`],
+        detailsFr: [`Ratio Réalisation vs Responsabilité : ${Math.round(ratio)}%`]
     };
 }
 
 function analyzeKeywordDensity(cvData: CVData, jobDescription?: string): ATSMetric {
-    // If no job description, check for general professional keywords
-    const generalKeywords = [
-        'team', 'project', 'management', 'development', 'analysis',
-        'strategy', 'communication', 'leadership', 'results', 'performance',
-        'growth', 'optimization', 'innovation', 'collaboration', 'solutions'
-    ];
+    if (!jobDescription) {
+        return {
+            id: 'keyword-density',
+            name: 'Keyword Density',
+            nameAr: 'كثافة الكلمات الدالة',
+            nameFr: 'Densité de Mots-clés',
+            category: 'keywords',
+            score: 0,
+            maxScore: 100,
+            weight: 9,
+            status: 'warning',
+            message: 'Provide a job description for keyword analysis',
+            messageAr: 'أضف وصفاً وظيفياً لتحليل الكلمات الدالة',
+            messageFr: 'Fournissez une description de poste pour l\'analyse',
+            tip: 'Paste a job description to see how well your CV matches the requirements',
+            tipAr: 'الصق وصفاً وظيفياً لترى مدى مطابقة سيرتك الذاتية للمتطلبات',
+            tipFr: 'Collez une description de poste pour voir la correspondance',
+        };
+    }
 
-    const allText = getAllText(cvData).toLowerCase();
-    const keywords = jobDescription
-        ? extractKeywords(jobDescription)
-        : generalKeywords;
+    const cvText = getAllText(cvData).toLowerCase();
+    const jdWords = jobDescription.toLowerCase().split(/\W+/).filter(w => w.length > 4);
 
-    const foundKeywords = keywords.filter(kw => allText.includes(kw.toLowerCase()));
-    const score = Math.min(100, Math.round((foundKeywords.length / keywords.length) * 100));
+    // Basic word frequency analysis
+    const wordCounts: Record<string, number> = {};
+    jdWords.forEach(word => {
+        wordCounts[word] = (wordCounts[word] || 0) + 1;
+    });
+
+    const topKeywords = Object.entries(wordCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20)
+        .map(e => e[0]);
+
+    const foundKeywords = topKeywords.filter(keyword => cvText.includes(keyword));
+    const score = Math.round((foundKeywords.length / topKeywords.length) * 100);
 
     return {
         id: 'keyword-density',
         name: 'Keyword Optimization',
-        nameAr: 'تحسين الكلمات المفتاحية',
+        nameAr: 'تحسين الكلمات الدالة',
+        nameFr: 'Optimisation des Mots-clés',
         category: 'keywords',
         score,
         maxScore: 100,
-        weight: 8,
-        status: score >= 50 ? 'pass' : score >= 25 ? 'warning' : 'fail',
-        message: score >= 50 ? `Good keyword coverage (${foundKeywords.length}/${keywords.length})` : 'Add more relevant keywords',
-        messageAr: score >= 50 ? `تغطية جيدة للكلمات المفتاحية (${foundKeywords.length}/${keywords.length})` : 'أضف المزيد من الكلمات المفتاحية',
-        tip: 'Mirror keywords from the job description naturally throughout your CV',
-        tipAr: 'استخدم الكلمات المفتاحية من وصف الوظيفة بشكل طبيعي في سيرتك',
-        details: [`Found: ${foundKeywords.slice(0, 5).join(', ')}${foundKeywords.length > 5 ? '...' : ''}`]
+        weight: 9,
+        status: score >= 70 ? 'pass' : score >= 40 ? 'warning' : 'fail',
+        message: score >= 70 ? 'Good keyword alignment' : 'CV lacks important job keywords',
+        messageAr: score >= 70 ? 'مطابقة جيدة للكلمات الدالة' : 'السيرة الذاتية تفتقر للكلمات الدالة المهمة',
+        messageFr: score >= 70 ? 'Bonne correspondance des mots-clés' : 'Le CV manque de mots-clés importants',
+        tip: `Include these keywords: ${topKeywords.slice(0, 5).join(', ')}`,
+        tipAr: `أدرج هذه الكلمات الدالة: ${topKeywords.slice(0, 5).join(', ')}`,
+        tipFr: `Incluez ces mots-clés : ${topKeywords.slice(0, 5).join(', ')}`,
+        details: [`Matched ${foundKeywords.length} out of ${topKeywords.length} key terms`],
+        detailsAr: [`تمت مطابقة ${foundKeywords.length} من أصل ${topKeywords.length} مصطلحات رئيسية`],
+        detailsFr: [`${foundKeywords.length} termes clés sur ${topKeywords.length} correspondent`]
     };
 }
 
 function analyzeIndustryKeywords(cvData: CVData): ATSMetric {
-    const profession = cvData.personalInfo?.profession?.toLowerCase() || '';
     const allText = getAllText(cvData).toLowerCase();
+    const industries = [
+        { name: 'Tech', keywords: ['software', 'cloud', 'data', 'agile', 'api', 'security', 'framework', 'database'] },
+        { name: 'Management', keywords: ['leadership', 'strategy', 'operations', 'budget', 'team', 'stakeholder', 'project', 'planning'] },
+        { name: 'Marketing', keywords: ['seo', 'content', 'campaign', 'analytics', 'brand', 'social media', 'growth', 'digital'] },
+        { name: 'Sales', keywords: ['crm', 'revenue', 'pipeline', 'negotiation', 'closing', 'prospecting', 'quota', 'client'] }
+    ];
 
-    // Industry-specific keywords based on profession
-    const industryKeywords = getIndustryKeywords(profession);
-    const foundKeywords = industryKeywords.filter(kw => allText.includes(kw.toLowerCase()));
+    let foundCount = 0;
+    industries.forEach(ind => {
+        ind.keywords.forEach(kw => {
+            if (allText.includes(kw)) foundCount++;
+        });
+    });
 
-    const score = industryKeywords.length > 0
-        ? Math.min(100, Math.round((foundKeywords.length / industryKeywords.length) * 100))
-        : 50; // Neutral if no profession detected
+    const score = Math.min(100, foundCount * 10);
 
     return {
         id: 'industry-keywords',
-        name: 'Industry Keywords',
-        nameAr: 'كلمات الصناعة',
+        name: 'Industry Vocabulary',
+        nameAr: 'مصطلحات المجال',
+        nameFr: 'Vocabulaire du Secteur',
         category: 'keywords',
         score,
         maxScore: 100,
-        weight: 6,
-        status: score >= 50 ? 'pass' : score >= 25 ? 'warning' : 'fail',
-        message: score >= 50 ? 'Good industry-specific terms' : 'Add more industry terminology',
-        messageAr: score >= 50 ? 'مصطلحات صناعية جيدة' : 'أضف المزيد من مصطلحات المجال',
-        tip: 'Include industry-specific tools, methodologies, and certifications',
-        tipAr: 'أضف الأدوات والمنهجيات والشهادات الخاصة بمجالك',
-        details: [`Found ${foundKeywords.length} industry terms for "${profession || 'general'}"`]
+        weight: 7,
+        status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
+        message: score >= 60 ? 'Good use of industry terms' : 'Add more industry-specific terminology',
+        messageAr: score >= 60 ? 'استخدام جيد لمصطلحات المجال' : 'أضف المزيد من المصطلحات الخاصة بمجالك',
+        messageFr: score >= 60 ? 'Bonne utilisation des termes du secteur' : 'Ajoutez plus de terminologie spécifique',
+        tip: 'Use standard terminology for your target role and industry',
+        tipAr: 'استخدم المصطلحات القياسية للدور المستهدف ومجال عملك',
+        tipFr: 'Utilisez la terminologie standard pour votre rôle et secteur',
     };
 }
 
 function analyzeSkillsAlignment(cvData: CVData): ATSMetric {
     const skills = cvData.skills?.map(s => s.name.toLowerCase()) || [];
-    const allDescriptions = getAllDescriptions(cvData).toLowerCase();
+    const experienceText = (cvData.experiences || [])
+        .map(e => (e.description || '').toLowerCase())
+        .join(' ');
 
-    const mentionedSkills = skills.filter(skill => allDescriptions.includes(skill));
-    const score = skills.length > 0
-        ? Math.min(100, Math.round((mentionedSkills.length / skills.length) * 100))
-        : 50;
+    const alignmentCount = skills.filter(skill => experienceText.includes(skill)).length;
+    const ratio = skills.length > 0 ? (alignmentCount / skills.length) * 100 : 0;
+    const score = Math.round(ratio);
 
     return {
         id: 'skills-alignment',
-        name: 'Skills-Experience Match',
-        nameAr: 'تطابق المهارات والخبرة',
+        name: 'Experience Alignment',
+        nameAr: 'توافق الخبرات',
+        nameFr: 'Alignement de l\'Expérience',
         category: 'keywords',
         score,
         maxScore: 100,
-        weight: 6,
-        status: score >= 40 ? 'pass' : score >= 20 ? 'warning' : 'fail',
-        message: score >= 40 ? 'Skills reflected in experience' : 'Skills not demonstrated in experience',
-        messageAr: score >= 40 ? 'المهارات ظاهرة في الخبرة' : 'المهارات غير موضحة في الخبرة',
-        tip: 'Mention your listed skills within your experience descriptions',
-        tipAr: 'اذكر مهاراتك المدرجة ضمن وصف خبراتك',
-        details: [`${mentionedSkills.length}/${skills.length} skills appear in experience`]
+        weight: 7,
+        status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
+        message: score >= 60 ? 'Skills are well-supported by experience' : 'Prove your skills in your experience section',
+        messageAr: score >= 60 ? 'المهارات مدعومة جيداً من الخبرات' : 'أثبت مهاراتك في قسم الخبرات',
+        messageFr: score >= 60 ? 'Les compétences sont bien illustrées par l\'expérience' : 'Prouvez vos compétences dans la section expérience',
+        tip: 'Ensure the skills you list are also mentioned in your work descriptions',
+        tipAr: 'تأكد من ذكر المهارات التي تدرجها أيضاً في أوصاف عملك',
+        tipFr: 'Assurez-vous que les compétences listées figurent aussi dans vos descriptions de poste',
     };
 }
 
 function analyzeContentLength(cvData: CVData): ATSMetric {
-    const allText = getAllText(cvData);
-    const wordCount = allText.split(/\s+/).filter(w => w.length > 0).length;
-
-    // Ideal: 400-800 words for 1-page, 600-1200 for 2-page
+    const textSize = getAllText(cvData).length;
     let score = 0;
     let status: 'pass' | 'warning' | 'fail' = 'fail';
-    let message = '';
 
-    if (wordCount >= 400 && wordCount <= 1000) {
+    if (textSize >= 1500 && textSize <= 4500) {
         score = 100;
         status = 'pass';
-        message = `Optimal length (${wordCount} words)`;
-    } else if (wordCount >= 300 && wordCount <= 1200) {
+    } else if (textSize >= 800 && textSize <= 6000) {
         score = 70;
         status = 'warning';
-        message = `Acceptable length (${wordCount} words)`;
-    } else if (wordCount < 300) {
-        score = 30;
-        status = 'fail';
-        message = `Too short (${wordCount} words)`;
-    } else {
+    } else if (textSize > 0) {
         score = 40;
-        status = 'warning';
-        message = `May be too long (${wordCount} words)`;
+        status = 'fail';
     }
 
     return {
         id: 'content-length',
-        name: 'Content Length',
-        nameAr: 'طول المحتوى',
+        name: 'CV Length',
+        nameAr: 'طول السيرة الذاتية',
+        nameFr: 'Longueur du CV',
         category: 'formatting',
         score,
         maxScore: 100,
-        weight: 4,
+        weight: 6,
         status,
-        message,
-        messageAr: `${wordCount} كلمة`,
-        tip: 'Aim for 400-800 words for one page, 600-1200 for two pages',
-        tipAr: 'استهدف 400-800 كلمة لصفحة واحدة، 600-1200 لصفحتين',
-        details: [`Total word count: ${wordCount}`]
+        message: status === 'pass' ? 'Ideal CV length' : 'CV length could be improved',
+        messageAr: status === 'pass' ? 'طول سيرة ذاتية مثالي' : 'طول السيرة الذاتية يحتاج تحسين',
+        messageFr: status === 'pass' ? 'Longueur de CV idéale' : 'La longueur du CV peut être améliorée',
+        tip: 'Target 1-2 pages (approx. 400-800 words)',
+        tipAr: 'استهدف 1-2 صفحات (حوالي 400-800 كلمة)',
+        tipFr: 'Visez 1 à 2 pages (environ 400-800 mots)',
     };
 }
 
 function analyzeSectionBalance(cvData: CVData): ATSMetric {
-    const sections = {
-        summary: (cvData.summary?.length || 0) > 50 ? 1 : 0,
-        experience: cvData.experiences?.length || 0,
-        education: cvData.education?.length || 0,
-        skills: cvData.skills?.length || 0,
-        languages: cvData.languages?.length || 0
-    };
+    const summaryLen = cvData.summary?.length || 0;
+    const expLen = (cvData.experiences || []).reduce((s, e) => s + (e.description?.length || 0), 0);
+    const skillCount = cvData.skills?.length || 0;
 
-    const filledSections = Object.values(sections).filter(v => v > 0).length;
-    const score = Math.min(100, (filledSections / 5) * 100);
+    const total = summaryLen + expLen + (skillCount * 20); // Weight skills
+    const expRatio = total > 0 ? (expLen / total) : 0;
+
+    let score = 0;
+    if (expRatio >= 0.5 && expRatio <= 0.8) score = 100;
+    else if (expRatio >= 0.3) score = 60;
+    else score = 30;
 
     return {
         id: 'section-balance',
-        name: 'Section Completeness',
-        nameAr: 'اكتمال الأقسام',
+        name: 'Section Balance',
+        nameAr: 'توازن الأقسام',
+        nameFr: 'Équilibre des Sections',
         category: 'formatting',
         score,
         maxScore: 100,
         weight: 5,
-        status: score >= 80 ? 'pass' : score >= 60 ? 'warning' : 'fail',
-        message: `${filledSections}/5 sections completed`,
-        messageAr: `${filledSections}/5 أقسام مكتملة`,
-        tip: 'Complete all main sections: Summary, Experience, Education, Skills',
-        tipAr: 'أكمل جميع الأقسام: الملخص، الخبرة، التعليم، المهارات',
-        details: Object.entries(sections).map(([k, v]) => `${k}: ${v > 0 ? '✓' : '✗'}`)
+        status: score >= 80 ? 'pass' : score >= 50 ? 'warning' : 'fail',
+        message: score >= 80 ? 'Well-balanced sections' : 'Experience section should dominate',
+        messageAr: score >= 80 ? 'تحقيق توازن جيد بين الأقسام' : 'يجب أن يهيمن قسم الخبرات',
+        messageFr: score >= 80 ? 'Sections bien équilibrées' : 'La section expérience devrait dominer',
+        tip: 'Ensure your work experience takes up 60-70% of your CV content',
+        tipAr: 'تأكد من أن خبرة العمل تشغل 60-70% من محتوى سيرتك الذاتية',
+        tipFr: 'Assurez-vous que l\'expérience occupe 60-70% du contenu de votre CV',
     };
 }
 
 function analyzeConsistency(cvData: CVData): ATSMetric {
-    let score = 100;
-    const details: string[] = [];
-
-    // Check date format consistency
     const experiences = cvData.experiences || [];
-    const dateFormats = new Set(experiences.map(e => detectDateFormat(e.startDate)));
-    if (dateFormats.size > 1 && dateFormats.size > 0) {
-        score -= 30;
-        details.push('✗ Inconsistent date formats');
-    } else {
-        details.push('✓ Consistent date formats');
-    }
+    const hasDates = experiences.every(e => e.startDate);
+    const hasCompanies = experiences.every(e => e.company);
 
-    // Check for gaps (simplified)
-    if (experiences.length >= 2) {
-        details.push('✓ No major employment gaps detected');
-    }
+    let score = 0;
+    if (hasDates && hasCompanies) score = 100;
+    else if (hasCompanies) score = 60;
+    else if (experiences.length > 0) score = 30;
+    else score = 100; // Neutral if no entries
 
     return {
         id: 'consistency',
-        name: 'Format Consistency',
-        nameAr: 'اتساق التنسيق',
+        name: 'Information Consistency',
+        nameAr: 'تناسق المعلومات',
+        nameFr: 'Cohérence des Infos',
         category: 'formatting',
         score,
         maxScore: 100,
-        weight: 4,
-        status: score >= 70 ? 'pass' : score >= 40 ? 'warning' : 'fail',
-        message: score >= 70 ? 'Consistent formatting' : 'Formatting inconsistencies detected',
-        messageAr: score >= 70 ? 'تنسيق متسق' : 'تم اكتشاف تضارب في التنسيق',
-        tip: 'Use the same date format and bullet style throughout',
-        tipAr: 'استخدم نفس تنسيق التاريخ وأسلوب النقاط في كل مكان',
-        details
+        weight: 6,
+        status: score >= 90 ? 'pass' : score >= 50 ? 'warning' : 'fail',
+        message: score >= 90 ? 'High content consistency' : 'Inconsistent formatting detected',
+        messageAr: score >= 90 ? 'تناسق عالي في المحتوى' : 'تم اكتشاف عدم تناسق في التنسيق',
+        messageFr: score >= 90 ? 'Grande cohérence du contenu' : 'Formatage incohérent détecté',
+        tip: 'Use the same format for all dates and job titles',
+        tipAr: 'استخدم نفس التنسيق لجميع التواريخ والمسميات الوظيفية',
+        tipFr: 'Utilisez le même format pour toutes les dates et titres',
     };
 }
 
 function analyzeProfileCompleteness(cvData: CVData): ATSMetric {
-    const checks = [
-        { name: 'Name', filled: !!cvData.personalInfo?.fullName?.trim() },
-        { name: 'Email', filled: !!cvData.personalInfo?.email?.trim() },
-        { name: 'Phone', filled: !!cvData.personalInfo?.phone?.trim() },
-        { name: 'Title', filled: !!cvData.personalInfo?.profession?.trim() },
-        { name: 'Summary', filled: (cvData.summary?.length || 0) > 30 },
-        { name: 'Experience', filled: (cvData.experiences?.length || 0) > 0 },
-        { name: 'Education', filled: (cvData.education?.length || 0) > 0 },
-        { name: 'Skills', filled: (cvData.skills?.length || 0) >= 3 }
-    ];
+    let fieldsCount = 0;
+    if (cvData.personalInfo.fullName) fieldsCount++;
+    if (cvData.personalInfo.email) fieldsCount++;
+    if (cvData.summary) fieldsCount++;
+    if (cvData.experiences?.length > 0) fieldsCount++;
+    if (cvData.education?.length > 0) fieldsCount++;
+    if (cvData.skills?.length >= 5) fieldsCount++;
 
-    const filled = checks.filter(c => c.filled).length;
-    const score = Math.round((filled / checks.length) * 100);
+    const score = Math.round((fieldsCount / 6) * 100);
 
     return {
-        id: 'profile-completeness',
+        id: 'completeness',
         name: 'Profile Completeness',
-        nameAr: 'اكتمال الملف',
+        nameAr: 'اكتمال الملف الشخصي',
+        nameFr: 'Profil Complet',
         category: 'completeness',
         score,
         maxScore: 100,
-        weight: 8,
-        status: score >= 80 ? 'pass' : score >= 50 ? 'warning' : 'fail',
-        message: `Profile is ${score}% complete`,
-        messageAr: `الملف مكتمل بنسبة ${score}%`,
-        tip: 'Fill in all essential sections for maximum ATS compatibility',
-        tipAr: 'أكمل جميع الأقسام الأساسية لأقصى توافق مع ATS',
-        details: checks.map(c => `${c.filled ? '✓' : '✗'} ${c.name}`)
+        weight: 10,
+        status: score >= 85 ? 'pass' : score >= 60 ? 'warning' : 'fail',
+        message: score >= 85 ? 'Complete CV profile' : 'CV profile is incomplete',
+        messageAr: score >= 85 ? 'ملف سيرة ذاتية مكتمل' : 'ملف السيرة الذاتية غير مكتمل',
+        messageFr: score >= 85 ? 'Profil de CV complet' : 'Profil de CV incomplet',
+        tip: 'Fill in all major sections: Summary, Experience, Education, and Skills',
+        tipAr: 'املأ جميع الأقسام الرئيسية: الملخص، الخبرة، التعليم، والمهارات',
+        tipFr: 'Remplissez toutes les sections : Résumé, Expérience, Formation et Compétences',
     };
 }
 
 function analyzeDateFormatting(cvData: CVData): ATSMetric {
-    const experiences = cvData.experiences || [];
-    const education = cvData.education || [];
+    const dates = (cvData.experiences || []).map(e => e.startDate).filter(Boolean);
+    const standardFormat = dates.every(d => /^\d{4}-\d{2}(-\d{2})?$/.test(d || ''));
 
-    let score = 100;
-    const details: string[] = [];
-
-    // Check if dates exist
-    const expWithDates = experiences.filter(e => e.startDate).length;
-    const eduWithDates = education.filter(e => e.graduationYear || e.endDate).length;
-
-    if (expWithDates < experiences.length) {
-        score -= 30;
-        details.push('✗ Some experiences missing dates');
-    } else if (experiences.length > 0) {
-        details.push('✓ All experiences have dates');
-    }
-
-    if (eduWithDates < education.length && education.length > 0) {
-        score -= 20;
-        details.push('✗ Some education entries missing dates');
-    } else if (education.length > 0) {
-        details.push('✓ Education dates complete');
-    }
+    const score = standardFormat ? 100 : dates.length > 0 ? 50 : 0;
 
     return {
-        id: 'date-formatting',
-        name: 'Date Completeness',
-        nameAr: 'اكتمال التواريخ',
-        category: 'formatting',
-        score: Math.max(0, score),
+        id: 'date-format',
+        name: 'ATS Date Format',
+        nameAr: 'تنسيق التاريخ لـ ATS',
+        nameFr: 'Format de Date ATS',
+        category: 'completeness',
+        score,
         maxScore: 100,
-        weight: 4,
-        status: score >= 80 ? 'pass' : score >= 50 ? 'warning' : 'fail',
-        message: score >= 80 ? 'Dates properly formatted' : 'Some dates missing or inconsistent',
-        messageAr: score >= 80 ? 'التواريخ منسقة بشكل صحيح' : 'بعض التواريخ مفقودة أو غير متسقة',
-        tip: 'Use consistent date format like "Jan 2023 - Present" or "2020 - 2023"',
-        tipAr: 'استخدم تنسيق تاريخ متسق مثل "يناير 2023 - حاليًا"',
-        details
+        weight: 5,
+        status: score >= 90 ? 'pass' : score >= 50 ? 'warning' : 'fail',
+        message: score >= 90 ? 'Standard date format used' : 'Use standard date format',
+        messageAr: score >= 90 ? 'تم استخدام تنسيق تاريخ قياسي' : 'استخدم تنسيق تاريخ قياسي',
+        messageFr: score >= 90 ? 'Format de date standard utilisé' : 'Utilisez un format de date standard',
+        tip: 'Use standard date formats (YYYY-MM) that ATS can easily parse',
+        tipAr: 'استخدم تنسيقات تاريخ قياسية (YYYY-MM) يمكن لأنظمة ATS قرائتها بسهولة',
+        tipFr: 'Utilisez des formats de date standards (AAAA-MM) lisibles par les ATS',
     };
 }
 
 function analyzeOnlinePresence(cvData: CVData): ATSMetric {
-    const { linkedin, github } = cvData.personalInfo || {};
+    const hasLinkedIn = cvData.personalInfo.linkedin?.includes('linkedin.com');
+    const hasPortfolio = cvData.personalInfo.website?.trim().length > 0;
+
     let score = 0;
-    const details: string[] = [];
-
-    if (linkedin?.trim()) {
-        score += 60;
-        details.push('✓ LinkedIn profile included');
-    } else {
-        details.push('○ Add LinkedIn profile');
-    }
-
-    if (github?.trim()) {
-        score += 40;
-        details.push('✓ GitHub/Portfolio included');
-    } else {
-        details.push('○ Consider adding portfolio');
-    }
+    if (hasLinkedIn && hasPortfolio) score = 100;
+    else if (hasLinkedIn) score = 70;
+    else if (hasPortfolio) score = 50;
+    else score = 20;
 
     return {
         id: 'online-presence',
         name: 'Online Presence',
-        nameAr: 'التواجد عبر الإنترنت',
+        nameAr: 'التواجد الرقمي',
+        nameFr: 'Présence en Ligne',
         category: 'completeness',
         score,
         maxScore: 100,
-        weight: 3,
-        status: score >= 60 ? 'pass' : score >= 30 ? 'warning' : 'fail',
-        message: score >= 60 ? 'Good online presence' : 'Add professional profiles',
-        messageAr: score >= 60 ? 'تواجد جيد عبر الإنترنت' : 'أضف ملفات تعريف مهنية',
-        tip: 'Add your LinkedIn profile and portfolio/GitHub if relevant',
-        tipAr: 'أضف ملف LinkedIn الخاص بك ومعرض الأعمال إن وجد',
-        details
+        weight: 4,
+        status: score >= 70 ? 'pass' : 'warning',
+        message: score >= 70 ? 'Strong professional presence' : 'Add your professional links',
+        messageAr: score >= 70 ? 'تواجد مهني قوي' : 'أضف روابطك المهنية',
+        messageFr: score >= 70 ? 'Forte présence professionnelle' : 'Ajoutez vos liens professionnels',
+        tip: 'Include your LinkedIn profile and portfolio/GitHub link',
+        tipAr: 'أدرج ملفك الشخصي على LinkedIn ورابط المحفظة/GitHub',
+        tipFr: 'Incluez votre profil LinkedIn et un lien vers votre portfolio/GitHub',
     };
 }
 
 // ============ HELPER FUNCTIONS ============
 
-function getAllDescriptions(cvData: CVData): string {
-    const parts: string[] = [];
-
-    if (cvData.summary) parts.push(cvData.summary);
-
-    cvData.experiences?.forEach(exp => {
-        if (exp.description) parts.push(exp.description);
-    });
-
-    return parts.join(' ');
+function getAllText(cvData: CVData): string {
+    const parts = [
+        cvData.personalInfo.fullName,
+        cvData.personalInfo.profession,
+        cvData.summary,
+        ...(cvData.experiences || []).map(e => `${e.company} ${e.position} ${e.description}`),
+        ...(cvData.education || []).map(e => `${e.institution} ${e.degree}`),
+        ...(cvData.skills || []).map(s => s.name),
+        ...(cvData.languages || []).map(l => l.name)
+    ];
+    return parts.filter(Boolean).join(' ');
 }
 
-function getAllText(cvData: CVData): string {
-    const parts: string[] = [];
-
-    if (cvData.personalInfo?.fullName) parts.push(cvData.personalInfo.fullName);
-    if (cvData.personalInfo?.profession) parts.push(cvData.personalInfo.profession);
-    if (cvData.summary) parts.push(cvData.summary);
-
-    cvData.experiences?.forEach(exp => {
-        if (exp.position) parts.push(exp.position);
-        if (exp.company) parts.push(exp.company);
-        if (exp.description) parts.push(exp.description);
-    });
-
-    cvData.education?.forEach(edu => {
-        if (edu.degree) parts.push(edu.degree);
-        if (edu.field) parts.push(edu.field);
-        if (edu.institution) parts.push(edu.institution);
-    });
-
-    cvData.skills?.forEach(skill => {
-        if (skill.name) parts.push(skill.name);
-    });
-
-    return parts.join(' ');
+function getAllDescriptions(cvData: CVData): string {
+    const parts = [
+        cvData.summary,
+        ...(cvData.experiences || []).map(e => e.description)
+    ];
+    return parts.filter(Boolean).join(' ');
 }
 
 function calculateCategoryScores(metrics: ATSMetric[]): Record<MetricCategory, number> {
     const categories: MetricCategory[] = ['content', 'formatting', 'keywords', 'impact', 'completeness'];
-    const scores: Record<MetricCategory, number> = {} as any;
+    const result: any = {};
 
     categories.forEach(cat => {
         const catMetrics = metrics.filter(m => m.category === cat);
-        if (catMetrics.length > 0) {
-            const total = catMetrics.reduce((sum, m) => sum + (m.score * m.weight), 0);
-            const weights = catMetrics.reduce((sum, m) => sum + m.weight, 0);
-            scores[cat] = Math.round(total / weights);
-        } else {
-            scores[cat] = 0;
-        }
+        const totalWeight = catMetrics.reduce((s, m) => s + m.weight, 0);
+        const weightedScore = catMetrics.reduce((s, m) => s + (m.score * m.weight), 0);
+        result[cat] = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 0;
     });
 
-    return scores;
+    return result as Record<MetricCategory, number>;
 }
 
-function getGrade(score: number): { grade: 'A' | 'B' | 'C' | 'D' | 'F'; gradeLabel: string; gradeLabelAr: string } {
-    if (score >= 90) return { grade: 'A', gradeLabel: 'Excellent', gradeLabelAr: 'ممتاز' };
-    if (score >= 80) return { grade: 'B', gradeLabel: 'Very Good', gradeLabelAr: 'جيد جداً' };
-    if (score >= 70) return { grade: 'C', gradeLabel: 'Good', gradeLabelAr: 'جيد' };
-    if (score >= 60) return { grade: 'D', gradeLabel: 'Needs Work', gradeLabelAr: 'يحتاج تحسين' };
-    return { grade: 'F', gradeLabel: 'Poor', gradeLabelAr: 'ضعيف' };
+function getGrade(score: number) {
+    if (score >= 90) return { grade: 'A' as const, gradeLabel: 'Excellent', gradeLabelAr: 'ممتاز', gradeLabelFr: 'Excellent' };
+    if (score >= 80) return { grade: 'B' as const, gradeLabel: 'Very Good', gradeLabelAr: 'جيد جداً', gradeLabelFr: 'Très Bien' };
+    if (score >= 70) return { grade: 'C' as const, gradeLabel: 'Good', gradeLabelAr: 'جيد', gradeLabelFr: 'Bien' };
+    if (score >= 60) return { grade: 'D' as const, gradeLabel: 'Fair', gradeLabelAr: 'مقبول', gradeLabelFr: 'Passable' };
+    return { grade: 'F' as const, gradeLabel: 'Poor', gradeLabelAr: 'ضعيف', gradeLabelFr: 'Insuffisant' };
 }
-
-function extractKeywords(jobDescription: string): string[] {
-    // Simple keyword extraction
-    const words = jobDescription.toLowerCase()
-        .replace(/[^\w\s]/g, '')
-        .split(/\s+/)
-        .filter(w => w.length > 3);
-
-    // Count frequency
-    const freq: Record<string, number> = {};
-    words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
-
-    // Return top keywords
-    return Object.entries(freq)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 20)
-        .map(([word]) => word);
-}
-
-function getIndustryKeywords(profession: string): string[] {
-    if (profession.includes('developer') || profession.includes('engineer') || profession.includes('software')) {
-        return ['agile', 'scrum', 'git', 'ci/cd', 'api', 'cloud', 'database', 'testing', 'deployment'];
-    }
-    if (profession.includes('marketing')) {
-        return ['seo', 'ppc', 'analytics', 'campaign', 'roi', 'conversion', 'content', 'social media'];
-    }
-    if (profession.includes('manager') || profession.includes('director')) {
-        return ['leadership', 'strategy', 'budget', 'stakeholder', 'kpi', 'roadmap', 'team'];
-    }
-    if (profession.includes('design')) {
-        return ['figma', 'prototype', 'wireframe', 'user experience', 'accessibility', 'responsive'];
-    }
-    if (profession.includes('data') || profession.includes('analyst')) {
-        return ['sql', 'python', 'visualization', 'reporting', 'metrics', 'insights', 'dashboard'];
-    }
-    return ['team', 'project', 'communication', 'results', 'improvement'];
-}
-
-function detectDateFormat(date?: string): string {
-    if (!date) return 'none';
-    if (/^\d{4}$/.test(date)) return 'year';
-    if (/^\d{1,2}\/\d{4}$/.test(date)) return 'mm/yyyy';
-    if (/^[A-Za-z]+\s+\d{4}$/.test(date)) return 'month year';
-    return 'other';
-}
-
-// Export everything
-export default analyzeATS;

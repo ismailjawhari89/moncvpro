@@ -89,6 +89,21 @@ export default function CVPreview({ selectedTemplate }: CVPreviewProps) {
         desktop: 'سطح المكتب',
         tablet: 'جهاز لوحي',
         mobile: 'جوال'
+    } : uiLocale === 'fr' ? {
+        livePreview: 'Aperçu en direct',
+        printReady: 'Format prêt pour impression',
+        realTime: 'Mises à jour en temps réel',
+        zoom: 'Zoom',
+        zoomIn: 'Zoom avant',
+        zoomOut: 'Zoom arrière',
+        resetZoom: 'Réinitialiser',
+        print: 'Imprimer',
+        printPreview: 'Aperçu avant impression',
+        fullscreen: 'Plein écran',
+        exitFullscreen: 'Quitter',
+        desktop: 'Ordinateur',
+        tablet: 'Tablette',
+        mobile: 'Mobile'
     } : {
         livePreview: 'Live Preview',
         printReady: 'Print-ready format',
@@ -326,6 +341,7 @@ export default function CVPreview({ selectedTemplate }: CVPreviewProps) {
                     <motion.div
                         id="cv-preview-content"
                         className={`absolute top-0 ${isContent_RTL ? 'right-0 origin-top-right' : 'left-0 origin-top-left'} rounded-sm overflow-hidden bg-white`}
+                        dir={isContent_RTL ? 'rtl' : 'ltr'}
                         style={{
                             width: `${currentWidth}px`,
                             minHeight: `${currentHeight}px`,
@@ -405,7 +421,7 @@ export default function CVPreview({ selectedTemplate }: CVPreviewProps) {
                         <div className="text-center">
                             <RefreshCw className="animate-spin mx-auto mb-3 text-blue-600" size={32} />
                             <p className="font-medium text-gray-700">
-                                {isUI_RTL ? 'جاري تحضير الطباعة...' : 'Preparing print...'}
+                                {uiLocale === 'ar' ? 'جاري تحضير الطباعة...' : uiLocale === 'fr' ? 'Préparation de l\'impression...' : 'Preparing print...'}
                             </p>
                         </div>
                     </motion.div>

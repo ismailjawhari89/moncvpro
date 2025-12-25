@@ -1,0 +1,48 @@
+/**
+ * Compresses an image Base64 string to a smaller JPEG.
+ * @param base64Str The original image base64 string
+ * @param maxWidth Max width (default 800)
+ * @param maxHeight Max height (default 800)
+ * @param quality JPEG quality 0-1 (default 0.7)
+ * @returns Promise resolving to the compressed base64 string
+ */
+export const compressImage = (
+    base64Str: string,
+    maxWidth = 800,
+    maxHeight = 800,
+    quality = 0.7
+): Promise<string> => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.src = base64Str;
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            // Maintain aspect ratio
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            } else {
+                resolve(base64Str); // Fallback if context fails
+            }
+        };
+        img.onerror = () => resolve(base64Str); // Fallback
+    });
+};

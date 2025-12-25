@@ -15,19 +15,15 @@ import {
     ChevronDown
 } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
-interface NavItem {
-    label: string;
-    labelAr: string;
-    href: string;
-    icon: React.ElementType;
-}
+// ... imports
 
-const navItems: NavItem[] = [
-    { label: 'Home', labelAr: 'الرئيسية', href: '/', icon: Home },
-    { label: 'Templates', labelAr: 'القوالب', href: '/templates', icon: LayoutTemplate },
-    { label: 'CV Builder', labelAr: 'منشئ السيرة', href: '/cv-builder', icon: FileText },
-    { label: 'Examples', labelAr: 'أمثلة', href: '/examples', icon: BookOpen },
+const navItems = [
+    { key: 'home', href: '/', icon: Home },
+    { key: 'templates', href: '/templates', icon: LayoutTemplate },
+    { key: 'cvBuilder', href: '/cv-builder', icon: FileText },
+    { key: 'examples', href: '/examples', icon: BookOpen },
 ];
 
 export default function Header() {
@@ -35,6 +31,8 @@ export default function Header() {
     const pathname = usePathname();
     const locale = (params?.locale as string) || 'en';
     const isRTL = locale === 'ar';
+    const t = useTranslations('nav');
+    const tHero = useTranslations('hero');
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -69,8 +67,8 @@ export default function Header() {
         <>
             <header
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                        ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-md'
-                        : 'bg-transparent'
+                    ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-md'
+                    : 'bg-transparent'
                     }`}
                 dir={isRTL ? 'rtl' : 'ltr'}
             >
@@ -96,12 +94,12 @@ export default function Header() {
                                     key={item.href}
                                     href={getLocalizedHref(item.href)}
                                     className={`nav-item flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive(item.href)
-                                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                         }`}
                                 >
                                     <item.icon size={18} />
-                                    <span>{isRTL ? item.labelAr : item.label}</span>
+                                    <span>{t(item.key)}</span>
                                 </Link>
                             ))}
                         </div>
@@ -117,7 +115,7 @@ export default function Header() {
                                 className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
                             >
                                 <FileText size={18} />
-                                <span>{isRTL ? 'ابدأ الآن' : 'Start Free'}</span>
+                                <span>{tHero('cta')}</span>
                             </Link>
 
                             {/* Mobile Menu Button */}
@@ -151,13 +149,13 @@ export default function Header() {
                                         key={item.href}
                                         href={getLocalizedHref(item.href)}
                                         className={`nav-item flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive(item.href)
-                                                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                             }`}
                                     >
                                         <item.icon size={20} />
                                         <span className="font-medium">
-                                            {isRTL ? item.labelAr : item.label}
+                                            {t(item.key)}
                                         </span>
                                     </Link>
                                 ))}
@@ -168,7 +166,7 @@ export default function Header() {
                                     className="flex items-center justify-center gap-2 w-full px-4 py-3 mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl"
                                 >
                                     <FileText size={20} />
-                                    <span>{isRTL ? 'ابدأ الآن مجاناً' : 'Start Building Free'}</span>
+                                    <span>{tHero('cta')}</span>
                                 </Link>
                             </div>
                         </motion.div>

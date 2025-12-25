@@ -1,15 +1,17 @@
-import React from 'react';
 import { useCVStore } from '@/stores/useCVStore';
 import { Education } from '@/types/cv';
 import { Card, InputField } from '@/components/ui/FormFields';
 import { Trash2, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface EducationSectionProps {
     isDark?: boolean;
 }
 
 export default function EducationSection({ isDark }: EducationSectionProps) {
+    const t = useTranslations('cv-form.education');
     const education = useCVStore((state) => state.cvData.education);
+    // ...
     const addEducation = useCVStore((state) => state.addEducation);
     const removeEducation = useCVStore((state) => state.removeEducation);
     const updateEducation = useCVStore((state) => state.updateEducation);
@@ -33,7 +35,7 @@ export default function EducationSection({ isDark }: EducationSectionProps) {
                 <Card key={edu.id} isDark={isDark} className="p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            Education #{index + 1}
+                            {t('title')} #{index + 1}
                         </h3>
                         <button
                             onClick={() => removeEducation(edu.id)}
@@ -44,35 +46,35 @@ export default function EducationSection({ isDark }: EducationSectionProps) {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InputField
-                            label="Institution"
+                            label={t('institution')}
                             value={edu.institution}
                             onChange={(val) => updateEducation(edu.id, 'institution', val)}
-                            placeholder="University Name"
+                            placeholder={t('placeholders.institution')}
                             isDark={isDark}
                         />
                         <InputField
-                            label="Degree"
+                            label={t('degree')}
                             value={edu.degree}
                             onChange={(val) => updateEducation(edu.id, 'degree', val)}
-                            placeholder="Bachelor's Degree"
+                            placeholder={t('placeholders.degree')}
                             isDark={isDark}
                         />
                         <InputField
-                            label="Field of Study"
+                            label={t('field')}
                             value={edu.field}
                             onChange={(val) => updateEducation(edu.id, 'field', val)}
-                            placeholder="Computer Science"
+                            placeholder={t('placeholders.field')}
                             isDark={isDark}
                         />
                         <InputField
-                            label="Start Date"
+                            label={t('startDate')}
                             type="month"
                             value={edu.startDate || ''}
                             onChange={(val) => updateEducation(edu.id, 'startDate', val)}
                             isDark={isDark}
                         />
                         <InputField
-                            label="End Date"
+                            label={t('endDate')}
                             type="month"
                             value={edu.endDate || ''}
                             onChange={(val) => updateEducation(edu.id, 'endDate', val)}
@@ -89,7 +91,7 @@ export default function EducationSection({ isDark }: EducationSectionProps) {
                     } flex items-center justify-center gap-2 font-medium`}
             >
                 <Plus size={20} />
-                Add Education
+                {t('add')}
             </button>
         </div>
     );

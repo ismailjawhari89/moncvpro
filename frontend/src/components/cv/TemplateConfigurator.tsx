@@ -20,6 +20,7 @@ import {
     FONT_FAMILIES,
     getTemplateConfig
 } from './templates';
+import { useTranslations } from 'next-intl';
 
 interface TemplateConfiguratorProps {
     selectedTemplate: TemplateId;
@@ -38,6 +39,7 @@ export default function TemplateConfigurator({
     isPremiumUser = false,
     isDark = false
 }: TemplateConfiguratorProps) {
+    const t = useTranslations('cvBuilder.templateConfig');
     const [isExpanded, setIsExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState<'templates' | 'colors' | 'fonts' | 'spacing'>('templates');
 
@@ -60,6 +62,13 @@ export default function TemplateConfigurator({
         onCustomizationChange({ ...customizations, spacing });
     };
 
+    const tabs = [
+        { id: 'templates', label: t('tabs.templates'), icon: Layout },
+        { id: 'colors', label: t('tabs.colors'), icon: Palette },
+        { id: 'fonts', label: t('tabs.fonts'), icon: Type },
+        { id: 'spacing', label: t('tabs.spacing'), icon: Eye }
+    ] as const;
+
     return (
         <div className={`${bgColor} rounded-xl border ${borderColor} overflow-hidden shadow-lg`}>
             {/* Header - Always visible */}
@@ -69,17 +78,17 @@ export default function TemplateConfigurator({
             >
                 <div className="flex items-center gap-3">
                     <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform hover:scale-105"
                         style={{ backgroundColor: customizations.primaryColor || currentConfig.defaultCustomizations.primaryColor }}
                     >
                         <Palette className="text-white" size={20} />
                     </div>
-                    <div className="text-left">
+                    <div className="text-left rtl:text-right">
                         <h3 className={`font-semibold ${textColor}`}>
                             {currentConfig.name}
                         </h3>
                         <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                            Cliquez pour personnaliser
+                            {t('clickToCustomize')}
                         </p>
                     </div>
                 </div>
@@ -95,21 +104,16 @@ export default function TemplateConfigurator({
                 <div className={`border-t ${borderColor}`}>
                     {/* Tabs */}
                     <div className={`flex border-b ${borderColor}`}>
-                        {[
-                            { id: 'templates', label: 'Templates', icon: Layout },
-                            { id: 'colors', label: 'Couleurs', icon: Palette },
-                            { id: 'fonts', label: 'Polices', icon: Type },
-                            { id: 'spacing', label: 'Espacement', icon: Eye }
-                        ].map(tab => {
+                        {tabs.map(tab => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
                             return (
                                 <button
                                     key={tab.id}
-                                    onClick={() => setActiveTab(tab.id as any)}
+                                    onClick={() => setActiveTab(tab.id)}
                                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 text-xs font-medium transition-colors ${isActive
-                                            ? 'text-blue-600 border-b-2 border-blue-600'
-                                            : isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'
+                                        ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/30'
+                                        : isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Icon size={14} />
@@ -134,15 +138,14 @@ export default function TemplateConfigurator({
                                             onClick={() => !isLocked && onTemplateChange(template.id)}
                                             disabled={isLocked}
                                             className={`relative p-3 rounded-lg border-2 transition-all ${isSelected
-                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                                    : isLocked
-                                                        ? `${borderColor} opacity-60 cursor-not-allowed`
-                                                        : `${borderColor} ${hoverBg}`
-                                                }`}
+                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                                                : isLocked
+                                                    ? `${borderColor} opacity-60 cursor-not-allowed`
+                                                    : `${borderColor} ${hoverBg}`
+                                                } hover:shadow-md`}
                                         >
-                                            {/* Template Preview Placeholder */}
                                             <div
-                                                className="w-full aspect-[3/4] rounded mb-2 flex items-center justify-center"
+                                                className="w-full aspect-[3/4] rounded mb-2 flex items-center justify-center transition-transform group-hover:scale-105"
                                                 style={{
                                                     backgroundColor: template.defaultCustomizations.primaryColor,
                                                     opacity: 0.1
@@ -158,7 +161,6 @@ export default function TemplateConfigurator({
                                                 {template.name}
                                             </p>
 
-                                            {/* Premium Badge */}
                                             {template.isPremium && (
                                                 <div className="absolute top-2 right-2">
                                                     <Crown
@@ -168,9 +170,8 @@ export default function TemplateConfigurator({
                                                 </div>
                                             )}
 
-                                            {/* Selected Check */}
                                             {isSelected && (
-                                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                                                     <Check size={12} className="text-white" />
                                                 </div>
                                             )}
@@ -184,17 +185,17 @@ export default function TemplateConfigurator({
                         {activeTab === 'colors' && (
                             <div className="space-y-4">
                                 <div>
-                                    <label className={`text-sm font-medium ${textColor} mb-2 block`}>
-                                        Couleur principale
+                                    <label className={`text-sm font-medium ${textColor} mb-2 block rtl:text-right`}>
+                                        {t('colors.primary')}
                                     </label>
                                     <div className="flex flex-wrap gap-2">
                                         {COLOR_PRESETS.map(color => (
                                             <button
                                                 key={color.value}
                                                 onClick={() => handleColorChange(color.value)}
-                                                className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${customizations.primaryColor === color.value
-                                                        ? 'border-blue-500 ring-2 ring-blue-200'
-                                                        : 'border-white shadow'
+                                                className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${customizations.primaryColor === color.value
+                                                    ? 'border-blue-500 ring-4 ring-blue-500/20 shadow-lg scale-110'
+                                                    : isDark ? 'border-gray-600 shadow' : 'border-white shadow'
                                                     }`}
                                                 style={{ backgroundColor: color.value }}
                                                 title={color.name}
@@ -204,22 +205,24 @@ export default function TemplateConfigurator({
                                 </div>
 
                                 <div>
-                                    <label className={`text-sm font-medium ${textColor} mb-2 block`}>
-                                        Couleur personnalisée
+                                    <label className={`text-sm font-medium ${textColor} mb-2 block rtl:text-right`}>
+                                        {t('colors.custom')}
                                     </label>
                                     <div className="flex items-center gap-3">
-                                        <input
-                                            type="color"
-                                            value={customizations.primaryColor || '#3b82f6'}
-                                            onChange={(e) => handleColorChange(e.target.value)}
-                                            className="w-12 h-10 rounded cursor-pointer border-0"
-                                        />
+                                        <div className="relative w-12 h-10 overflow-hidden rounded-lg">
+                                            <input
+                                                type="color"
+                                                value={customizations.primaryColor || '#3b82f6'}
+                                                onChange={(e) => handleColorChange(e.target.value)}
+                                                className="absolute inset-0 w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer border-0"
+                                            />
+                                        </div>
                                         <input
                                             type="text"
-                                            value={customizations.primaryColor || '#3b82f6'}
+                                            value={customizations.primaryColor || ''}
                                             onChange={(e) => handleColorChange(e.target.value)}
-                                            className={`flex-1 px-3 py-2 border rounded-lg text-sm ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'} ${textColor}`}
-                                            placeholder="#3b82f6"
+                                            className={`flex-1 px-3 py-2 border rounded-lg text-sm transition-all focus:ring-2 focus:ring-blue-500/20 ${isDark ? 'bg-gray-700 border-gray-600 focus:border-blue-500' : 'bg-white border-gray-200 focus:border-blue-500'} ${textColor}`}
+                                            placeholder={t('colors.placeholder')}
                                         />
                                     </div>
                                 </div>
@@ -233,19 +236,16 @@ export default function TemplateConfigurator({
                                     <button
                                         key={fontKey}
                                         onClick={() => handleFontChange(fontKey)}
-                                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${customizations.fontFamily === fontKey
-                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                                : `${borderColor} ${hoverBg}`
+                                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${customizations.fontFamily === fontKey
+                                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-sm'
+                                            : `${borderColor} ${hoverBg}`
                                             }`}
                                     >
                                         <span
                                             className={`${textColor}`}
                                             style={{ fontFamily: FONT_FAMILIES[fontKey] }}
                                         >
-                                            {fontKey === 'system' && 'System UI'}
-                                            {fontKey === 'serif' && 'Serif (Georgia)'}
-                                            {fontKey === 'sans' && 'Sans-serif (Inter)'}
-                                            {fontKey === 'mono' && 'Monospace (JetBrains)'}
+                                            {t(`fonts.${fontKey}`)}
                                         </span>
                                         {customizations.fontFamily === fontKey && (
                                             <Check size={16} className="text-blue-500" />
@@ -262,24 +262,22 @@ export default function TemplateConfigurator({
                                     <button
                                         key={spacing}
                                         onClick={() => handleSpacingChange(spacing)}
-                                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${customizations.spacing === spacing
-                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                                : `${borderColor} ${hoverBg}`
+                                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${customizations.spacing === spacing
+                                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-sm'
+                                            : `${borderColor} ${hoverBg}`
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <div className="flex gap-0.5">
+                                            <div className="flex gap-0.5 min-w-[24px]">
                                                 {[...Array(spacing === 'compact' ? 2 : spacing === 'normal' ? 3 : 4)].map((_, i) => (
                                                     <div
                                                         key={i}
-                                                        className={`w-1 h-4 rounded ${isDark ? 'bg-gray-500' : 'bg-gray-400'}`}
+                                                        className={`w-1 h-4 rounded transition-colors ${customizations.spacing === spacing ? 'bg-blue-500' : isDark ? 'bg-gray-500' : 'bg-gray-400'}`}
                                                     />
                                                 ))}
                                             </div>
                                             <span className={textColor}>
-                                                {spacing === 'compact' && 'Compact'}
-                                                {spacing === 'normal' && 'Normal'}
-                                                {spacing === 'spacious' && 'Aéré'}
+                                                {t(`spacing.${spacing}`)}
                                             </span>
                                         </div>
                                         {customizations.spacing === spacing && (
@@ -295,19 +293,19 @@ export default function TemplateConfigurator({
                     {!isPremiumUser && (
                         <div className={`p-4 border-t ${borderColor} bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20`}>
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-yellow-100 dark:bg-yellow-800 rounded-lg">
+                                <div className="p-2 bg-white dark:bg-yellow-900/40 rounded-lg shadow-sm">
                                     <Sparkles className="text-yellow-600" size={20} />
                                 </div>
-                                <div className="flex-1">
+                                <div className="flex-1 text-left rtl:text-right">
                                     <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-200">
-                                        Débloquez tous les templates
+                                        {t('premium.title')}
                                     </p>
                                     <p className="text-xs text-yellow-600 dark:text-yellow-400">
-                                        Accédez aux templates premium avec Pro
+                                        {t('premium.subtitle')}
                                     </p>
                                 </div>
-                                <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg transition-colors">
-                                    Upgrade
+                                <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg transition-all shadow-md hover:shadow-lg active:scale-95">
+                                    {t('premium.upgrade')}
                                 </button>
                             </div>
                         </div>

@@ -1,14 +1,18 @@
-'use client';
-
 import React from 'react';
 import { Shield, Lock, Eye, Database, UserCheck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 // Edge Runtime for Cloudflare Pages
 export const runtime = 'edge';
 
-export default function PrivacyPolicyPage() {
-    const lastUpdated = 'December 3, 2025';
+interface Props {
+    params: Promise<{ locale: string }>;
+}
+
+export default async function PrivacyPolicyPage({ params }: Props) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'privacy-policy' });
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -17,10 +21,10 @@ export default function PrivacyPolicyPage() {
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3 mb-4">
                         <Shield size={40} />
-                        <h1 className="text-4xl font-bold">Privacy Policy</h1>
+                        <h1 className="text-4xl font-bold">{t('title')}</h1>
                     </div>
                     <p className="text-xl text-blue-100">
-                        Last updated: {lastUpdated}
+                        {t('lastUpdated')}
                     </p>
                 </div>
             </section>
@@ -32,10 +36,9 @@ export default function PrivacyPolicyPage() {
                         <div className="flex items-start gap-3">
                             <AlertCircle className="text-blue-600 flex-shrink-0 mt-1" size={24} />
                             <div>
-                                <h3 className="font-bold text-blue-900 mb-2">Your Privacy Matters</h3>
+                                <h3 className="font-bold text-blue-900 mb-2">{t('summaryTitle')}</h3>
                                 <p className="text-blue-800 text-sm">
-                                    At MonCVPro, we are committed to protecting your personal information and your right to privacy.
-                                    This Privacy Policy explains how we collect, use, and safeguard your data.
+                                    {t('summaryDescription')}
                                 </p>
                             </div>
                         </div>
@@ -46,26 +49,24 @@ export default function PrivacyPolicyPage() {
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <Database className="text-blue-600" size={28} />
-                                <h2 className="text-2xl font-bold text-gray-900">1. Information We Collect</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('sections.collect.title')}</h2>
                             </div>
                             <div className="space-y-4 text-gray-700">
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 mb-2">1.1 Information You Provide</h3>
+                                    <h3 className="font-semibold text-gray-900 mb-2">{t('sections.collect.provide.title')}</h3>
                                     <ul className="list-disc list-inside space-y-1 ml-4">
-                                        <li>Account information (name, email address)</li>
-                                        <li>CV content (work experience, education, skills)</li>
-                                        <li>Contact form submissions</li>
-                                        <li>Feedback and survey responses</li>
+                                        {(t.raw('sections.collect.provide.items') as string[]).map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
                                     </ul>
                                 </div>
 
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 mb-2">1.2 Automatically Collected Information</h3>
+                                    <h3 className="font-semibold text-gray-900 mb-2">{t('sections.collect.automated.title')}</h3>
                                     <ul className="list-disc list-inside space-y-1 ml-4">
-                                        <li>Device information (browser type, operating system)</li>
-                                        <li>Usage data (pages visited, features used)</li>
-                                        <li>Cookies and similar tracking technologies</li>
-                                        <li>IP address and location data</li>
+                                        {(t.raw('sections.collect.automated.items') as string[]).map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
@@ -75,18 +76,14 @@ export default function PrivacyPolicyPage() {
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <Eye className="text-purple-600" size={28} />
-                                <h2 className="text-2xl font-bold text-gray-900">2. How We Use Your Information</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('sections.usage.title')}</h2>
                             </div>
                             <div className="space-y-2 text-gray-700">
-                                <p>We use the collected information for the following purposes:</p>
+                                <p>{t('sections.usage.description')}</p>
                                 <ul className="list-disc list-inside space-y-1 ml-4">
-                                    <li>To provide and maintain our CV building service</li>
-                                    <li>To personalize your experience and save your CVs</li>
-                                    <li>To improve our website and develop new features</li>
-                                    <li>To communicate with you about updates and support</li>
-                                    <li>To display relevant advertisements (Google AdSense)</li>
-                                    <li>To ensure security and prevent fraud</li>
-                                    <li>To comply with legal obligations</li>
+                                    {(t.raw('sections.usage.items') as string[]).map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
@@ -95,20 +92,17 @@ export default function PrivacyPolicyPage() {
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <Lock className="text-green-600" size={28} />
-                                <h2 className="text-2xl font-bold text-gray-900">3. Data Storage and Security</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('sections.security.title')}</h2>
                             </div>
                             <div className="space-y-3 text-gray-700">
                                 <p>
-                                    We implement appropriate technical and organizational security measures to protect your
-                                    personal information against unauthorized access, alteration, disclosure, or destruction.
+                                    {t('sections.security.paragraph1')}
                                 </p>
                                 <p>
-                                    Your CV data is stored securely using industry-standard encryption. We use Supabase
-                                    (PostgreSQL) for data storage, which provides enterprise-grade security and compliance.
+                                    {t('sections.security.paragraph2')}
                                 </p>
                                 <p className="font-semibold">
-                                    However, no method of transmission over the Internet is 100% secure. While we strive to
-                                    protect your data, we cannot guarantee absolute security.
+                                    {t('sections.security.paragraph3')}
                                 </p>
                             </div>
                         </div>
@@ -117,23 +111,22 @@ export default function PrivacyPolicyPage() {
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <UserCheck className="text-orange-600" size={28} />
-                                <h2 className="text-2xl font-bold text-gray-900">4. Third-Party Services</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('sections.thirdParty.title')}</h2>
                             </div>
                             <div className="space-y-3 text-gray-700">
-                                <p>We use the following third-party services:</p>
+                                <p>{t('sections.thirdParty.description')}</p>
                                 <ul className="space-y-2 ml-4">
                                     <li>
-                                        <strong>Google AdSense:</strong> For displaying advertisements. Google may use cookies
-                                        to serve ads based on your interests. You can opt-out at{' '}
+                                        <strong>{t('sections.thirdParty.googleAdsense.name')}:</strong> {t('sections.thirdParty.googleAdsense.text')}{' '}
                                         <a href="https://www.google.com/settings/ads" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                                            Google Ads Settings
+                                            {t('sections.thirdParty.googleAdsense.linkText')}
                                         </a>.
                                     </li>
                                     <li>
-                                        <strong>Supabase:</strong> For secure data storage and authentication.
+                                        <strong>{t('sections.thirdParty.supabase.name')}:</strong> {t('sections.thirdParty.supabase.text')}
                                     </li>
                                     <li>
-                                        <strong>Cloudflare:</strong> For content delivery and security.
+                                        <strong>{t('sections.thirdParty.cloudflare.name')}:</strong> {t('sections.thirdParty.cloudflare.text')}
                                     </li>
                                 </ul>
                             </div>
@@ -141,83 +134,77 @@ export default function PrivacyPolicyPage() {
 
                         {/* Your Rights */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Your Rights (GDPR)</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.yourRights.title')}</h2>
                             <div className="text-gray-700">
-                                <p className="mb-3">If you are located in the European Economic Area (EEA), you have the following rights:</p>
+                                <p className="mb-3">{t('sections.yourRights.description')}</p>
                                 <ul className="list-disc list-inside space-y-1 ml-4">
-                                    <li><strong>Right to Access:</strong> Request copies of your personal data</li>
-                                    <li><strong>Right to Rectification:</strong> Request correction of inaccurate data</li>
-                                    <li><strong>Right to Erasure:</strong> Request deletion of your personal data</li>
-                                    <li><strong>Right to Restrict Processing:</strong> Request limitation of data processing</li>
-                                    <li><strong>Right to Data Portability:</strong> Request transfer of your data</li>
-                                    <li><strong>Right to Object:</strong> Object to processing of your data</li>
+                                    <li><strong>{t('sections.yourRights.access.title')}:</strong> {t('sections.yourRights.access.text')}</li>
+                                    <li><strong>{t('sections.yourRights.rectification.title')}:</strong> {t('sections.yourRights.rectification.text')}</li>
+                                    <li><strong>{t('sections.yourRights.erasure.title')}:</strong> {t('sections.yourRights.erasure.text')}</li>
+                                    <li><strong>{t('sections.yourRights.restrictProcessing.title')}:</strong> {t('sections.yourRights.restrictProcessing.text')}</li>
+                                    <li><strong>{t('sections.yourRights.dataPortability.title')}:</strong> {t('sections.yourRights.dataPortability.text')}</li>
+                                    <li><strong>{t('sections.yourRights.object.title')}:</strong> {t('sections.yourRights.object.text')}</li>
                                 </ul>
                                 <p className="mt-3">
-                                    To exercise these rights, please contact us at <strong>privacy@moncvpro.com</strong>
+                                    {t('sections.yourRights.contactText')} <strong>privacy@moncvpro.com</strong>
                                 </p>
                             </div>
                         </div>
 
                         {/* Cookies */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Cookies</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.cookies.title')}</h2>
                             <div className="text-gray-700 space-y-3">
                                 <p>
-                                    We use cookies and similar tracking technologies to improve your experience. Cookies are
-                                    small files stored on your device that help us remember your preferences and analyze site usage.
+                                    {t('sections.cookies.paragraph1')}
                                 </p>
                                 <p>
-                                    You can control cookies through your browser settings. However, disabling cookies may
-                                    limit some features of our website.
+                                    {t('sections.cookies.paragraph2')}
                                 </p>
                                 <p>
-                                    For more information, please see our <Link href="/cookies-policy" className="text-blue-600 hover:underline">Cookies Policy</Link>.
+                                    {t('sections.cookies.paragraph3')}{' '}
+                                    <Link href={`/${locale}/cookies-policy`} className="text-blue-600 hover:underline">{t('sections.cookies.linkText')}</Link>.
                                 </p>
                             </div>
                         </div>
 
                         {/* Data Retention */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Data Retention</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.dataRetention.title')}</h2>
                             <div className="text-gray-700 space-y-2">
                                 <p>
-                                    We retain your personal information only for as long as necessary to provide our services
-                                    and fulfill the purposes outlined in this Privacy Policy.
+                                    {t('sections.dataRetention.paragraph1')}
                                 </p>
                                 <p>
-                                    When you delete your account, we will delete your personal data within 30 days, except
-                                    where we are required to retain it for legal compliance.
+                                    {t('sections.dataRetention.paragraph2')}
                                 </p>
                             </div>
                         </div>
 
                         {/* Children's Privacy */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children&apos;s Privacy</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.childrenPrivacy.title')}</h2>
                             <p className="text-gray-700">
-                                Our service is not intended for children under 16 years of age. We do not knowingly collect
-                                personal information from children. If you believe we have collected data from a child,
-                                please contact us immediately.
+                                {t('sections.childrenPrivacy.text')}
                             </p>
                         </div>
 
                         {/* Changes to Policy */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.changesToPolicy.title')}</h2>
                             <p className="text-gray-700">
-                                We may update this Privacy Policy from time to time. We will notify you of any changes by
-                                posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
+                                {t('sections.changesToPolicy.text')}
                             </p>
                         </div>
 
                         {/* Contact */}
                         <div className="border-t border-gray-200 pt-8">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Us</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('sections.contact.title')}</h2>
                             <div className="text-gray-700">
-                                <p className="mb-2">If you have questions about this Privacy Policy, please contact us:</p>
+                                <p className="mb-2">{t('sections.contact.description')}</p>
                                 <ul className="space-y-1">
-                                    <li><strong>Email:</strong> privacy@moncvpro.com</li>
-                                    <li><strong>Website:</strong> <Link href="/contact" className="text-blue-600 hover:underline">Contact Form</Link></li>
+                                    <li><strong>{t('sections.contact.emailLabel')}:</strong> privacy@moncvpro.com</li>
+                                    <li><strong>{t('sections.contact.websiteLabel')}:</strong> <Link href={`/${locale}/contact`} className="text-blue-600 hover:underline">{t('sections.contact.websiteLinkText')}</Link></li>
                                 </ul>
                             </div>
                         </div>

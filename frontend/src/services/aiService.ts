@@ -2,48 +2,21 @@
  * AI Service - Frontend integration with MonCVPro AI Backend
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import {
+    ATSAnalysisSchema,
+    ContentImproveSchema,
+    GrammarCheckSchema,
+    KeywordAnalysisSchema,
+    type ATSAnalysisResult,
+    type ContentImproveResult,
+    type GrammarCheckResult,
+    type KeywordAnalysisResult
+} from '@/lib/ai-schemas';
+import { ZodSchema } from 'zod';
 
-export interface ATSAnalysisResult {
-    score: number;
-    summary: string;
-    strengths: string[];
-    improvements: string[];
-    keywords: {
-        found: string[];
-        missing: string[];
-    };
-    sections?: {
-        name: string;
-        score: number;
-        feedback: string;
-    }[];
-}
+const API_BASE_URL = process.env.NEXT_PUBLIC_WORKER_URL || 'https://moncvpro-worker.ismailhouwa123.workers.dev';
 
-export interface ContentImproveResult {
-    originalText: string;
-    improvedText: string;
-    changes: string[];
-    improvementType: string;
-}
-
-export interface GrammarCheckResult {
-    correctedText: string;
-    errors: {
-        type: string;
-        original: string;
-        correction: string;
-        explanation: string;
-    }[];
-    score: number;
-}
-
-export interface KeywordAnalysisResult {
-    keywords: string[];
-    density: Record<string, number>;
-    suggestions: string[];
-    industryMatch: number;
-}
+export type { ATSAnalysisResult, ContentImproveResult, GrammarCheckResult, KeywordAnalysisResult };
 
 export interface RateLimitInfo {
     limit: number;
@@ -53,7 +26,8 @@ export interface RateLimitInfo {
 
 interface APIResponse<T> {
     success: boolean;
-    data: T;
+    data: T | string; // data can be string if it's a raw generic answer or the inner JSON string
+    response?: string; // Sometimes the worker returns 'response' field for AI text
     mockMode?: boolean;
 }
 
@@ -119,6 +93,132 @@ class AIService {
     }
 
     /**
+     * Helper to call the Unified AI Endpoint with Zod Validation
+     */
+    private async callAI<T>(prompt: string, action: string, schema: ZodSchema<T>, language: string = 'en'): Promise<T> {
+        // Implement client-side rate limit check before calling
+        if (!this.checkUsageLimit()) {
+            throw new Error('Daily AI usage limit reached. Upgrade to Pro for unlimited access.');
+        }
+
+        // The worker returns { success: true, response: "..." }
+        const apiResponse = await this.request<APIResponse<any>>(
+            '/ai',
+            'POST',
+            { prompt, action, language }
+        );
+
+        // Extract the AI text response
+        // The worker usually puts the AI content in `response` field
+        const rawAiText = apiResponse.response || (typeof apiResponse.data === 'string' ? apiResponse.data : JSON.stringify(apiResponse.data));
+
+        if (!rawAiText) {
+            throw new Error('Empty response from AI service');
+        }
+
+        try {
+            // 1. Clean the response (remove potential markdown markers)
+            const cleanJson = rawAiText.replace(/```json\n?|\n?```/g, '').trim();
+
+            // 2. Parse JSON
+            const parsedJson = JSON.parse(cleanJson);
+
+            // 3. Validate with Zod
+            const validationResult = schema.safeParse(parsedJson);
+
+            if (!validationResult.success) {
+                console.error('Schema Validation Failed:', validationResult.error);
+                throw new Error('AI response format invalid. We are tweaking the models.');
+            }
+
+            // Increment usage on success
+            this.incrementUsage();
+
+            return validationResult.data;
+        } catch (e: any) {
+            console.error('Failed to parse AI response:', rawAiText, e);
+            throw new Error(e.message || 'Failed to process AI response');
+        }
+    }
+
+    /**
+     * Check if user has reached daily limit
+     */
+    checkUsageLimit(): boolean {
+        try {
+            const today = new Date().toDateString();
+            const usageData = localStorage.getItem('moncvpro_ai_usage');
+            let usage = { count: 0, date: today };
+
+            if (usageData) {
+                const parsed = JSON.parse(usageData);
+                if (parsed.date === today) {
+                    usage = parsed;
+                }
+            }
+
+            // Simple limit logic: 
+            // If token exists (Auth user) -> 10 actions
+            // If no token (Free user) -> 3 actions
+            const limit = this.token ? 10 : 3;
+            return usage.count < limit;
+        } catch (e) {
+            // Fallback to allow if localStorage fails
+            return true;
+        }
+    }
+
+    /**
+     * Increment usage counter
+     */
+    private incrementUsage() {
+        try {
+            const today = new Date().toDateString();
+            const usageData = localStorage.getItem('moncvpro_ai_usage');
+            let usage = { count: 0, date: today };
+
+            if (usageData) {
+                const parsed = JSON.parse(usageData);
+                if (parsed.date === today) {
+                    usage = parsed;
+                }
+            }
+
+            usage.count++;
+            localStorage.setItem('moncvpro_ai_usage', JSON.stringify(usage));
+        } catch (e) {
+            // Ignore storage errors
+        }
+    }
+
+    /**
+     * Get current usage state for UI display
+     */
+    getUsageState(): { used: number; limit: number; remaining: number } {
+        try {
+            const today = new Date().toDateString();
+            const usageData = localStorage.getItem('moncvpro_ai_usage');
+            let usage = { count: 0, date: today };
+
+            if (usageData) {
+                const parsed = JSON.parse(usageData);
+                if (parsed.date === today) {
+                    usage = parsed;
+                }
+            }
+
+            const limit = this.token ? 10 : 3;
+            return {
+                used: usage.count,
+                limit: limit,
+                remaining: Math.max(0, limit - usage.count)
+            };
+        } catch (e) {
+            return { used: 0, limit: 3, remaining: 3 };
+        }
+    }
+
+    /**
      * Analyze CV for ATS compatibility
      */
     async analyzeCV(
@@ -126,80 +226,12 @@ class AIService {
         industry?: string,
         role?: string
     ): Promise<ATSAnalysisResult> {
-        const response = await this.request<APIResponse<ATSAnalysisResult>>(
-            '/api/ai/analyze',
-            'POST',
-            { cvText, industry, role }
+        return this.callAI<ATSAnalysisResult>(
+            cvText,
+            'analyze',
+            ATSAnalysisSchema,
+            'en'
         );
-        return response.data;
-    }
-
-    /**
-     * Stream CV analysis with progress updates
-     */
-    async analyzeCVStream(
-        cvText: string,
-        industry?: string,
-        callbacks?: {
-            onProgress?: (message: string, progress: number) => void;
-            onToken?: (token: string) => void;
-            onComplete?: (result: ATSAnalysisResult) => void;
-            onError?: (error: Error) => void;
-        }
-    ): Promise<void> {
-        const response = await fetch(`${API_BASE_URL}/api/ai/stream/analyze`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'text/event-stream',
-                ...(this.token && { 'Authorization': `Bearer ${this.token}` }),
-            },
-            body: JSON.stringify({ cvText, industry }),
-        });
-
-        if (!response.body) {
-            throw new Error('No response body');
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop() || '';
-
-            for (const line of lines) {
-                if (line.startsWith('event:')) {
-                    const eventType = line.slice(7).trim();
-                    continue;
-                }
-                if (line.startsWith('data:')) {
-                    try {
-                        const data = JSON.parse(line.slice(5).trim());
-
-                        if (data.progress !== undefined && callbacks?.onProgress) {
-                            callbacks.onProgress(data.message || '', data.progress);
-                        }
-                        if (data.token && callbacks?.onToken) {
-                            callbacks.onToken(data.token);
-                        }
-                        if (data.data && callbacks?.onComplete) {
-                            callbacks.onComplete(data.data);
-                        }
-                        if (data.message && !data.progress && callbacks?.onError) {
-                            callbacks.onError(new Error(data.message));
-                        }
-                    } catch (e) {
-                        // Ignore parse errors for partial data
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -209,68 +241,76 @@ class AIService {
         text: string,
         type: 'professional' | 'concise' | 'impactful' | 'creative' = 'professional'
     ): Promise<ContentImproveResult> {
-        const response = await this.request<APIResponse<ContentImproveResult>>(
-            '/api/ai/improve',
-            'POST',
-            { text, type }
+        return this.callAI<ContentImproveResult>(
+            text,
+            'improve',
+            ContentImproveSchema,
+            'en'
         );
-        return response.data;
     }
 
     /**
      * Check grammar and style
      */
     async checkGrammar(text: string): Promise<GrammarCheckResult> {
-        const response = await this.request<APIResponse<GrammarCheckResult>>(
-            '/api/ai/grammar',
-            'POST',
-            { text }
+        return this.callAI<GrammarCheckResult>(
+            text,
+            'grammar',
+            GrammarCheckSchema,
+            'en'
         );
-        return response.data;
     }
 
     /**
      * Extract and analyze keywords
      */
     async extractKeywords(text: string, industry?: string): Promise<KeywordAnalysisResult> {
-        const response = await this.request<APIResponse<KeywordAnalysisResult>>(
-            '/api/ai/keywords',
-            'POST',
-            { text, industry }
+        return this.callAI<KeywordAnalysisResult>(
+            text,
+            'keywords',
+            KeywordAnalysisSchema,
+            'en'
         );
-        return response.data;
     }
 
     /**
      * Generate professional summary
      */
     async generateSummary(cvData: any, targetRole?: string): Promise<string> {
-        const response = await this.request<APIResponse<{ summary: string }>>(
-            '/api/ai/summary',
+        const prompt = `Generate a professional summary for a ${targetRole || 'professional'}. Data: ${JSON.stringify(cvData.personalInfo)}`;
+
+        // This endpoint might just return a plain string, not structured JSON.
+        // We handle this case separately or wrap it.
+        // For now, let's assume the default action returns plain text in 'response'.
+        if (!this.checkUsageLimit()) {
+            throw new Error('Daily AI usage limit reached.');
+        }
+
+        const response = await this.request<APIResponse<string>>(
+            '/ai',
             'POST',
-            { cvData, targetRole }
+            { prompt, action: 'default', language: 'en' }
         );
-        return response.data.summary;
+
+        this.incrementUsage();
+        return response.response || (response.data as string);
     }
 
     /**
      * Get available AI models
      */
     async getModels(): Promise<Record<string, string>> {
-        const response = await this.request<APIResponse<{ models: Record<string, string>; mockMode: boolean }>>(
-            '/api/ai/models'
-        );
-        return response.data.models;
+        const response = await this.request<any>('/');
+        return {
+            default: response.groq_model || 'llama-3.3-70b-versatile'
+        };
     }
 
     /**
      * Get rate limit status
      */
     async getRateLimitStatus(): Promise<RateLimitInfo> {
-        const response = await this.request<APIResponse<RateLimitInfo>>(
-            '/api/ai/rate-limit'
-        );
-        return response.data;
+        return this.rateLimitInfo || { limit: 0, remaining: 0, reset: 0 };
     }
 }
 

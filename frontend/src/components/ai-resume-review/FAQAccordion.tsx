@@ -2,18 +2,21 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { AI_RESUME_FAQ } from '@/data/ai-resume-faq';
+import { useTranslations } from 'next-intl';
 
 export default function FAQAccordion() {
+    const t = useTranslations('ai-resume-review.faq');
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
 
+    const faqItems = t.raw('items') as { question: string; answer: string }[];
+
     return (
         <div className="max-w-3xl mx-auto space-y-4">
-            {AI_RESUME_FAQ.map((faq, index) => (
+            {faqItems.map((faq, index) => (
                 <div
                     key={index}
                     className={`bg-white rounded-xl border transition-all duration-300 overflow-hidden

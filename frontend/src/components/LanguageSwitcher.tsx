@@ -234,7 +234,6 @@ export default function LanguageSwitcher({
                                ${isTransitioning ? 'opacity-50 cursor-wait' : ''}`}
                     aria-label="Select language"
                 >
-                    {showFlags && <span className="text-lg">{currentLanguage.flag}</span>}
                     <span className="text-gray-700 dark:text-gray-200">
                         {showNativeName ? currentLanguage.nativeName : currentLanguage.code.toUpperCase()}
                     </span>

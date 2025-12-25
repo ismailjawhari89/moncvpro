@@ -1,8 +1,9 @@
+
 import modern from './modern.json';
 import classic from './classic.json';
 import creative from './creative.json';
 import { TemplateDef } from '../types';
-import { enhancedTemplates, getEnhancedTemplateById } from '@/data/enhanced-templates';
+import { aiTemplates, getAITemplateById } from '@/data/ai-templates/ai-templates';
 
 // Legacy template definitions (for backward compatibility with existing renderer)
 export const templates: Record<string, TemplateDef> = {
@@ -11,20 +12,20 @@ export const templates: Record<string, TemplateDef> = {
     creative: creative as unknown as TemplateDef
 };
 
-// Get template definition by ID (legacy)
+// Get template definition by ID
 export const getTemplate = (id: string): TemplateDef => {
     // First check legacy templates
     if (templates[id]) {
         return templates[id];
     }
 
-    // For new enhanced templates, map to closest legacy definition
-    const enhanced = getEnhancedTemplateById(id);
-    if (enhanced) {
-        // Map based on style
-        if (enhanced.style.includes('creative')) {
+    // For new AI templates, map to closest legacy definition
+    const aiTemplate = getAITemplateById(id);
+    if (aiTemplate) {
+        // Map based on layout style
+        if (aiTemplate.design.layout === 'creative') {
             return templates.creative;
-        } else if (enhanced.style.includes('professional') || enhanced.style.includes('minimalist')) {
+        } else if (aiTemplate.design.layout === 'classic' || aiTemplate.design.layout === 'academic' || aiTemplate.design.layout === 'executive') {
             return templates.classic;
         }
     }
@@ -33,23 +34,23 @@ export const getTemplate = (id: string): TemplateDef => {
     return templates.modern;
 };
 
-// Get all template IDs (including enhanced)
+// Get all template IDs
 export const getTemplateIds = () => {
-    return enhancedTemplates.map(t => t.id);
+    return aiTemplates.map(t => t.id);
 };
 
 // Get template display info for dropdowns/selectors
 export const getTemplateDisplayInfo = (id: string) => {
-    const enhanced = getEnhancedTemplateById(id);
-    if (enhanced) {
+    const aiTemplate = getAITemplateById(id);
+    if (aiTemplate) {
         return {
-            id: enhanced.id,
-            name: enhanced.name,
-            thumbnail: enhanced.previewImage,
-            description: enhanced.description,
-            category: enhanced.category[0],
-            atsScore: enhanced.atsScore,
-            palette: enhanced.colors
+            id: aiTemplate.id,
+            name: aiTemplate.name.en, // Default to English name here
+            thumbnail: '', // Thumbnail handling moved to AITemplatePreview
+            description: aiTemplate.description.en,
+            category: 'Professional',
+            atsScore: aiTemplate.atsScore,
+            palette: aiTemplate.design.colors
         };
     }
 
@@ -72,21 +73,21 @@ export const getTemplateDisplayInfo = (id: string) => {
 
 // Map template ID to render configuration
 export const getTemplateRenderConfig = (templateId: string) => {
-    const enhanced = getEnhancedTemplateById(templateId);
+    const aiTemplate = getAITemplateById(templateId);
     const definition = getTemplate(templateId);
 
     return {
         definition,
-        enhanced,
-        colors: enhanced?.colors || definition?.palette || {
+        aiTemplate,
+        colors: aiTemplate?.design.colors || definition?.palette || {
             primary: '#3b82f6',
             secondary: '#1e40af',
             accent: '#60a5fa'
         },
-        typography: enhanced?.typography || definition?.typography || {
-            heading: 'Inter',
-            body: 'Inter'
+        typography: {
+            heading: aiTemplate?.design.typography.headingFont || 'Inter',
+            body: aiTemplate?.design.typography.fontFamily || 'Inter'
         },
-        layout: enhanced?.layout || definition?.metadata?.layout || 'two-column'
+        layout: aiTemplate?.design.layout || definition?.metadata?.layout || 'two-column'
     };
 };

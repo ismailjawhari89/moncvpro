@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, FileText, X, AlertCircle, CheckCircle, Loader2, Zap } from 'lucide-react';
 import { validateFile } from '@/utils/resume-upload';
+import { useTranslations } from 'next-intl';
 
 interface UploadSectionProps {
     onAnalyze: (file: File | null, text: string) => void;
@@ -10,6 +11,7 @@ interface UploadSectionProps {
 }
 
 export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionProps) {
+    const t = useTranslations('ai-resume-review.uploadSection');
     const [activeTab, setActiveTab] = useState<'upload' | 'text'>('upload');
     const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState<File | null>(null);
@@ -57,11 +59,11 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
 
     const handleSubmit = () => {
         if (activeTab === 'upload' && !file) {
-            setError('Please select a file first.');
+            setError(t('errors.selectFile'));
             return;
         }
         if (activeTab === 'text' && text.trim().length < 50) {
-            setError('Please enter at least 50 characters.');
+            setError(t('errors.minCharacters'));
             return;
         }
         onAnalyze(activeTab === 'upload' ? file : null, activeTab === 'text' ? text : '');
@@ -78,7 +80,7 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                     onClick={() => setActiveTab('upload')}
                 >
                     <Upload size={18} />
-                    Upload File
+                    {t('tabs.upload')}
                 </button>
                 <button
                     className={`flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-2 transition-colors
@@ -87,7 +89,7 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                     onClick={() => setActiveTab('text')}
                 >
                     <FileText size={18} />
-                    Paste Text
+                    {t('tabs.text')}
                 </button>
             </div>
 
@@ -125,7 +127,7 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                                     }}
                                     className="text-red-500 text-sm hover:underline flex items-center gap-1"
                                 >
-                                    <X size={14} /> Remove file
+                                    <X size={14} /> {t('file.remove')}
                                 </button>
                             </div>
                         ) : (
@@ -133,13 +135,13 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 text-blue-600">
                                     <Upload size={32} />
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">Drag & Drop your CV here</h3>
-                                <p className="text-gray-500 mb-6">or click to browse (PDF, DOCX, TXT)</p>
+                                <h3 className="text-lg font-bold text-gray-900 mb-2">{t('dropzone.title')}</h3>
+                                <p className="text-gray-500 mb-6">{t('dropzone.subtitle')}</p>
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
                                     className="px-6 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                                 >
-                                    Select File
+                                    {t('dropzone.button')}
                                 </button>
                             </div>
                         )}
@@ -149,11 +151,11 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                         <textarea
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            placeholder="Paste your CV content here..."
+                            placeholder={t('text.placeholder')}
                             className="w-full h-64 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
                         />
                         <div className="absolute bottom-4 right-4 text-xs text-gray-400">
-                            {text.length} characters
+                            {t('text.characterCount', { count: text.length })}
                         </div>
                     </div>
                 )}
@@ -176,12 +178,12 @@ export default function UploadSection({ onAnalyze, isAnalyzing }: UploadSectionP
                         {isAnalyzing ? (
                             <>
                                 <Loader2 size={20} className="animate-spin" />
-                                Analyzing...
+                                {t('analyzing')}
                             </>
                         ) : (
                             <>
                                 <Zap size={20} />
-                                Analyze My CV Now
+                                {t('analyzeButton')}
                             </>
                         )}
                     </button>

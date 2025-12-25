@@ -3,6 +3,7 @@ import { useCVStore } from '@/stores/useCVStore';
 import { Experience } from '@/types/cv';
 import { Card, InputField, TextAreaField } from '@/components/ui/FormFields';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
     DndContext,
     closestCenter,
@@ -31,6 +32,7 @@ const SortableExperienceItem = ({ exp, isDark, onRemove, onUpdate }: {
     onRemove: (id: string) => void,
     onUpdate: (id: string, field: keyof Experience, value: any) => void
 }) => {
+    const t = useTranslations('cv-form.experience');
     const {
         attributes,
         listeners,
@@ -53,7 +55,7 @@ const SortableExperienceItem = ({ exp, isDark, onRemove, onUpdate }: {
                             <GripVertical size={20} />
                         </div>
                         <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            {exp.position || 'New Position'}
+                            {exp.position || t('position')}
                         </h3>
                     </div>
                     <button
@@ -65,28 +67,28 @@ const SortableExperienceItem = ({ exp, isDark, onRemove, onUpdate }: {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <InputField
-                        label="Position"
+                        label={t('position')}
                         value={exp.position}
                         onChange={(val) => onUpdate(exp.id, 'position', val)}
-                        placeholder="Software Engineer"
+                        placeholder={t('placeholders.position')}
                         isDark={isDark}
                     />
                     <InputField
-                        label="Company"
+                        label={t('company')}
                         value={exp.company}
                         onChange={(val) => onUpdate(exp.id, 'company', val)}
-                        placeholder="Tech Corp"
+                        placeholder={t('placeholders.company')}
                         isDark={isDark}
                     />
                     <InputField
-                        label="Start Date"
+                        label={t('startDate')}
                         type="month"
                         value={exp.startDate}
                         onChange={(val) => onUpdate(exp.id, 'startDate', val)}
                         isDark={isDark}
                     />
                     <InputField
-                        label="End Date"
+                        label={t('endDate')}
                         type="month"
                         value={exp.endDate}
                         onChange={(val) => onUpdate(exp.id, 'endDate', val)}
@@ -103,16 +105,16 @@ const SortableExperienceItem = ({ exp, isDark, onRemove, onUpdate }: {
                             className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                         />
                         <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Currently working here
+                            {t('current')}
                         </span>
                     </label>
                 </div>
                 <div className="mt-4">
                     <TextAreaField
-                        label="Description"
+                        label={t('description')}
                         value={exp.description}
                         onChange={(val) => onUpdate(exp.id, 'description', val)}
-                        placeholder="Describe your responsibilities and achievements..."
+                        placeholder={t('placeholders.description')}
                         rows={3}
                         isDark={isDark}
                     />
@@ -123,6 +125,7 @@ const SortableExperienceItem = ({ exp, isDark, onRemove, onUpdate }: {
 };
 
 export default function ExperienceSection({ isDark }: ExperienceSectionProps) {
+    const t = useTranslations('cv-form.experience');
     const experiences = useCVStore((state) => state.cvData.experiences);
     const addExperience = useCVStore((state) => state.addExperience);
     const removeExperience = useCVStore((state) => state.removeExperience);
@@ -189,7 +192,7 @@ export default function ExperienceSection({ isDark }: ExperienceSectionProps) {
                     } flex items-center justify-center gap-2 font-medium`}
             >
                 <Plus size={20} />
-                Add Experience
+                {t('add')}
             </button>
         </div>
     );

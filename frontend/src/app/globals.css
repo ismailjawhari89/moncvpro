@@ -75,14 +75,6 @@ html[dir="rtl"] .-translate-x-full {
   --tw-translate-x: 100%;
 }
 
-/* RTL gradient directions */
-html[dir="rtl"] .bg-gradient-to-r {
-  background-image: linear-gradient(to left, var(--tw-gradient-stops));
-}
-
-html[dir="rtl"] .bg-gradient-to-l {
-  background-image: linear-gradient(to right, var(--tw-gradient-stops));
-}
 
 /* RTL scroll direction */
 html[dir="rtl"] .scroll-rtl {
