@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 const navItems = [
     { key: 'home', href: '/', icon: Home },
     { key: 'templates', href: '/templates', icon: LayoutTemplate },
+    { key: 'review', href: '/ai-resume-review', icon: Sparkles },
     { key: 'cvBuilder', href: '/cv-builder', icon: FileText },
     { key: 'examples', href: '/examples', icon: BookOpen },
 ];
