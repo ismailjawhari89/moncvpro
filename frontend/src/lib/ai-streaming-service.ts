@@ -24,7 +24,8 @@ export async function streamCVImprovements(cvData: CVData, targetRole?: string, 
 
     // Use Vercel AI SDK streamObject
     const result = await streamObject({
-        model: groq('llama-3.3-70b-versatile'), // high performance model
+        model: groq('llama-3.3-70b-versatile'),
+        output: 'no-schema',
         schema: ImprovementSchema,
         abortSignal,
         prompt: `

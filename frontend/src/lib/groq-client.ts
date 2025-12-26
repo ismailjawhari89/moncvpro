@@ -13,5 +13,9 @@ export const groq = createGroq({
  * Validates if the Groq API key is present.
  */
 export const hasGroqKey = () => {
-    return !!process.env.NEXT_PUBLIC_GROQ_API_KEY && process.env.NEXT_PUBLIC_GROQ_API_KEY.length > 5;
+    const key = process.env.NEXT_PUBLIC_GROQ_API_KEY;
+    if (!key) {
+        console.warn('Groq Key Debug: NEXT_PUBLIC_GROQ_API_KEY is undefined');
+    }
+    return !!key && key.trim().length > 5;
 };

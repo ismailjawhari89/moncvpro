@@ -100,6 +100,8 @@
             "degree": "Degree",
             "field": "Field of Study",
             "graduationYear": "Graduation Year",
+            "startDate": "Start Date",
+            "endDate": "End Date",
             "gpa": "GPA",
             "placeholders": {
                 "institution": "Stanford University",
@@ -860,7 +862,7 @@
         },
         "success": {
             "applied": "Changes applied successfully!",
-            "hint": "AI helped improve your CV —"
+            "unlockPro": "AI helped improve your CV — Unlock unlimited AI with Pro"
         },
         "unlock": "unlock unlimited AI with Pro",
         "previewMode": {

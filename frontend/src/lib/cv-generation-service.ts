@@ -1,4 +1,4 @@
-import { generateObject } from 'ai';
+import { generateObject, generateText } from 'ai';
 import { z } from 'zod';
 import { CVData } from '@/types/cv';
 import { groq, hasGroqKey } from './groq-client';
@@ -26,9 +26,8 @@ export async function generateFullCVContent(jobTitle: string, currentData: CVDat
             : "You are a professional recruiting expert specializing in crafting world-class CV content.";
 
     try {
-        const { object } = await generateObject({
+        const { text } = await generateText({
             model: groq('llama-3.3-70b-versatile'),
-            schema: cvGenerationSchema,
             prompt: `
                 ${systemPrompt}
                 
@@ -44,10 +43,23 @@ export async function generateFullCVContent(jobTitle: string, currentData: CVDat
                 2. Generate 2 detailed experience placeholders that would perfectly fit this candidate for this role.
                 3. List the top 10 most critical skills for this role.
                 4. Match the language: ${contentLanguage === 'ar' ? 'Arabic' : contentLanguage === 'fr' ? 'French' : 'English'}.
+                
+                IMPORTANT: Output your response ONLY as a valid JSON object matching this schema:
+                {
+                    "summary": "string",
+                    "experiences": [
+                        { "position": "string", "company": "string", "description": "string" }
+                    ],
+                    "skills": ["string"]
+                }
+                Do not include any prose, markdown blocks (like \`\`\`json), or explanations. Just the JSON object.
             `,
         });
 
-        return object;
+        // Parse and validate the response
+        const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const jsonResponse = JSON.parse(cleanText);
+        return cvGenerationSchema.parse(jsonResponse);
     } catch (error) {
         console.error('Groq Generation Error:', error);
         throw error;

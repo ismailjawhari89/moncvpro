@@ -100,6 +100,8 @@
             "degree": "Diplôme",
             "field": "Domaine d'études",
             "graduationYear": "Année d'obtention",
+            "startDate": "Date de début",
+            "endDate": "Date de fin",
             "gpa": "Moyenne (GPA)",
             "placeholders": {
                 "institution": "Université Paris-Sorbonne",
