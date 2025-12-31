@@ -203,29 +203,191 @@ export function generateHTML(data: CoverLetterData): string {
 }
 
 /**
- * Export cover letter as PDF (browser print)
+ * Export cover letter as PDF using pdf-lib
+ * ✅ Direct download - No print dialog
  */
-export async function exportAsPDF(data: CoverLetterData, options: ExportOptions): Promise<void> {
-    const html = generateHTML(data);
-    const printWindow = window.open('', '_blank');
+export async function exportAsPDF(data: CoverLetterData, _options: ExportOptions): Promise<void> {
+    const { PDFDocument, rgb, StandardFonts } = await import('pdf-lib');
+    const { personalInfo, companyInfo, content } = data;
 
-    if (!printWindow) {
-        throw new Error('Please allow popups to export PDF');
+    // Create a new PDF document
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595, 842]); // A4 size
+
+    // Load fonts
+    const regularFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const { width, height } = page.getSize();
+    let yPosition = height - 50;
+
+    // Helper function to draw text with word wrap
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const drawWrappedText = (text: string, fontSize: number, font: any, maxWidth: number) => {
+        const words = text.split(' ');
+        let line = '';
+        const lines: string[] = [];
+
+        for (const word of words) {
+            const testLine = line + (line ? ' ' : '') + word;
+            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+
+            if (testWidth > maxWidth && line) {
+                lines.push(line);
+                line = word;
+            } else {
+                line = testLine;
+            }
+        }
+        if (line) lines.push(line);
+
+        for (const textLine of lines) {
+            page.drawText(textLine, {
+                x: 50,
+                y: yPosition,
+                size: fontSize,
+                font: font,
+                color: rgb(0.1, 0.1, 0.1),
+            });
+            yPosition -= fontSize + 5;
+        }
+        yPosition -= 10; // Extra spacing after paragraph
+    };
+
+    // Header - Your info
+    page.drawText(personalInfo.fullName, {
+        x: 50,
+        y: yPosition,
+        size: 16,
+        font: boldFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+    yPosition -= 25;
+
+    page.drawText(`${personalInfo.email} | ${personalInfo.phone}`, {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: regularFont,
+        color: rgb(0.3, 0.3, 0.3),
+    });
+    yPosition -= 15;
+
+    if (personalInfo.linkedIn) {
+        page.drawText(personalInfo.linkedIn, {
+            x: 50,
+            y: yPosition,
+            size: 10,
+            font: regularFont,
+            color: rgb(0.3, 0.3, 0.3),
+        });
+        yPosition -= 15;
     }
 
-    printWindow.document.write(html);
-    printWindow.document.close();
+    yPosition -= 20;
 
-    // Wait for content to load
-    printWindow.onload = () => {
-        printWindow.print();
-    };
+    // Date
+    page.drawText(formatDate(), {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: regularFont,
+        color: rgb(0.2, 0.2, 0.2),
+    });
+    yPosition -= 30;
+
+    // Recipient
+    if (companyInfo.hiringManagerName) {
+        page.drawText(companyInfo.hiringManagerName, {
+            x: 50,
+            y: yPosition,
+            size: 10,
+            font: regularFont,
+            color: rgb(0.1, 0.1, 0.1),
+        });
+        yPosition -= 15;
+    }
+
+    page.drawText(companyInfo.companyName, {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: regularFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+    yPosition -= 15;
+
+    const refText = companyInfo.jobReference
+        ? `Re: ${companyInfo.jobTitle} (Ref: ${companyInfo.jobReference})`
+        : `Re: ${companyInfo.jobTitle}`;
+    page.drawText(refText, {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: regularFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+    yPosition -= 30;
+
+    // Salutation
+    const salutation = companyInfo.hiringManagerName
+        ? `Dear ${companyInfo.hiringManagerName},`
+        : 'Dear Hiring Manager,';
+    page.drawText(salutation, {
+        x: 50,
+        y: yPosition,
+        size: 11,
+        font: regularFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+    yPosition -= 30;
+
+    // Content paragraphs
+    const maxWidth = width - 100; // Margins
+    if (content.introduction) drawWrappedText(content.introduction, 10, regularFont, maxWidth);
+    if (content.bodyParagraph1) drawWrappedText(content.bodyParagraph1, 10, regularFont, maxWidth);
+    if (content.bodyParagraph2) drawWrappedText(content.bodyParagraph2, 10, regularFont, maxWidth);
+    if (content.bodyParagraph3) drawWrappedText(content.bodyParagraph3, 10, regularFont, maxWidth);
+    if (content.closing) drawWrappedText(content.closing, 10, regularFont, maxWidth);
+    if (content.callToAction) drawWrappedText(content.callToAction, 10, regularFont, maxWidth);
+
+    yPosition -= 10;
+
+    // Signature
+    page.drawText('Sincerely,', {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: regularFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+    yPosition -= 20;
+
+    page.drawText(personalInfo.fullName, {
+        x: 50,
+        y: yPosition,
+        size: 10,
+        font: boldFont,
+        color: rgb(0.1, 0.1, 0.1),
+    });
+
+    // Save and download
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cover-letter-${personalInfo.fullName.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 /**
  * Export cover letter as DOCX (placeholder - requires library)
  */
-export async function exportAsDOCX(data: CoverLetterData, options: ExportOptions): Promise<void> {
+export async function exportAsDOCX(data: CoverLetterData, _options: ExportOptions): Promise<void> {
     // TODO: Implement DOCX export using docx library
     // For now, download as HTML
     const html = generateHTML(data);

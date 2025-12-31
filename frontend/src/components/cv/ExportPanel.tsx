@@ -10,11 +10,12 @@ import {
     Check,
     X
 } from 'lucide-react';
-import { saveAs } from 'file-saver';
-import { generatePDF, generatePDFWithProgress } from '@/lib/pdfGenerator';
+// ❌ OLD DISABLED: import { generatePDF, generatePDFWithProgress } from '@/lib/pdfGenerator';
+// ❌ OLD DISABLED: import { saveAs } from 'file-saver';
+// ❌ OLD DISABLED: import { pdf } from '@react-pdf/renderer';
+// ❌ OLD DISABLED: import { ModernPDF } from './pdf-templates/ModernPDF';
+import { generateSimplePDF, generateAdvancedPDF } from '@/lib/pdfLibEngine';
 import { exportDOCX, exportTXT, exportJSON, generateTextPDF } from '@/utils/export';
-import { pdf } from '@react-pdf/renderer';
-import { ModernPDF } from './pdf-templates/ModernPDF';
 import type { TemplateData, CVData } from '@/types/cv';
 
 interface ExportPanelProps {
@@ -53,14 +54,14 @@ export default function ExportPanel({
         {
             id: 'pdf',
             label: t('formats.pdf.label'),
-            description: t('formats.pdf.desc'),
+            description: "✅ Direct download - No print dialog",
             icon: FileText,
             isPremium: false
         },
         {
             id: 'pdf-hq',
-            label: "High Performance (Vector PDF)",
-            description: "Fast, small file, and ATS-friendly",
+            label: "Professional PDF (Arabic Support)",
+            description: "✅ Real text - Selectable - ATS-friendly",
             icon: FileText,
             isPremium: true
         },
@@ -124,21 +125,21 @@ export default function ExportPanel({
         try {
             switch (format) {
                 case 'pdf':
-                    await generatePDFWithProgress(
-                        previewElementId,
-                        setExportProgress,
-                        { filename: `${filename}.pdf` }
-                    );
+                    // ✅ NEW: Using pdf-lib engine
+                    setExportProgress(20);
+                    await generateSimplePDF(cvData, { filename: `${filename}.pdf` });
+                    setExportProgress(100);
                     break;
 
                 case 'pdf-hq':
+                    // ✅ NEW: Using pdf-lib with Arabic font support
                     setExportProgress(30);
-                    const blob = await pdf(<ModernPDF data={cvData} />).toBlob();
-                    setExportProgress(80);
-                    saveAs(blob, `${filename}-hq.pdf`);
+                    await generateAdvancedPDF(cvData, { filename: `${filename}-hq.pdf` });
+                    setExportProgress(100);
                     break;
 
                 case 'pdf-ats':
+                    // ATS PDF still uses external worker (text-based)
                     const element = document.getElementById(previewElementId);
                     if (!element) throw new Error('Element de prévisualisation non trouvé');
 
@@ -168,9 +169,10 @@ export default function ExportPanel({
 
             setExportSuccess(format);
             setTimeout(() => setExportSuccess(null), 2000);
-        } catch (error: any) {
+        } catch (error) {
             console.error('Export failed:', error);
-            setExportError(error.message || 'Export failed');
+            const errorMessage = error instanceof Error ? error.message : 'Export failed';
+            setExportError(errorMessage);
             setTimeout(() => setExportError(null), 3000);
         } finally {
             setIsExporting(null);
