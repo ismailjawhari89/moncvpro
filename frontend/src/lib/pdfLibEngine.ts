@@ -41,6 +41,24 @@ const COLORS = {
 };
 
 // ==========================================
+// 📦 Unicode Icons - ATS-Safe Symbols
+// ==========================================
+const ICONS = {
+  // Contact info
+  email: '✉',      // Envelope (monochrome)
+  phone: '☎',      // Telephone (monochrome)
+  location: '⌖',   // Location marker (monochrome)
+  linkedin: '⚲',   // Link symbol
+  
+  // Section headers
+  experience: '◆', // Diamond bullet
+  education: '◆',  // Diamond bullet
+  skills: '◆',     // Diamond bullet
+  languages: '◆',  // Diamond bullet
+  summary: '◆',    // Diamond bullet
+};
+
+// ==========================================
 // 🔧 Helper Functions
 // ==========================================
 
@@ -378,16 +396,22 @@ export async function generateAdvancedPDF(
     y -= 30;
     
     // ==========================================
-    // 📌 CONTACT INFO (Horizontal)
+    // 📌 CONTACT INFO (Horizontal with Icons)
     // ==========================================
     const contactY = y;
     const contactParts: string[] = [];
     
-    if (cvData.personalInfo?.email) contactParts.push(cvData.personalInfo.email);
-    if (cvData.personalInfo?.phone) contactParts.push(cvData.personalInfo.phone);
-    if (cvData.personalInfo?.address) contactParts.push(cvData.personalInfo.address);
+    if (cvData.personalInfo?.email) {
+      contactParts.push(`${ICONS.email} ${cvData.personalInfo.email}`);
+    }
+    if (cvData.personalInfo?.phone) {
+      contactParts.push(`${ICONS.phone} ${cvData.personalInfo.phone}`);
+    }
+    if (cvData.personalInfo?.address) {
+      contactParts.push(`${ICONS.location} ${cvData.personalInfo.address}`);
+    }
     
-    const contactText = contactParts.join(' • ');
+    const contactText = contactParts.join('  •  ');
     drawText(page, contactText, PAGE_WIDTH - MARGIN, contactY, {
       font: regularFont,
       size: 9,
@@ -420,8 +444,8 @@ export async function generateAdvancedPDF(
     
     // --- Skills Section ---
     if (cvData.skills && cvData.skills.length > 0) {
-      // Section title - PRIMARY COLOR
-      drawText(page, 'المهارات', PAGE_WIDTH - MARGIN, sidebarY, {
+      // Section title with icon - PRIMARY COLOR
+      drawText(page, `${ICONS.skills} المهارات`, PAGE_WIDTH - MARGIN, sidebarY, {
         font: boldFont,
         size: 12,
         color: COLORS.primary,
@@ -444,8 +468,8 @@ export async function generateAdvancedPDF(
     
     // --- Languages Section ---
     if (cvData.languages && cvData.languages.length > 0) {
-      // Section title - PRIMARY COLOR
-      drawText(page, 'اللغات', PAGE_WIDTH - MARGIN, sidebarY, {
+      // Section title with icon - PRIMARY COLOR
+      drawText(page, `${ICONS.languages} اللغات`, PAGE_WIDTH - MARGIN, sidebarY, {
         font: boldFont,
         size: 12,
         color: COLORS.primary,
@@ -473,8 +497,8 @@ export async function generateAdvancedPDF(
     
     // --- Professional Summary ---
     if (cvData.summary) {
-      // Section title - PRIMARY COLOR
-      drawText(page, 'نبذة مهنية', MAIN_X + MAIN_WIDTH, mainY, {
+      // Section title with icon - PRIMARY COLOR
+      drawText(page, `${ICONS.summary} نبذة مهنية`, MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
         color: COLORS.primary,
@@ -493,8 +517,8 @@ export async function generateAdvancedPDF(
     
     // --- Experience Section ---
     if (cvData.experiences && cvData.experiences.length > 0) {
-      // Section title - PRIMARY COLOR
-      drawText(page, 'الخبرات المهنية', MAIN_X + MAIN_WIDTH, mainY, {
+      // Section title with icon - PRIMARY COLOR
+      drawText(page, `${ICONS.experience} الخبرات المهنية`, MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
         color: COLORS.primary,
@@ -542,8 +566,8 @@ export async function generateAdvancedPDF(
     
     // --- Education Section ---
     if (cvData.education && cvData.education.length > 0) {
-      // Section title - PRIMARY COLOR
-      drawText(page, 'التعليم', MAIN_X + MAIN_WIDTH, mainY, {
+      // Section title with icon - PRIMARY COLOR
+      drawText(page, `${ICONS.education} التعليم`, MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
         color: COLORS.primary,
