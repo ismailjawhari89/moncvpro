@@ -4,6 +4,8 @@ import type { CVData } from '@/types/cv';
 
 interface PDFGeneratorOptions {
   filename?: string;
+  mode?: 'ats' | 'design';  // ATS = no images, Design = with images
+  profilePhoto?: string;     // Base64 image data or URL
 }
 
 // ==========================================
@@ -19,6 +21,11 @@ const SIDEBAR_WIDTH = 170;
 // const SIDEBAR_X = MARGIN; // Reserved for future use
 const MAIN_X = MARGIN + SIDEBAR_WIDTH + 20;
 const MAIN_WIDTH = CONTENT_WIDTH - SIDEBAR_WIDTH - 20;
+
+// Profile photo settings (Design Mode only)
+const PHOTO_SIZE = 100;           // Square photo size
+const PHOTO_X = PAGE_WIDTH - MARGIN - PHOTO_SIZE;  // Top right position
+const PHOTO_Y = PAGE_HEIGHT - MARGIN - PHOTO_SIZE; // Top right position
 
 // ==========================================
 // 🎨 Color System - Professional & ATS-Safe
@@ -176,6 +183,54 @@ function drawParagraph(
   }
   
   return currentY; // Return final Y position
+}
+
+/**
+ * Draw profile photo (Design Mode only)
+ */
+async function drawProfilePhoto(
+  page: PDFPage,
+  pdfDoc: PDFDocument,
+  imageData: string
+): Promise<void> {
+  try {
+    // Convert base64 to image
+    let image;
+    
+    if (imageData.startsWith('data:image/png')) {
+      const pngImageBytes = imageData.split(',')[1];
+      const pngBytes = Uint8Array.from(atob(pngImageBytes), c => c.charCodeAt(0));
+      image = await pdfDoc.embedPng(pngBytes);
+    } else if (imageData.startsWith('data:image/jpeg') || imageData.startsWith('data:image/jpg')) {
+      const jpgImageBytes = imageData.split(',')[1];
+      const jpgBytes = Uint8Array.from(atob(jpgImageBytes), c => c.charCodeAt(0));
+      image = await pdfDoc.embedJpg(jpgBytes);
+    } else {
+      console.warn('Unsupported image format, skipping photo');
+      return;
+    }
+    
+    // Draw image in circle (actually square, but we'll add border)
+    page.drawImage(image, {
+      x: PHOTO_X,
+      y: PHOTO_Y,
+      width: PHOTO_SIZE,
+      height: PHOTO_SIZE,
+    });
+    
+    // Draw border around photo
+    page.drawRectangle({
+      x: PHOTO_X,
+      y: PHOTO_Y,
+      width: PHOTO_SIZE,
+      height: PHOTO_SIZE,
+      borderColor: COLORS.primary,
+      borderWidth: 2,
+    });
+  } catch (error) {
+    console.error('Failed to load profile photo:', error);
+    // Continue without photo
+  }
 }
 
 /**
@@ -346,7 +401,7 @@ export async function generateAdvancedPDF(
   cvData: CVData,
   options: PDFGeneratorOptions = {}
 ): Promise<void> {
-  const { filename = 'cv.pdf' } = options;
+  const { filename = 'cv.pdf', mode = 'design', profilePhoto } = options;
 
   try {
     // Create PDF document
@@ -360,6 +415,11 @@ export async function generateAdvancedPDF(
     const regularFont = await pdfDoc.embedFont(regularFontBytes);
     const boldFont = await pdfDoc.embedFont(boldFontBytes);
     
+    // 🎨 DESIGN MODE: Draw profile photo (top right)
+    if (mode === 'design' && profilePhoto) {
+      await drawProfilePhoto(page, pdfDoc, profilePhoto);
+    }
+    
     // Start from top
     let y = PAGE_HEIGHT - MARGIN;
     
@@ -369,22 +429,35 @@ export async function generateAdvancedPDF(
     const fullName = cvData.personalInfo?.fullName || 'Your Name';
     const title = cvData.personalInfo?.profession || cvData.experiences?.[0]?.position || 'Professional';
     
+    // Calculate header width (leave space for photo in design mode)
+    const headerRightX = (mode === 'design' && profilePhoto) 
+      ? PHOTO_X - 20  // Leave 20pt gap before photo
+      : PAGE_WIDTH - MARGIN;
+    
     // Name (Large, Bold, RTL-aware)
-    drawText(page, fullName, PAGE_WIDTH - MARGIN, y, {
+    drawText(page, fullName, headerRightX, y, {
       font: boldFont,
-      size: 22,
+      size: 24,  // Slightly bigger for impact
       align: 'right',
     });
-    y -= 28;
+    y -= 30;
     
     // Title/Position
-    drawText(page, title, PAGE_WIDTH - MARGIN, y, {
+    drawText(page, title, headerRightX, y, {
       font: regularFont,
-      size: 12,
+      size: 13,  // Slightly bigger
       color: COLORS.textMedium,
       align: 'right',
     });
-    y -= 20;
+    y -= 25;
+    
+    // In design mode, ensure we're below the photo
+    if (mode === 'design' && profilePhoto) {
+      const photoBottom = PHOTO_Y - 10;
+      if (y > photoBottom) {
+        y = photoBottom;
+      }
+    }
     
     // Separator line - PRIMARY COLOR
     page.drawLine({
