@@ -21,6 +21,26 @@ const MAIN_X = MARGIN + SIDEBAR_WIDTH + 20;
 const MAIN_WIDTH = CONTENT_WIDTH - SIDEBAR_WIDTH - 20;
 
 // ==========================================
+// 🎨 Color System - Professional & ATS-Safe
+// ==========================================
+const COLORS = {
+  // Primary color - professional blue
+  primary: rgb(0.1, 0.4, 0.8),        // #1A66CC - Main accent
+  
+  // Text colors
+  textDark: rgb(0.1, 0.1, 0.1),       // #1A1A1A - Main text
+  textMedium: rgb(0.3, 0.3, 0.3),     // #4D4D4D - Secondary text
+  textLight: rgb(0.4, 0.4, 0.4),      // #666666 - Tertiary text
+  
+  // Background colors
+  sidebarBg: rgb(0.95, 0.96, 0.98),   // #F2F5FA - Light blue-gray
+  white: rgb(1, 1, 1),                // #FFFFFF - Pure white
+  
+  // Separators
+  separator: rgb(0.85, 0.85, 0.85),   // #D9D9D9 - Light gray
+};
+
+// ==========================================
 // 🔧 Helper Functions
 // ==========================================
 
@@ -343,17 +363,17 @@ export async function generateAdvancedPDF(
     drawText(page, title, PAGE_WIDTH - MARGIN, y, {
       font: regularFont,
       size: 12,
-      color: rgb(0.3, 0.3, 0.3),
+      color: COLORS.textMedium,
       align: 'right',
     });
     y -= 20;
     
-    // Separator line
+    // Separator line - PRIMARY COLOR
     page.drawLine({
       start: { x: MARGIN, y },
       end: { x: PAGE_WIDTH - MARGIN, y },
-      thickness: 1.5,
-      color: rgb(0.2, 0.2, 0.2),
+      thickness: 2,
+      color: COLORS.primary,
     });
     y -= 30;
     
@@ -371,7 +391,7 @@ export async function generateAdvancedPDF(
     drawText(page, contactText, PAGE_WIDTH - MARGIN, contactY, {
       font: regularFont,
       size: 9,
-      color: rgb(0.4, 0.4, 0.4),
+      color: COLORS.textLight,
       align: 'right',
     });
     y -= 35;
@@ -380,6 +400,17 @@ export async function generateAdvancedPDF(
     // 📌 TWO-COLUMN LAYOUT START
     // ==========================================
     const contentStartY = y;
+    
+    // ✨ SIDEBAR BACKGROUND - Light blue-gray
+    const sidebarHeight = PAGE_HEIGHT - contentStartY - MARGIN;
+    page.drawRectangle({
+      x: PAGE_WIDTH - MARGIN - SIDEBAR_WIDTH,
+      y: MARGIN,
+      width: SIDEBAR_WIDTH,
+      height: sidebarHeight,
+      color: COLORS.sidebarBg,
+    });
+    
     let sidebarY = contentStartY;
     let mainY = contentStartY;
     
@@ -389,9 +420,11 @@ export async function generateAdvancedPDF(
     
     // --- Skills Section ---
     if (cvData.skills && cvData.skills.length > 0) {
+      // Section title - PRIMARY COLOR
       drawText(page, 'المهارات', PAGE_WIDTH - MARGIN, sidebarY, {
         font: boldFont,
         size: 12,
+        color: COLORS.primary,
         align: 'right',
       });
       sidebarY -= 20;
@@ -400,7 +433,7 @@ export async function generateAdvancedPDF(
         drawText(page, skill.name, PAGE_WIDTH - MARGIN, sidebarY, {
           font: regularFont,
           size: 9,
-          color: rgb(0.2, 0.2, 0.2),
+          color: COLORS.textDark,
           align: 'right',
         });
         sidebarY -= 16;
@@ -411,9 +444,11 @@ export async function generateAdvancedPDF(
     
     // --- Languages Section ---
     if (cvData.languages && cvData.languages.length > 0) {
+      // Section title - PRIMARY COLOR
       drawText(page, 'اللغات', PAGE_WIDTH - MARGIN, sidebarY, {
         font: boldFont,
         size: 12,
+        color: COLORS.primary,
         align: 'right',
       });
       sidebarY -= 20;
@@ -423,7 +458,7 @@ export async function generateAdvancedPDF(
         drawText(page, langText, PAGE_WIDTH - MARGIN, sidebarY, {
           font: regularFont,
           size: 9,
-          color: rgb(0.2, 0.2, 0.2),
+          color: COLORS.textDark,
           align: 'right',
         });
         sidebarY -= 16;
@@ -438,9 +473,11 @@ export async function generateAdvancedPDF(
     
     // --- Professional Summary ---
     if (cvData.summary) {
+      // Section title - PRIMARY COLOR
       drawText(page, 'نبذة مهنية', MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
+        color: COLORS.primary,
         align: 'right',
       });
       mainY -= 22;
@@ -448,6 +485,7 @@ export async function generateAdvancedPDF(
       mainY = drawParagraph(page, cvData.summary, MAIN_X + MAIN_WIDTH, mainY, MAIN_WIDTH, {
         font: regularFont,
         size: 10,
+        color: COLORS.textDark,
         lineHeight: 16,
       });
       mainY -= 20;
@@ -455,9 +493,11 @@ export async function generateAdvancedPDF(
     
     // --- Experience Section ---
     if (cvData.experiences && cvData.experiences.length > 0) {
+      // Section title - PRIMARY COLOR
       drawText(page, 'الخبرات المهنية', MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
+        color: COLORS.primary,
         align: 'right',
       });
       mainY -= 22;
@@ -477,7 +517,7 @@ export async function generateAdvancedPDF(
         drawText(page, dateText, MAIN_X + MAIN_WIDTH, mainY, {
           font: regularFont,
           size: 9,
-          color: rgb(0.4, 0.4, 0.4),
+          color: COLORS.textLight,
           align: 'right',
         });
         mainY -= 16;
@@ -502,9 +542,11 @@ export async function generateAdvancedPDF(
     
     // --- Education Section ---
     if (cvData.education && cvData.education.length > 0) {
+      // Section title - PRIMARY COLOR
       drawText(page, 'التعليم', MAIN_X + MAIN_WIDTH, mainY, {
         font: boldFont,
         size: 14,
+        color: COLORS.primary,
         align: 'right',
       });
       mainY -= 22;
@@ -523,6 +565,7 @@ export async function generateAdvancedPDF(
         drawText(page, institutionText, MAIN_X + MAIN_WIDTH, mainY, {
           font: regularFont,
           size: 10,
+          color: COLORS.textDark,
           align: 'right',
         });
         mainY -= 16;
@@ -532,7 +575,7 @@ export async function generateAdvancedPDF(
         drawText(page, eduDate, MAIN_X + MAIN_WIDTH, mainY, {
           font: regularFont,
           size: 9,
-          color: rgb(0.4, 0.4, 0.4),
+          color: COLORS.textLight,
           align: 'right',
         });
         mainY -= 20;
