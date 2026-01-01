@@ -12,10 +12,14 @@
         "prisma:migrate": "prisma migrate dev",
         "prisma:studio": "prisma studio",
         "prisma:deploy": "prisma migrate deploy",
+        "prisma:seed": "node --loader tsx prisma/seed.ts",
         "backup": "node scripts/backup.js",
         "test": "jest --coverage",
         "lint": "eslint src/**/*.js",
         "format": "prettier --write \"src/**/*.js\""
+    },
+    "prisma": {
+        "seed": "node --loader tsx prisma/seed.ts"
     },
     "keywords": [
         "cv",
