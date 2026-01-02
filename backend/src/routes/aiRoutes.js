@@ -2,6 +2,7 @@ import express from 'express';
 import { check } from 'express-validator';
 import { generateCVContent } from '../controllers/aiController.js';
 import auth from '../middleware/authMiddleware.js';
+import { aiGenerateRateLimit } from '../middleware/rateLimitMiddleware.js';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const router = express.Router();
 // @access  Private
 router.post(
     '/generate',
+    aiGenerateRateLimit,
     [
         auth,
         check('jobTitle', 'Job title is required').not().isEmpty(),

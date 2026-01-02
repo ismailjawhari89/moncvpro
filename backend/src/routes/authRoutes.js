@@ -1,6 +1,7 @@
 import express from 'express';
 import { check } from 'express-validator';
 import { register, login } from '../controllers/authController.js';
+import { authLoginRateLimit, authRegisterRateLimit } from '../middleware/rateLimitMiddleware.js';
 
 const router = express.Router();
 
@@ -9,6 +10,7 @@ const router = express.Router();
 // @access  Public
 router.post(
     '/register',
+    authRegisterRateLimit,
     [
         check('email', 'Please include a valid email').isEmail(),
         check(
@@ -24,6 +26,7 @@ router.post(
 // @access  Public
 router.post(
     '/login',
+    authLoginRateLimit,
     [
         check('email', 'Please include a valid email').isEmail(),
         check('password', 'Password is required').exists(),

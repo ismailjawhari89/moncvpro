@@ -1,21 +1,31 @@
 import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
 import authRoutes from './routes/authRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import cvRoutes from './routes/cvRoutes.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
+
+import corsMiddleware from './middleware/corsMiddleware.js';
+import { helmetMiddleware, jsonBodyParser, urlencodedBodyParser, securityLogger } from './middleware/securityMiddleware.js';
+import { globalRateLimit } from './middleware/rateLimitMiddleware.js';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
+
+app.use(securityLogger);
+app.use(corsMiddleware);
+app.use(helmetMiddleware);
+app.use(jsonBodyParser);
+app.use(urlencodedBodyParser);
+
+app.use(globalRateLimit);
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
