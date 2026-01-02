@@ -29,26 +29,65 @@ export async function generatePDF(
 
     const element = document.getElementById(elementId);
     if (!element) {
+        console.error('❌ Element not found:', elementId);
+        console.log('Available elements:', Array.from(document.querySelectorAll('[id]')).map(el => el.id));
         throw new Error(`Element with id "${elementId}" not found`);
     }
+
+    console.log('✅ Element found:', element);
+    console.log('📐 Element dimensions:', {
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        scrollWidth: element.scrollWidth,
+        scrollHeight: element.scrollHeight
+    });
 
     // Store original styles
     const originalOverflow = element.style.overflow;
     const originalHeight = element.style.maxHeight;
+    const originalPosition = element.style.position;
 
     // Temporarily remove scroll constraints for full capture
     element.style.overflow = 'visible';
     element.style.maxHeight = 'none';
+    element.style.position = 'relative';
 
     try {
+        console.log('📸 Starting html2canvas...');
+        
+        // انتظر حتى تحمّل جميع الصور
+        const images = element.querySelectorAll('img');
+        const imagePromises = Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = () => {
+                    console.warn('⚠️ Image failed to load:', img.src);
+                    resolve(); // استمر حتى لو فشلت صورة
+                };
+                setTimeout(() => resolve(), 5000); // timeout بعد 5 ثواني
+            });
+        });
+
+        await Promise.all(imagePromises);
+        console.log('✅ All images loaded');
+
         // Capture with high quality
         const canvas = await html2canvas(element, {
             scale,
             useCORS: true,
+            allowTaint: false,
             logging: false,
             backgroundColor: '#ffffff',
             windowWidth: element.scrollWidth,
-            windowHeight: element.scrollHeight
+            windowHeight: element.scrollHeight,
+            imageTimeout: 15000,
+            removeContainer: true
+        });
+
+        console.log('✅ Canvas created:', {
+            width: canvas.width,
+            height: canvas.height
         });
 
         // Calculate dimensions
@@ -98,12 +137,17 @@ export async function generatePDF(
             }
         }
 
-        // Save the PDF
+        console.log('💾 Saving PDF...');
         pdf.save(filename);
+        console.log('✅ PDF saved successfully!');
+    } catch (error) {
+        console.error('❌ PDF generation failed:', error);
+        throw error;
     } finally {
         // Restore original styles
         element.style.overflow = originalOverflow;
         element.style.maxHeight = originalHeight;
+        element.style.position = originalPosition;
     }
 }
 
