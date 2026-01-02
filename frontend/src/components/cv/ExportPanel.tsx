@@ -119,62 +119,132 @@ export default function ExportPanel({
         setExportError(null);
         setExportSuccess(null);
 
-        const exportData = getTemplateData();
-
         try {
+            // 1. التحقق من وجود العنصر للـ PDF formats
+            if (['pdf', 'pdf-ats'].includes(format)) {
+                const element = document.getElementById(previewElementId);
+                if (!element) {
+                    throw new Error('عنصر المعاينة غير موجود. الرجاء الانتظار حتى يتم تحميل السيرة الذاتية.');
+                }
+                console.log('✅ Preview element found:', element);
+            }
+
+            const exportData = getTemplateData();
+
             switch (format) {
                 case 'pdf':
+                    setExportProgress(10);
+                    console.log('📄 Starting PDF export...');
+                    
                     await generatePDFWithProgress(
                         previewElementId,
-                        setExportProgress,
-                        { filename: `${filename}.pdf` }
+                        (progress) => {
+                            setExportProgress(progress);
+                            console.log('📊 Export progress:', progress);
+                        },
+                        { 
+                            filename: `${filename}.pdf`,
+                            scale: 2,
+                            quality: 0.95
+                        }
                     );
                     break;
 
                 case 'pdf-hq':
-                    setExportProgress(30);
-                    const blob = await pdf(<ModernPDF data={cvData} />).toBlob();
-                    setExportProgress(80);
-                    saveAs(blob, `${filename}-hq.pdf`);
+                    setExportProgress(20);
+                    console.log('🚀 Generating HQ PDF...');
+                    
+                    try {
+                        const blob = await pdf(<ModernPDF data={cvData} />).toBlob();
+                        setExportProgress(80);
+                        saveAs(blob, `${filename}-hq.pdf`);
+                        setExportProgress(100);
+                    } catch (err) {
+                        console.error('HQ PDF Error:', err);
+                        throw new Error('فشل توليد PDF عالي الجودة. جرب التصدير العادي.');
+                    }
                     break;
 
                 case 'pdf-ats':
+                    setExportProgress(10);
                     const element = document.getElementById(previewElementId);
-                    if (!element) throw new Error('Element de prévisualisation non trouvé');
+                    if (!element) throw new Error('عنصر المعاينة غير موجود');
 
+                    setExportProgress(30);
+                    console.log('📄 Starting ATS PDF export...');
+                    
                     // Capture HTML
                     const html = element.outerHTML;
 
-                    // Capture CSS form head
-                    const styles = Array.from(document.querySelectorAll('style'))
-                        .map(s => s.outerHTML)
+                    // Capture ALL CSS (including Tailwind)
+                    const styles = Array.from(document.styleSheets)
+                        .map(sheet => {
+                            try {
+                                return Array.from(sheet.cssRules)
+                                    .map(rule => rule.cssText)
+                                    .join('\n');
+                            } catch (e) {
+                                console.warn('Cannot access stylesheet:', sheet.href);
+                                return '';
+                            }
+                        })
                         .join('\n');
 
+                    setExportProgress(60);
                     await generateTextPDF(html, styles, `${filename}-ats.pdf`);
+                    setExportProgress(100);
                     break;
 
                 case 'docx':
+                    setExportProgress(20);
+                    console.log('📝 Starting DOCX export...');
                     await exportDOCX(exportData, { filename: `${filename}.docx` });
+                    setExportProgress(100);
                     break;
 
                 case 'txt':
+                    setExportProgress(50);
+                    console.log('📄 Starting TXT export...');
                     exportTXT(exportData, { filename: `${filename}.txt` });
+                    setExportProgress(100);
                     break;
 
                 case 'json':
+                    setExportProgress(50);
+                    console.log('💾 Starting JSON export...');
                     exportJSON(exportData, { filename: `${filename}.json` });
+                    setExportProgress(100);
                     break;
+
+                default:
+                    throw new Error(`صيغة غير مدعومة: ${format}`);
             }
 
+            console.log('✅ Export successful:', format);
             setExportSuccess(format);
-            setTimeout(() => setExportSuccess(null), 2000);
+            setTimeout(() => setExportSuccess(null), 3000);
+            
         } catch (error: any) {
-            console.error('Export failed:', error);
-            setExportError(error.message || 'Export failed');
-            setTimeout(() => setExportError(null), 3000);
+            console.error('❌ Export failed:', error);
+            
+            // رسائل خطأ واضحة
+            let errorMessage = 'فشل التصدير. ';
+            
+            if (error.message.includes('not found') || error.message.includes('غير موجود')) {
+                errorMessage += 'الرجاء الانتظار حتى يتم تحميل السيرة الذاتية.';
+            } else if (error.message.includes('network')) {
+                errorMessage += 'تحقق من اتصالك بالإنترنت.';
+            } else if (error.message.includes('CORS')) {
+                errorMessage += 'مشكلة في تحميل الصور. جرب مرة أخرى.';
+            } else {
+                errorMessage += error.message || 'حدث خطأ غير متوقع.';
+            }
+            
+            setExportError(errorMessage);
+            setTimeout(() => setExportError(null), 5000);
         } finally {
             setIsExporting(null);
-            setExportProgress(0);
+            setTimeout(() => setExportProgress(0), 500);
         }
     };
 
