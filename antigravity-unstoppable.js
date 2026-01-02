@@ -1,15 +1,41 @@
 export default {
   async fetch(request, env) {
-    const prompt = "Hello from Antigravity Test";
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    };
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    const url = new URL(request.url);
     const ai = new AntigravityUnstoppable(env);
 
     try {
-      const result = await ai.generate(prompt);
-      return new Response(JSON.stringify(result), {
-        headers: { "Content-Type": "application/json" }
+      if (url.pathname === "/ai" || url.pathname === "/api/ai") {
+        const body = await request.json();
+        const { prompt, action } = body;
+        
+        const result = await ai.generate(prompt || "Hello");
+        return new Response(JSON.stringify({
+          success: true,
+          provider: result.provider,
+          response: result.content
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      return new Response(JSON.stringify({ status: "running" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     } catch (e) {
-      return new Response("Error: " + e.message, { status: 500 });
+      return new Response(JSON.stringify({ error: e.message }), { 
+        status: 500, 
+        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+      });
     }
   }
 };
@@ -41,6 +67,7 @@ class AntigravityUnstoppable {
   async generate(prompt) {
     for (const p of this.providers.sort((a, b) => a.priority - b.priority)) {
       try {
+        if (!p.apiKey || p.apiKey === "…") continue;
         const result = await this.callProvider(p, prompt);
         if (result && result.content) {
           return { provider: p.name, content: result.content };
@@ -53,8 +80,6 @@ class AntigravityUnstoppable {
   }
 
   async callProvider(p, prompt) {
-    if (!p.apiKey) throw new Error(`${p.name} API key is missing`);
-
     if (p.name === "gemini") return this.callGemini(p, prompt);
     if (p.name === "groq") return this.callGroq(p, prompt);
     return this.callOpenAI(p, prompt);
@@ -69,9 +94,6 @@ class AntigravityUnstoppable {
         generationConfig: { temperature: 0.7, maxOutputTokens: 2000 }
       })
     });
-
-    if (!res.ok) throw new Error("Gemini error: " + res.status);
-
     const data = await res.json();
     return { content: data.candidates?.[0]?.content?.parts?.[0]?.text || "" };
   }
@@ -90,9 +112,6 @@ class AntigravityUnstoppable {
         max_tokens: 2000
       })
     });
-
-    if (!res.ok) throw new Error("Groq error: " + res.status);
-
     const data = await res.json();
     return { content: data.choices?.[0]?.message?.content || "" };
   }
@@ -111,9 +130,6 @@ class AntigravityUnstoppable {
         max_tokens: 2000
       })
     });
-
-    if (!res.ok) throw new Error("OpenAI error: " + res.status);
-
     const data = await res.json();
     return { content: data.choices?.[0]?.message?.content || "" };
   }

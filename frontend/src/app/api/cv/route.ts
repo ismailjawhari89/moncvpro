@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     });
 
     const { data, error } = await supabase
-        .from('resumes')
+        .from('cvs')
         .select('*')
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
@@ -61,9 +61,11 @@ export async function POST(req: NextRequest) {
         if (id) {
             // Update existing
             result = await supabase
-                .from('resumes')
+                .from('cvs')
                 .update({
-                    content,
+                    data: content,
+                    template: content.template || 'modern',
+                    title: content.personalInfo?.fullName ? `CV - ${content.personalInfo.fullName}` : 'Mon CV',
                     updated_at: timestamp
                 })
                 .eq('id', id)
@@ -73,10 +75,12 @@ export async function POST(req: NextRequest) {
         } else {
             // Create new
             result = await supabase
-                .from('resumes')
+                .from('cvs')
                 .insert({
                     user_id: user.id,
-                    content,
+                    data: content,
+                    template: content.template || 'modern',
+                    title: content.personalInfo?.fullName ? `CV - ${content.personalInfo.fullName}` : 'Mon CV',
                     updated_at: timestamp
                 })
                 .select()

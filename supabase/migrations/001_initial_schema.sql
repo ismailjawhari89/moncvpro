@@ -7,12 +7,30 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS cvs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL DEFAULT 'Mon CV',
     data JSONB NOT NULL,
     template VARCHAR(50) NOT NULL DEFAULT 'modern',
     version INTEGER NOT NULL DEFAULT 1,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Profiles Table
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    full_name VARCHAR(255),
+    avatar_url TEXT,
+    website TEXT,
+    username VARCHAR(50) UNIQUE,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Pro Waitlist Table
+CREATE TABLE IF NOT EXISTS pro_waitlist (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    source VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- CV Versions Table (for version history)
@@ -70,6 +88,22 @@ ALTER TABLE cvs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cv_versions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_analytics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pro_waitlist ENABLE ROW LEVEL SECURITY;
+
+-- Profiles Policies
+CREATE POLICY "Public profiles are viewable by everyone"
+    ON profiles FOR SELECT
+    USING (true);
+
+CREATE POLICY "Users can update their own profile"
+    ON profiles FOR UPDATE
+    USING (auth.uid() = id);
+
+-- Waitlist Policies
+CREATE POLICY "Anyone can join the waitlist"
+    ON pro_waitlist FOR INSERT
+    WITH CHECK (true);
 
 -- CVs Policies
 CREATE POLICY "Users can view their own CVs"
@@ -165,11 +199,17 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION setup_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
+    -- Create user profile
+    INSERT INTO profiles (id, full_name, avatar_url)
+    VALUES (NEW.id, NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'avatar_url');
+
+    -- Create user analytics
     INSERT INTO user_analytics (user_id, cvs_created, ai_uses, exports_count)
     VALUES (NEW.id, 0, 0, 0);
+    
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to setup analytics for new users
 CREATE TRIGGER on_auth_user_created
