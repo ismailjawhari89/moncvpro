@@ -11,14 +11,19 @@ import cvRoutes from './routes/cvRoutes.js';
 import corsMiddleware from './middleware/corsMiddleware.js';
 import { helmetMiddleware, jsonBodyParser, urlencodedBodyParser, securityLogger } from './middleware/securityMiddleware.js';
 import { globalRateLimit } from './middleware/rateLimitMiddleware.js';
+import { requestLogger } from './middleware/loggingMiddleware.js';
+import { notFoundHandler, errorHandler, handleUncaughtErrors } from './middleware/errorMiddleware.js';
+import logger from './utils/logger.js';
 
 dotenv.config();
+handleUncaughtErrors();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.use(requestLogger);
 app.use(securityLogger);
 app.use(corsMiddleware);
 app.use(helmetMiddleware);
@@ -39,7 +44,10 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/cv', cvRoutes);
 
+app.use(notFoundHandler);
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server started successfully`, { port: PORT, env: process.env.NODE_ENV });
 });

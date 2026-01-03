@@ -1,4 +1,6 @@
 import { RateLimiterMemory } from 'rate-limiter-flexible';
+import logger from '../utils/logger.js';
+import { RateLimitError } from '../utils/errors.js';
 
 const getEnvNumber = (key, defaultValue) => {
     const value = process.env[key];
@@ -50,15 +52,6 @@ const getClientIp = (req) => {
     );
 };
 
-const logRateLimitViolation = (ip, route, remainingTime) => {
-    const timestamp = new Date().toISOString();
-    console.warn(`[RATE LIMIT] ${timestamp} - IP: ${ip} - Route: ${route} - Retry after: ${remainingTime}s`);
-    
-    if (process.env.NODE_ENV === 'production') {
-        console.error(`[SECURITY ALERT] Potential abuse detected from IP: ${ip} on route: ${route}`);
-    }
-};
-
 export const rateLimitMiddleware = (limiter, routeName = 'API') => {
     return async (req, res, next) => {
         const ip = getClientIp(req);
@@ -74,19 +67,26 @@ export const rateLimitMiddleware = (limiter, routeName = 'API') => {
         } catch (rateLimiterRes) {
             const retrySecs = Math.ceil(rateLimiterRes.msBeforeNext / 1000);
             
-            logRateLimitViolation(ip, routeName, retrySecs);
+            logger.rateLimit(ip, routeName, retrySecs);
+            
+            if (process.env.NODE_ENV === 'production') {
+                logger.suspiciousActivity('RATE_LIMIT_EXCEEDED', ip, {
+                    route: routeName,
+                    retryAfter: retrySecs,
+                });
+            }
             
             res.setHeader('Retry-After', retrySecs);
             res.setHeader('X-RateLimit-Limit', limiter.points);
             res.setHeader('X-RateLimit-Remaining', 0);
             res.setHeader('X-RateLimit-Reset', new Date(Date.now() + rateLimiterRes.msBeforeNext).toISOString());
             
-            return res.status(429).json({
-                success: false,
-                error: 'Too many requests',
-                message: `Rate limit exceeded. Please try again in ${retrySecs} seconds.`,
-                retryAfter: retrySecs,
-            });
+            const error = new RateLimitError(
+                `Rate limit exceeded. Please try again in ${retrySecs} seconds.`,
+                retrySecs
+            );
+            
+            return next(error);
         }
     };
 };

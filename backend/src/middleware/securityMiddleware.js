@@ -1,5 +1,6 @@
 import helmet from 'helmet';
 import express from 'express';
+import logger from '../utils/logger.js';
 
 export const helmetMiddleware = helmet({
     contentSecurityPolicy: {
@@ -39,7 +40,13 @@ export const jsonBodyParser = express.json({
     limit: getRequestSizeLimit(),
     verify: (req, res, buf, encoding) => {
         if (buf.length > 1024 * 1024) {
-            console.warn(`[SECURITY] Large request body detected: ${buf.length} bytes from IP: ${req.ip}`);
+            const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+            logger.warn('Large JSON request body detected', {
+                size: buf.length,
+                ip,
+                path: req.path,
+                type: 'LARGE_PAYLOAD',
+            });
         }
     },
 });
@@ -49,13 +56,18 @@ export const urlencodedBodyParser = express.urlencoded({
     extended: true,
     verify: (req, res, buf, encoding) => {
         if (buf.length > 1024 * 1024) {
-            console.warn(`[SECURITY] Large URL-encoded body detected: ${buf.length} bytes from IP: ${req.ip}`);
+            const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+            logger.warn('Large URL-encoded request body detected', {
+                size: buf.length,
+                ip,
+                path: req.path,
+                type: 'LARGE_PAYLOAD',
+            });
         }
     },
 });
 
 export const securityLogger = (req, res, next) => {
-    const timestamp = new Date().toISOString();
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
     const method = req.method;
     const path = req.path;
@@ -64,13 +76,25 @@ export const securityLogger = (req, res, next) => {
         const sensitiveRoutes = ['/api/auth/login', '/api/auth/register', '/api/upload'];
         
         if (sensitiveRoutes.some(route => path.includes(route))) {
-            console.log(`[SECURITY LOG] ${timestamp} - ${method} ${path} - IP: ${ip}`);
+            logger.security('Sensitive route accessed', {
+                method,
+                path,
+                ip,
+                userAgent: req.headers['user-agent'],
+            });
         }
     }
     
     res.on('finish', () => {
-        if (res.statusCode === 401 || res.statusCode === 403 || res.statusCode === 429) {
-            console.warn(`[SECURITY ALERT] ${timestamp} - ${method} ${path} - Status: ${res.statusCode} - IP: ${ip}`);
+        if (res.statusCode === 401 || res.statusCode === 403) {
+            logger.authFailure(
+                method === 'POST' && path.includes('login') ? 'LOGIN' : 'AUTH',
+                req.body?.email || 'unknown',
+                ip,
+                `${res.statusCode} - ${path}`
+            );
+        } else if (res.statusCode === 429) {
+            logger.rateLimit(ip, path, res.getHeader('Retry-After') || 'unknown');
         }
     });
     
