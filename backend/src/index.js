@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import cvRoutes from './routes/cvRoutes.js';
+import exportRoutes from './routes/exportRoutes.js';
 
 import corsMiddleware from './middleware/corsMiddleware.js';
 import { helmetMiddleware, jsonBodyParser, urlencodedBodyParser, securityLogger } from './middleware/securityMiddleware.js';
@@ -43,6 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/cv', cvRoutes);
+app.use('/api/export', exportRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

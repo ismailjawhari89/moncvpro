@@ -26,6 +26,7 @@ npm start
 - **[API_SECURITY.md](../API_SECURITY.md)** - API security documentation
 - **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Security implementation details
 - **[UPLOAD_SECURITY.md](./UPLOAD_SECURITY.md)** - File upload security guide
+- **[PDF_EXPORT.md](./PDF_EXPORT.md)** - PDF export system documentation
 
 ### Logging & Error Handling
 - **[LOGGING_AND_ERRORS.md](./LOGGING_AND_ERRORS.md)** - Comprehensive logging guide
@@ -74,6 +75,14 @@ npm start
 - ✅ **Secure Naming** - Cryptographic random filenames
 - ✅ **Size Limits** - Type-specific limits (5-10MB)
 - ✅ **Directory Organization** - Type-based subdirectories
+
+### Export System
+- ✅ **PDF Export** - Professional CV exports
+- ✅ **HTML Fallback** - Always available format
+- ✅ **Beautiful Templates** - Modern, professional design
+- ✅ **Secure Downloads** - Time-limited access (24h)
+- ✅ **Auto-Cleanup** - 7-day retention policy
+- ✅ **Preview Mode** - View before download
 
 ---
 
