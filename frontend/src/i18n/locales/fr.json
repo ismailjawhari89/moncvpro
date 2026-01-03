@@ -25,6 +25,7 @@
     "nav": {
         "home": "Accueil",
         "templates": "Modèles",
+        "review": "Revue",
         "cvBuilder": "Créateur de CV",
         "examples": "Exemples",
         "pricing": "Tarifs",
