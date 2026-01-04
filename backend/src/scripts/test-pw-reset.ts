@@ -1,9 +1,10 @@
 
 import axios from 'axios';
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
 const API_URL = 'http://localhost:3001/api/v1';
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 async function runTests() {
     console.log('🚀 Starting Password Reset & Security Tests...\n');

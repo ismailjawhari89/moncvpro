@@ -3,8 +3,9 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
 import { logger } from '../lib/logger';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 const ARCHIVE_DIR = path.join(process.cwd(), 'logs', 'audit');
 const RETENTION_DAYS_DB = 7;
 const RETENTION_DAYS_ARCHIVE = 90;

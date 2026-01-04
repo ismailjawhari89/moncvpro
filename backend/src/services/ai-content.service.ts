@@ -1,8 +1,9 @@
 
 import Groq from 'groq-sdk';
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const db = new PrismaClient();
+const db = new PrismaClient({ datasources });
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });

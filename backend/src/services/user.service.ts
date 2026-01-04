@@ -2,8 +2,9 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../lib/logger';
 import { alertService } from './alertService';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 export class UserService {
     async updateEmail(userId: string, newEmail: string, ipAddress?: string) {

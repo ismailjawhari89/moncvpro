@@ -1,7 +1,8 @@
 
 import { Prisma, PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 export class AdminSearchService {
     /**

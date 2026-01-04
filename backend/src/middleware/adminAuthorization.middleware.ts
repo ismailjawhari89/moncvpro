@@ -3,8 +3,9 @@ import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AdminPermission, RBACService } from '../services/rbac.service';
 import { logger } from '../lib/logger';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 /**
  * Middleware to authorize admin actions based on role and permissions

@@ -1,7 +1,8 @@
 
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 /**
  * Service to manage pre-made CV templates

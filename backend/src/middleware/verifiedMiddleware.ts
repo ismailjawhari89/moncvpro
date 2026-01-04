@@ -2,8 +2,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { auditService } from '../services/audit.service';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 /**
  * Middleware to restrict access to users with unverified emails

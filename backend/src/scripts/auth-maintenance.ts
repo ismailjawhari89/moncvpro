@@ -15,8 +15,9 @@
 
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../lib/logger';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 interface MaintenanceStats {
     tokensDeleted?: number;

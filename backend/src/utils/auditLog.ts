@@ -2,8 +2,9 @@
 import { Request } from 'express';
 
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 /**
  * Log a user action for auditing purposes

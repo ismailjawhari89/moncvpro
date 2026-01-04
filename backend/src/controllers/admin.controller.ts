@@ -6,8 +6,9 @@ import { AdminSearchService } from '../services/adminSearch.service';
 import { logger } from '../lib/logger';
 import { emailService } from '../services/email.service';
 import { invalidateCache } from '../services/cacheInvalidation';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 export const adminController = {
     // --- User Management ---

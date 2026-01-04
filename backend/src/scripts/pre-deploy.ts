@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import Redis from 'ioredis';
 import { logger } from '../lib/logger';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 async function preDeployChecks() {
     console.log('🔍 Running pre-deployment checks...\n');

@@ -4,8 +4,9 @@ import { logger } from '../lib/logger';
 import { auditService } from '../services/audit.service';
 import fs from 'fs';
 import path from 'path';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 export class GDPRController {
     /**

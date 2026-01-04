@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
 declare global {
     var prisma: PrismaClient | undefined;
 }
 
 const prismaClient = new PrismaClient({
+    datasources,
     log: process.env.NODE_ENV === 'development' ? [
         { emit: 'event', level: 'query' },
         { emit: 'stdout', level: 'error' },

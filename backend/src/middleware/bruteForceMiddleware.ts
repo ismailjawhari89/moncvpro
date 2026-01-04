@@ -2,8 +2,9 @@
 import { alertService } from '../services/alertService';
 import { logger } from '../lib/logger';
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 // In-memory store for tracking attempts per IP + Email
 // In a distributed production system, this should be moved to Redis

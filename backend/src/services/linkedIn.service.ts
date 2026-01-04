@@ -2,8 +2,9 @@
 import axios from 'axios';
 import { PrismaClient } from '@prisma/client';
 import { analytics } from '../utils/analytics';
+import { datasources } from '../../prisma/prisma.config';
 
-const db = new PrismaClient();
+const db = new PrismaClient({ datasources });
 
 /**
  * Service to handle LinkedIn Integration features

@@ -1,7 +1,8 @@
 
 import { PrismaClient } from '@prisma/client';
+import { datasources } from './prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 const templates = [
     // TECH CATEGORY

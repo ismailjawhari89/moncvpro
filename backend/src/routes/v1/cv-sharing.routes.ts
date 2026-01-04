@@ -5,9 +5,10 @@ import { PrismaClient } from '@prisma/client';
 import { emailQueue } from '../../queues/emailQueue';
 
 import { authMiddleware } from '../../middleware/authMiddleware';
+import { datasources } from '../../../prisma/prisma.config';
 
 const router = express.Router();
-const db = new PrismaClient();
+const db = new PrismaClient({ datasources });
 
 /**
  * Share CV with user/email

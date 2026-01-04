@@ -1,8 +1,9 @@
 
 import DataLoader from 'dataloader';
 import { PrismaClient } from '@prisma/client';
+import { datasources } from '../../prisma/prisma.config';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources });
 
 /**
  * Batched user loader to prevent N+1 queries
