@@ -1,0 +1,106 @@
+name: Tests & Linting
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm run install:all
+      
+      - name: Backend Linting
+        run: npm run lint --prefix backend
+      
+      - name: Frontend Linting
+        run: npm run lint --prefix frontend
+      
+      - name: Backend Build
+        run: npm run build --prefix backend
+      
+      - name: Generate Prisma Client
+        run: npx prisma generate --prefix backend
+      
+      - name: Check Frontend Build
+        run: npm run build --prefix frontend
+        env:
+          NEXT_PUBLIC_API_URL: "${{ secrets.STAGING_API_URL }}"
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+      
+      - name: Run Backend Tests
+        run: npm test --prefix backend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          JWT_SECRET: test-secret
+          ACCESS_TOKEN_SECRET: test-secret-access
+          REFRESH_TOKEN_SECRET: test-secret-refresh
+          ENCRYPTION_KEY: this-is-a-test-encryption-key-32-chars-long-12345
+      
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        working-directory: ./frontend
+      
+      - name: Run E2E Tests
+        run: npx playwright test
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+      
+      - name: Upload Coverage
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./backend/coverage/coverage-final.json
+          flags: unittests
+          token: "${{ secrets.CODECOV_TOKEN }}"
+      
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "❌ Build failed for ${{ github.repository }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Build Failed*\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCommit: ${{ github.sha }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK }}"

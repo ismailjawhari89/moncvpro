@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .container {
+            font-family: 'Inter', sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #450a0a;
+            color: #fecaca;
+            padding: 40px;
+            border-radius: 16px;
+            border: 2px solid #991b1b;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ef4444;
+        }
+
+        .content {
+            line-height: 1.6;
+        }
+
+        .warning-badge {
+            background: #991b1b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #f87171;
+            text-align: center;
+            margin-top: 40px;
+            border-top: 1px solid #7f1d1d;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="logo">MonCVPro Security</span>
+        </div>
+        <div class="content">
+            <div style="text-align: center;">
+                <div class="warning-badge">Suspicious Activity Blocked</div>
+            </div>
+            <h1>Urgent Action Required ⚠️</h1>
+            <p>Our security systems detected suspicious behavior associated with your account.</p>
+            <p><strong>Reason:</strong> Multiple failed login attempts or unauthorized access patterns.</p>
+            <p>For your protection, we have temporarily restricted some actions on your account. Please log in to verify
+                your identity and review your security settings.</p>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{loginUrl}}"
+                    style="background: #ef4444; color: white; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600;">Secure
+                    My Account</a>
+            </div>
+        </div>
+        <div class="footer">
+            © 2026 MonCVPro | Critical Account Alerts
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 30px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .content {
+            padding: 40px;
+            color: #1e293b;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 99px;
+            background: #ede9fe;
+            color: #8b5cf6;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #8b5cf6;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="color: #8b5cf6; margin: 0; font-size: 24px;">MonCVPro</h1>
+        </div>
+        <div class="content">
+            <center>
+                <div class="badge">{{tag}}</div>
+            </center>
+            <h2 style="margin-top: 0; text-align: center;">{{title}}</h2>
+            <p>{{message}}</p>
+
+            {{#if details}}
+            <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <pre style="margin: 0; font-size: 13px; color: #475569; white-space: pre-wrap;">{{details}}</pre>
+            </div>
+            {{/if}}
+
+            {{#if actionUrl}}
+            <center style="margin: 30px 0;">
+                <a href="{{actionUrl}}" class="btn">{{actionText}}</a>
+            </center>
+            {{/if}}
+        </div>
+        <div class="footer">
+            &copy; 2026 MonCVPro • <a href="{{unsubscribeUrl}}">Preferences</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,47 +1,137 @@
+
 import React from 'react';
-import { BlockRendererProps } from '../../types';
-import { cn } from '../../utils';
-import { Mail, Phone, MapPin, Linkedin, Github, Globe } from 'lucide-react';
+import { TemplateBlock, PersonalInfo } from '../../types';
 
-export const ContactBlock: React.FC<BlockRendererProps> = ({ data, template, block }) => {
-    const { personalInfo } = data;
-    const { primary, text, muted } = template.palette;
-    const { settings = {} } = block;
+// Simple Icons to avoid external dependencies
+const MailIcon = ({ size = 16, style = {} }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+    </svg>
+);
 
-    // settings.layout = 'list' | 'row'
-    // settings.inverseText = boolean
+const PhoneIcon = ({ size = 16, style = {} }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+);
 
-    const isRow = settings.layout === 'row';
-    const inverse = settings.inverseText || false;
-    const color = inverse ? 'white' : text;
-    const iconColor = inverse ? 'rgba(255,255,255,0.8)' : primary;
+const MapPinIcon = ({ size = 16, style = {} }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+);
 
-    const items = [
-        { icon: Mail, value: personalInfo.email, label: 'Email' },
-        { icon: Phone, value: personalInfo.phone, label: 'Phone' },
-        { icon: MapPin, value: personalInfo.address, label: 'Address' },
-        { icon: Linkedin, value: personalInfo.linkedin, label: 'LinkedIn' },
-        { icon: Github, value: personalInfo.github, label: 'GitHub' },
-    ].filter(i => i.value);
+const LinkIcon = ({ size = 16, style = {} }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+    </svg>
+);
+
+interface ContactBlockProps {
+    blockSettings: TemplateBlock;
+    data: PersonalInfo;
+    locale?: string;
+}
+
+export const ContactBlock: React.FC<ContactBlockProps> = ({
+    blockSettings,
+    data,
+    locale = 'en',
+}) => {
+    const { settings } = blockSettings;
+    const isRTL = locale === 'ar';
+
+    if (!blockSettings.enabled) return null;
+
+    const {
+        showIcons,
+        layout,
+        fontSize,
+        fontColor,
+        spacing,
+        sectionTitle,
+        sectionTitleSize,
+        sectionTitleWeight,
+        sectionTitleColor,
+        sectionTitleTransform,
+        borderBottom,
+        marginBottom,
+    } = settings;
+
+    const containerStyles: React.CSSProperties = {
+        marginBottom,
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: isRTL ? 'right' : 'left',
+    };
+
+    const titleStyles: React.CSSProperties = {
+        fontSize: sectionTitleSize,
+        fontWeight: sectionTitleWeight,
+        color: sectionTitleColor,
+        textTransform: sectionTitleTransform as any,
+        borderBottom,
+        marginBottom: '8px',
+        paddingBottom: '4px',
+        display: 'block',
+    };
+
+    const listStyles: React.CSSProperties = {
+        display: 'flex',
+        flexDirection: layout === 'horizontal' ? 'row' : 'column',
+        flexWrap: 'wrap',
+        gap: spacing,
+        marginTop: '4px',
+        listStyle: 'none',
+        padding: 0,
+        margin: 0,
+    };
+
+    const itemStyles: React.CSSProperties = {
+        fontSize,
+        color: fontColor,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        flexDirection: isRTL ? 'row-reverse' : 'row',
+    };
+
+    // Only render items that have data
+    const contactItems = [
+        { type: 'email', value: data.email, icon: MailIcon },
+        { type: 'phone', value: data.phone, icon: PhoneIcon },
+        { type: 'location', value: data.location, icon: MapPinIcon },
+        { type: 'linkedin', value: (data as any).linkedin, icon: LinkIcon, link: true },
+        { type: 'github', value: (data as any).github, icon: LinkIcon, link: true },
+    ].filter(item => item.value);
+
+    if (contactItems.length === 0) return null;
 
     return (
-        <div className={cn("mb-6", isRow ? "flex flex-wrap gap-4 text-sm" : "space-y-3")}>
-            {!isRow && <h3 className="font-bold uppercase tracking-wider mb-3 border-b pb-1"
-                style={{ color: inverse ? 'white' : primary, borderColor: inverse ? 'rgba(255,255,255,0.2)' : muted + '40' }}>
-                Contact
-            </h3>}
+        <div style={containerStyles}>
+            {sectionTitle && (
+                <span style={titleStyles}>{sectionTitle}</span>
+            )}
 
-            {items.map((item, idx) => {
-                const Icon = item.icon;
-                return (
-                    <div key={idx} className={cn("flex items-center gap-2", isRow && "mr-4")}>
-                        <Icon size={16} style={{ color: iconColor }} />
-                        <span style={{ color }} className="text-sm">
-                            {item.value}
-                        </span>
-                    </div>
-                );
-            })}
+            <ul style={listStyles}>
+                {contactItems.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                        <li key={index} style={itemStyles}>
+                            {showIcons && <Icon size={14} style={{ flexShrink: 0 }} />}
+                            <span style={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                            }}>
+                                {item.value}
+                            </span>
+                        </li>
+                    );
+                })}
+            </ul>
         </div>
     );
 };

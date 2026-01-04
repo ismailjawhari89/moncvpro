@@ -1,25 +1,73 @@
+
 import React from 'react';
-import { BlockRendererProps } from '../../types';
+import { TemplateBlock, Language } from '../../types';
 
-export const LanguagesBlock: React.FC<BlockRendererProps> = ({ data, template, block }) => {
-    const { languages } = data;
-    if (!languages || languages.length === 0) return null;
+interface LanguagesBlockProps {
+    blockSettings: TemplateBlock;
+    data: Language[];
+    locale?: string;
+}
 
-    const { primary, text, muted } = template.palette;
-    const { settings = {} } = block;
-    const inverse = settings.inverseText || false;
+export const LanguagesBlock: React.FC<LanguagesBlockProps> = ({
+    blockSettings,
+    data,
+    locale = 'en',
+}) => {
+    const { settings } = blockSettings;
+    const isRTL = locale === 'ar';
+
+    if (!blockSettings.enabled || !data || data.length === 0) return null;
+
+    const {
+        sectionTitle,
+        sectionTitleSize,
+        sectionTitleWeight,
+        sectionTitleColor,
+        sectionTitleTransform,
+        borderBottom,
+        marginBottom,
+        itemSpacing,
+        languageSize,
+        languageWeight,
+        languageColor,
+        proficiencySize,
+        proficiencyColor,
+        showProficiencyLevel
+    } = settings;
+
+    const containerStyles: React.CSSProperties = {
+        marginBottom,
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: isRTL ? 'right' : 'left',
+    };
+
+    const titleStyles: React.CSSProperties = {
+        fontSize: sectionTitleSize,
+        fontWeight: sectionTitleWeight,
+        color: sectionTitleColor,
+        textTransform: sectionTitleTransform as any,
+        borderBottom,
+        marginBottom: '12px',
+        paddingBottom: '4px',
+        display: 'block',
+    };
 
     return (
-        <div className="mb-6">
-            <h3 className="font-bold uppercase tracking-wider mb-3 border-b pb-1"
-                style={{ color: inverse ? 'white' : primary, borderColor: inverse ? 'rgba(255,255,255,0.2)' : muted + '40' }}>
-                Languages
-            </h3>
-            <div className="space-y-2">
-                {languages.map((lang) => (
-                    <div key={lang.id} className="flex justify-between items-center">
-                        <span className="text-sm font-medium" style={{ color: inverse ? 'white' : text }}>{lang.name}</span>
-                        <span className="text-xs" style={{ color: inverse ? 'rgba(255,255,255,0.7)' : muted }}>{lang.proficiency}</span>
+        <div style={containerStyles}>
+            {sectionTitle && <h3 style={titleStyles}>{sectionTitle}</h3>}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: itemSpacing }}>
+                {data.map((lang, index) => (
+                    <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: languageSize, fontWeight: languageWeight, color: languageColor }}>
+                            {lang.name}
+                        </span>
+                        {showProficiencyLevel && (
+                            <span style={{ fontSize: proficiencySize, color: proficiencyColor }}>
+                                {/* ({lang.proficiency}) - Parentheses logic handled by text alignment usually, but explicit here */}
+                                {isRTL ? `(${lang.proficiency})` : `(${lang.proficiency})`}
+                            </span>
+                        )}
                     </div>
                 ))}
             </div>

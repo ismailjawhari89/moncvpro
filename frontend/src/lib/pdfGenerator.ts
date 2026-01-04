@@ -1,197 +1,92 @@
+
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { CVData } from '../templates/types';
 
-interface PDFOptions {
-    filename?: string;
-    format?: 'a4' | 'letter';
-    orientation?: 'portrait' | 'landscape';
-    scale?: number;
-    margin?: number;
-    quality?: number;
+export interface PDFGeneratorOptions {
+    format: 'standard' | 'hq' | 'ats';
+    atsMode?: boolean;
 }
 
 /**
- * High-performance PDF generator using HTML2Canvas + jsPDF
- * Captures the CV preview element and converts to PDF
+ * Generates a PDF from a given HTML element using optimal settings for the Modern Pro template.
  */
-export async function generatePDF(
-    elementId: string,
-    options: PDFOptions = {}
-): Promise<void> {
-    const {
-        filename = 'cv.pdf',
-        format = 'a4',
-        orientation = 'portrait',
-        scale = 2,
-        margin = 10,
-        quality = 1
-    } = options;
+export async function generateModernProPDF(
+    element: HTMLElement,
+    cvData: CVData,
+    options: PDFGeneratorOptions
+): Promise<Blob> {
+    // Configuration based on format
+    const isHQ = options.format === 'hq';
+    const scale = isHQ ? 2 : 1.5; // HQ = 2x scale for better clarity on retina/high-res, Standard = 1.5x
 
-    const element = document.getElementById(elementId);
-    if (!element) {
-        throw new Error(`Element with id "${elementId}" not found`);
-    }
+    // NOTE: For 'ats' format, typically we would want a text-based PDF generation logic
+    // but for now we follow the visual capture approach unless a raw text generation engine is available.
+    // Ideally, PDF-ATS should use raw text placement APIs of jsPDF for true machine readability.
+    // Here we assume the visual representation is clean enough for now or the 'atsMode' toggle in renderer handles the visual styling changes 
+    // (like removing photos) before we capture it.
 
-    // Store original styles
-    const originalOverflow = element.style.overflow;
-    const originalHeight = element.style.maxHeight;
-
-    // Temporarily remove scroll constraints for full capture
-    element.style.overflow = 'visible';
-    element.style.maxHeight = 'none';
+    const config = {
+        scale: scale,
+        useCORS: true, // Crucial for external images like profile photos
+        allowTaint: false,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: 794, // A4 width in px at 96 DPI
+        // height is auto
+        imageQuality: isHQ ? 1.0 : 0.95
+    };
 
     try {
-        // Capture with high quality
-        const canvas = await html2canvas(element, {
-            scale,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            windowWidth: element.scrollWidth,
-            windowHeight: element.scrollHeight
-        });
+        const canvas = await html2canvas(element, config);
+        const imgData = canvas.toDataURL('image/png', options.format === 'hq' ? 1.0 : 0.95);
 
-        // Calculate dimensions
-        const imgData = canvas.toDataURL('image/jpeg', quality);
-
+        // A4 Dimensions: 210mm x 297mm
+        // Margins: 32px (approx 8.5mm)
         const pdf = new jsPDF({
-            orientation,
-            unit: 'mm',
-            format
+            orientation: 'portrait',
+            unit: 'px',
+            format: 'a4',
+            compress: true,
+            hotlinks: true
         });
 
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-        const contentWidth = pageWidth - (margin * 2);
-        const contentHeight = (canvas.height * contentWidth) / canvas.width;
+        // Calculate aspect ratio to fit image
+        const imgProps = pdf.getImageProperties(imgData);
+        const renderWidth = pdfWidth; // Full width
+        const renderHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-        // Handle multi-page if content is longer than one page
-        if (contentHeight <= pageHeight - (margin * 2)) {
-            // Single page
-            pdf.addImage(imgData, 'JPEG', margin, margin, contentWidth, contentHeight);
-        } else {
-            // Multi-page
-            let remainingHeight = contentHeight;
-            let position = 0;
-            let pageNum = 0;
+        // Handle Pagination if content is longer than one page
+        let heightLeft = renderHeight;
+        let position = 0;
 
-            while (remainingHeight > 0) {
-                if (pageNum > 0) {
-                    pdf.addPage();
-                }
+        // First Page
+        pdf.addImage(imgData, 'PNG', 0, position, renderWidth, renderHeight);
+        heightLeft -= pdfHeight;
 
-                const sliceHeight = Math.min(remainingHeight, pageHeight - (margin * 2));
-
-                pdf.addImage(
-                    imgData,
-                    'JPEG',
-                    margin,
-                    margin - (position * (pageHeight - margin * 2) / contentHeight * contentHeight),
-                    contentWidth,
-                    contentHeight
-                );
-
-                remainingHeight -= (pageHeight - margin * 2);
-                position++;
-                pageNum++;
-            }
+        // Subsequent Pages
+        while (heightLeft > 0) {
+            position -= pdfHeight; // Move the image up
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, renderWidth, renderHeight);
+            heightLeft -= pdfHeight;
         }
 
-        // Save the PDF
-        pdf.save(filename);
-    } finally {
-        // Restore original styles
-        element.style.overflow = originalOverflow;
-        element.style.maxHeight = originalHeight;
+        // Set metadata
+        pdf.setProperties({
+            title: `${cvData.personalInfo.fullName} - CV`,
+            author: cvData.personalInfo.fullName,
+            creator: 'MonCVPro',
+            subject: `CV - ${cvData.personalInfo.jobTitle}`
+        });
+
+        return pdf.output('blob');
+
+    } catch (error) {
+        console.error('PDF Generation Error:', error);
+        throw new Error('Failed to generate PDF');
     }
 }
-
-/**
- * Generate PDF with progress callback
- */
-export async function generatePDFWithProgress(
-    elementId: string,
-    onProgress: (progress: number) => void,
-    options: PDFOptions = {}
-): Promise<void> {
-    onProgress(0);
-
-    const element = document.getElementById(elementId);
-    if (!element) {
-        throw new Error(`Element with id "${elementId}" not found`);
-    }
-
-    onProgress(20);
-
-    const canvas = await html2canvas(element, {
-        scale: options.scale || 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-    });
-
-    onProgress(60);
-
-    const imgData = canvas.toDataURL('image/jpeg', options.quality || 1);
-
-    const pdf = new jsPDF({
-        orientation: options.orientation || 'portrait',
-        unit: 'mm',
-        format: options.format || 'a4'
-    });
-
-    onProgress(80);
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const margin = options.margin || 10;
-    const contentWidth = pageWidth - (margin * 2);
-    const contentHeight = (canvas.height * contentWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'JPEG', margin, margin, contentWidth, contentHeight);
-
-    onProgress(95);
-
-    pdf.save(options.filename || 'cv.pdf');
-
-    onProgress(100);
-}
-
-/**
- * Generate PDF blob (for upload or preview)
- */
-export async function generatePDFBlob(
-    elementId: string,
-    options: PDFOptions = {}
-): Promise<Blob> {
-    const element = document.getElementById(elementId);
-    if (!element) {
-        throw new Error(`Element with id "${elementId}" not found`);
-    }
-
-    const canvas = await html2canvas(element, {
-        scale: options.scale || 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-    });
-
-    const imgData = canvas.toDataURL('image/jpeg', options.quality || 1);
-
-    const pdf = new jsPDF({
-        orientation: options.orientation || 'portrait',
-        unit: 'mm',
-        format: options.format || 'a4'
-    });
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const margin = options.margin || 10;
-    const contentWidth = pageWidth - (margin * 2);
-    const contentHeight = (canvas.height * contentWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'JPEG', margin, margin, contentWidth, contentHeight);
-
-    return pdf.output('blob');
-}
-
-export default generatePDF;

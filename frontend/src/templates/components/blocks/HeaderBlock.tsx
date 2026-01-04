@@ -1,73 +1,124 @@
+/**
+ * HeaderBlock Component
+ * Renders the CV header with photo, name, job title, and summary
+ */
+
 import React from 'react';
-import { BlockRendererProps } from '../../types';
-import { cn, getFontSizeClass } from '../../utils';
-import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react';
+import Image from 'next/image';
+import { TemplateBlock, PersonalInfo } from '../../types';
 
-export const HeaderBlock: React.FC<BlockRendererProps> = ({ data, template, block }) => {
-    const { personalInfo } = data;
-    const { primary, text, background } = template.palette;
-    const { settings = {} } = block;
+interface HeaderBlockProps {
+    blockSettings: TemplateBlock;
+    data: PersonalInfo;
+    locale?: string;
+}
 
-    const align = settings.align || 'left';
-    const showPhoto = settings.showPhoto !== false;
-    const photoShape = settings.photoShape || 'circle'; // circle, square, rounded
-    const inverseText = settings.inverseText || false;
+export const HeaderBlock: React.FC<HeaderBlockProps> = ({
+    blockSettings,
+    data,
+    locale = 'en',
+}) => {
+    const { settings } = blockSettings;
+    const isRTL = locale === 'ar';
 
-    const textColor = inverseText ? 'text-white' : 'text-gray-900';
-    const subTextColor = inverseText ? 'text-gray-200' : 'text-gray-600';
-    const accentColorStyle = { color: inverseText ? 'white' : primary };
+    if (!blockSettings.enabled) return null;
+
+    const {
+        showPhoto,
+        photoShape,
+        photoSize,
+        photoBorder,
+        layout,
+        alignment,
+        backgroundColor,
+        textColor,
+        nameSize,
+        nameWeight,
+        nameColor,
+        jobTitleSize,
+        jobTitleWeight,
+        jobTitleColor,
+        summaryMaxLines,
+        summaryColor,
+        summarySize,
+        spacing,
+    } = settings;
+
+    const photoStyles: React.CSSProperties = {
+        width: photoSize,
+        height: photoSize,
+        borderRadius: photoShape === 'circle' ? '50%' : photoShape === 'rounded' ? '8px' : '0',
+        border: photoBorder,
+        objectFit: 'cover',
+        marginRight: isRTL ? '0' : spacing,
+        marginLeft: isRTL ? spacing : '0',
+    };
+
+    const containerStyles: React.CSSProperties = {
+        display: 'flex',
+        flexDirection: layout === 'horizontal' ? 'row' : 'column',
+        alignItems: alignment === 'center' ? 'center' : alignment === 'right' ? 'flex-end' : 'flex-start',
+        backgroundColor,
+        color: textColor,
+        gap: spacing,
+        marginBottom: spacing,
+        direction: isRTL ? 'rtl' : 'ltr',
+    };
+
+    const nameStyles: React.CSSProperties = {
+        fontSize: nameSize,
+        fontWeight: nameWeight,
+        color: nameColor,
+        margin: '0',
+        lineHeight: '1.2',
+    };
+
+    const jobTitleStyles: React.CSSProperties = {
+        fontSize: jobTitleSize,
+        fontWeight: jobTitleWeight,
+        color: jobTitleColor,
+        margin: '4px 0 0 0',
+    };
+
+    const summaryStyles: React.CSSProperties = {
+        fontSize: summarySize,
+        color: summaryColor,
+        margin: '8px 0 0 0',
+        lineHeight: '1.6',
+        display: '-webkit-box',
+        WebkitLineClamp: summaryMaxLines,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    };
 
     return (
-        <div
-            className={cn(
-                "flex flex-col gap-4 mb-6",
-                align === 'center' && "items-center text-center",
-                align === 'right' && "items-end text-right",
-                align === 'left' && "items-start text-left"
+        <header style={containerStyles}>
+            {showPhoto && data.photoUrl && (
+                <div style={photoStyles} className="overflow-hidden relative">
+                    <Image
+                        src={data.photoUrl}
+                        alt={data.fullName}
+                        fill
+                        className="object-cover"
+                        sizes={`${photoSize}`}
+                    />
+                </div>
             )}
-            style={{ color: inverseText ? '#fff' : text }}
-        >
-            <div className={cn("flex gap-6 w-full",
-                align === 'center' ? "flex-col items-center" : "flex-row",
-                align === 'right' && "flex-row-reverse"
-            )}>
-                {showPhoto && personalInfo.photoUrl && (
-                    <div className={cn(
-                        "relative shrink-0 overflow-hidden border-4",
-                        photoShape === 'circle' && "rounded-full",
-                        photoShape === 'rounded' && "rounded-2xl",
-                        photoShape === 'square' && "rounded-none",
-                    )} style={{ borderColor: template.palette.background === '#ffffff' ? '#f3f4f6' : 'rgba(255,255,255,0.2)', width: '100px', height: '100px' }}>
-                        <img
-                            src={personalInfo.photoUrl}
-                            alt={personalInfo.fullName}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
+
+            <div style={{ flex: 1 }}>
+                <h1 style={nameStyles}>{data.fullName}</h1>
+
+                {data.jobTitle && (
+                    <h2 style={jobTitleStyles}>{data.jobTitle}</h2>
                 )}
 
-                <div className="flex-1 flex flex-col justify-center">
-                    <h1 className={cn("font-bold leading-tight", getFontSizeClass(template.metadata.baseFontSize || 14, 2.5))}
-                        style={{ color: inverseText ? 'white' : text }}>
-                        {personalInfo.fullName || 'Your Name'}
-                    </h1>
-                    <h2 className={cn("font-medium mt-1", getFontSizeClass(template.metadata.baseFontSize || 14, 1.2))}
-                        style={accentColorStyle}>
-                        {personalInfo.profession || 'Professional Title'}
-                    </h2>
-
-                    {/* Horizontal Contact (if not using separate Contact block) */}
-                    {!!settings.showIcons && (
-                        <div className={cn("flex flex-wrap gap-3 mt-3 text-sm",
-                            align === 'center' ? "justify-center" : (align === 'right' ? "justify-end" : "justify-start")
-                        )} style={{ color: subTextColor }}>
-                            {/* Simplified inline contact for header */}
-                            {personalInfo.email && <span>{personalInfo.email}</span>}
-                            {personalInfo.phone && <span>{personalInfo.phone}</span>}
-                        </div>
-                    )}
-                </div>
+                {data.summary && (
+                    <p style={summaryStyles}>{data.summary}</p>
+                )}
             </div>
-        </div>
+        </header>
     );
 };
+
+export default HeaderBlock;
