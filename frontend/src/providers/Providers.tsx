@@ -1,33 +1,59 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import api from '@/lib/axios';
 
-// Create a client
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            staleTime: 60 * 1000, // 1 minute
-            retry: 1,
-        },
-    },
-});
+function AuthInitializer() {
+    const { setAccessToken, setUser, logout, setLoading, setCsrfToken } = useAuthStore();
 
-interface ProvidersProps {
-    children: ReactNode;
+    useEffect(() => {
+        const initAuth = async () => {
+            try {
+                // 1. Fetch CSRF Token (Required for all POST requests including refresh)
+                const csrfRes = await api.get('/auth/csrf-token');
+                if (csrfRes.data.csrfToken) {
+                    setCsrfToken(csrfRes.data.csrfToken);
+                }
+
+                // 2. Try to silent refresh on app mount
+                const { data } = await api.post('/auth/refresh');
+                // Access token is returned but primarily set in cookie.
+                // We can keep it in memory if needed, or ignore it if we fully trust cookies.
+                // But the store expects it.
+                setAccessToken(data.accessToken);
+
+                // Fetch fresh user data
+                // Assuming /auth/me or /me is the endpoint. 
+                // Based on API_AUTH.md provided earlier: "GET /me (Protected)" -> Likely /api/auth/me?
+                // The API_AUTH says: "Base URL: /api/auth" ... "Endpoints: ... /me".
+                // So full path is /api/auth/me. 
+                // My axios base is /api. So I call /auth/me.
+                const userRes = await api.get('/auth/me');
+                setUser(userRes.data);
+
+            } catch (error) {
+                // If refresh fails (401/403), we are strictly logged out.
+                logout();
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        initAuth();
+    }, [setAccessToken, setUser, logout, setLoading]);
+
+    // NOTE: We do not block the UI rendering here (non-blocking initialization).
+    // The strict protection is handled by ProtectedRoute or individual pages checking useAuth().isLoading.
+    // This allows public pages (Landing, etc.) to load instantly without waiting for the Auth API.
+    return null;
 }
 
-/**
- * Client-side providers wrapper
- * Includes: AuthProvider, QueryClientProvider
- */
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-                {children}
-            </AuthProvider>
-        </QueryClientProvider>
+        <>
+            <AuthInitializer />
+            {children}
+        </>
     );
 }

@@ -1,0 +1,279 @@
+{
+    "id": "modern-pro",
+    "name": "Modern Pro",
+    "category": "modern",
+    "description": "Professional CV template with photo support and two-column layout - visually impressive for human readers",
+    "version": "1.0.0",
+    "settings": {
+        "showPhoto": true,
+        "photoShape": "circle",
+        "showSummary": true,
+        "showContactIcons": false,
+        "columnLayout": "two-column",
+        "atsCompatible": false
+    },
+    "design": {
+        "colors": {
+            "primary": "#1e40af",
+            "background": "#ffffff",
+            "text": "#111827",
+            "mutedText": "#6b7280",
+            "borders": "#e5e7eb"
+        },
+        "typography": {
+            "fontFamily": "Inter, system-ui, -apple-system, sans-serif",
+            "sizes": {
+                "name": "28px",
+                "jobTitle": "14px",
+                "sectionHeader": "12px",
+                "body": "11px",
+                "contact": "10px"
+            },
+            "weights": {
+                "name": "700",
+                "jobTitle": "500",
+                "sectionHeader": "700",
+                "body": "400"
+            }
+        },
+        "spacing": {
+            "sectionGap": "16px",
+            "columnGap": "24px",
+            "itemPadding": "8px",
+            "documentMargin": "32px"
+        },
+        "photo": {
+            "size": "100px",
+            "borderWidth": "2px",
+            "borderColor": "#e5e7eb",
+            "position": "top-left"
+        }
+    },
+    "layout": {
+        "type": "two-column",
+        "columns": {
+            "left": {
+                "width": "30%",
+                "sections": [
+                    "contact",
+                    "skills",
+                    "languages"
+                ]
+            },
+            "right": {
+                "width": "70%",
+                "sections": [
+                    "summary",
+                    "experience",
+                    "education"
+                ]
+            }
+        }
+    },
+    "blocks": {
+        "header": {
+            "type": "HeaderBlock",
+            "enabled": true,
+            "settings": {
+                "showPhoto": true,
+                "photoShape": "circle",
+                "photoSize": "100px",
+                "photoBorder": "2px solid #e5e7eb",
+                "layout": "horizontal",
+                "alignment": "left",
+                "backgroundColor": "#ffffff",
+                "textColor": "#111827",
+                "nameSize": "28px",
+                "nameWeight": "700",
+                "nameColor": "#1e40af",
+                "jobTitleSize": "14px",
+                "jobTitleWeight": "500",
+                "jobTitleColor": "#1e40af",
+                "summaryMaxLines": 2,
+                "summaryColor": "#374151",
+                "summarySize": "11px",
+                "spacing": "16px"
+            }
+        },
+        "contact": {
+            "type": "ContactBlock",
+            "enabled": true,
+            "settings": {
+                "showIcons": false,
+                "layout": "vertical",
+                "fontSize": "10px",
+                "fontColor": "#6b7280",
+                "spacing": "6px",
+                "showLabels": false,
+                "sectionTitle": "Contact",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px"
+            }
+        },
+        "summary": {
+            "type": "SummaryBlock",
+            "enabled": true,
+            "settings": {
+                "sectionTitle": "Professional Summary",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px",
+                "fontSize": "11px",
+                "fontColor": "#374151",
+                "lineHeight": "1.6",
+                "textAlign": "left"
+            }
+        },
+        "experience": {
+            "type": "ExperienceBlock",
+            "enabled": true,
+            "settings": {
+                "sectionTitle": "Experience",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px",
+                "itemSpacing": "8px",
+                "jobTitleSize": "12px",
+                "jobTitleWeight": "600",
+                "jobTitleColor": "#111827",
+                "companySize": "11px",
+                "companyWeight": "500",
+                "companyColor": "#1e40af",
+                "dateSize": "10px",
+                "dateColor": "#6b7280",
+                "descriptionSize": "11px",
+                "descriptionColor": "#374151",
+                "descriptionLineHeight": "1.5",
+                "showBullets": true,
+                "bulletColor": "#1e40af"
+            }
+        },
+        "education": {
+            "type": "EducationBlock",
+            "enabled": true,
+            "settings": {
+                "sectionTitle": "Education",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px",
+                "itemSpacing": "8px",
+                "degreeSize": "12px",
+                "degreeWeight": "600",
+                "degreeColor": "#111827",
+                "institutionSize": "11px",
+                "institutionWeight": "500",
+                "institutionColor": "#1e40af",
+                "dateSize": "10px",
+                "dateColor": "#6b7280",
+                "descriptionSize": "11px",
+                "descriptionColor": "#374151"
+            }
+        },
+        "skills": {
+            "type": "SkillsBlock",
+            "enabled": true,
+            "settings": {
+                "sectionTitle": "Skills",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px",
+                "layout": "vertical",
+                "groupByCategory": true,
+                "categorySpacing": "12px",
+                "categoryTitleSize": "10px",
+                "categoryTitleWeight": "600",
+                "categoryTitleColor": "#111827",
+                "skillSize": "10px",
+                "skillColor": "#374151",
+                "skillSpacing": "6px",
+                "showProgressBar": false
+            }
+        },
+        "languages": {
+            "type": "LanguagesBlock",
+            "enabled": true,
+            "settings": {
+                "sectionTitle": "Languages",
+                "sectionTitleSize": "12px",
+                "sectionTitleWeight": "700",
+                "sectionTitleColor": "#1e40af",
+                "sectionTitleTransform": "uppercase",
+                "borderBottom": "2px solid #1e40af",
+                "marginBottom": "12px",
+                "layout": "vertical",
+                "languageSize": "10px",
+                "languageWeight": "500",
+                "languageColor": "#111827",
+                "proficiencySize": "10px",
+                "proficiencyColor": "#6b7280",
+                "itemSpacing": "6px",
+                "showProficiencyLevel": true
+            }
+        },
+        "footer": {
+            "type": "FooterBlock",
+            "enabled": true,
+            "settings": {
+                "showSeparator": true,
+                "separatorColor": "#e5e7eb",
+                "separatorHeight": "1px",
+                "marginTop": "24px",
+                "fontSize": "9px",
+                "fontColor": "#9ca3af",
+                "textAlign": "center",
+                "showCertificates": true
+            }
+        }
+    },
+    "rtl": {
+        "supported": true,
+        "settings": {
+            "fontFamily": "Cairo, system-ui, sans-serif",
+            "textAlign": "right",
+            "direction": "rtl",
+            "photoPosition": "top-right",
+            "columnOrder": "reverse"
+        }
+    },
+    "export": {
+        "pdf": {
+            "pageSize": "A4",
+            "margins": {
+                "top": "32px",
+                "right": "32px",
+                "bottom": "32px",
+                "left": "32px"
+            },
+            "quality": "high"
+        }
+    },
+    "metadata": {
+        "author": "MonCVPro",
+        "createdAt": "2026-01-01",
+        "tags": [
+            "professional",
+            "modern",
+            "two-column",
+            "photo",
+            "clean"
+        ],
+        "previewImage": "/templates/previews/modern-pro.png",
+        "isPremium": false
+    }
+}

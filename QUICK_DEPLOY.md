@@ -96,9 +96,13 @@ DATABASE_URL=file:./production.db
 ALLOWED_ORIGINS=https://VOTRE-APP.vercel.app
 JWT_SECRET=CHANGEZ-MOI-SECRET-SUPER-SECURISE-123456
 JWT_EXPIRES_IN=7d
-GEMINI_API_KEY=votre-gemini-key-si-vous-avez
 MAX_FILE_SIZE=5242880
 UPLOAD_DIR=./storage/uploads
+
+# NOTE: Les clés API AI (Gemini/OpenAI) 
+# sont maintenant gérées par le Cloudflare Worker via 'wrangler secret put'.
+# Voir backend-worker/README.md ou utiliser ./set-secrets.sh
+
 ```
 
 ### 4.4 Générer un Domaine

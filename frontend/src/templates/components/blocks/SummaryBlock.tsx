@@ -1,30 +1,68 @@
+
 import React from 'react';
-import { BlockRendererProps } from '../../types';
-import { cn } from '../../utils';
+import { TemplateBlock, PersonalInfo } from '../../types';
 
-export const SummaryBlock: React.FC<BlockRendererProps> = ({ data, template, block }) => {
-    const { summary } = data;
-    if (!summary) return null;
+interface SummaryBlockProps {
+    blockSettings: TemplateBlock;
+    data: PersonalInfo;
+    locale?: string;
+}
 
-    const { primary, text } = template.palette;
-    const { settings = {} } = block;
-    const inverseText = settings.inverseText || false;
+export const SummaryBlock: React.FC<SummaryBlockProps> = ({
+    blockSettings,
+    data,
+    locale = 'en',
+}) => {
+    const { settings } = blockSettings;
+    const isRTL = locale === 'ar';
+
+    if (!blockSettings.enabled || !data.summary) return null;
+
+    const {
+        sectionTitle,
+        sectionTitleSize,
+        sectionTitleWeight,
+        sectionTitleColor,
+        sectionTitleTransform,
+        borderBottom,
+        marginBottom,
+        fontSize,
+        fontColor,
+        lineHeight,
+        textAlign
+    } = settings;
+
+    const containerStyles: React.CSSProperties = {
+        marginBottom,
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: isRTL ? 'right' : (textAlign || 'left'),
+    };
+
+    const titleStyles: React.CSSProperties = {
+        fontSize: sectionTitleSize,
+        fontWeight: sectionTitleWeight,
+        color: sectionTitleColor,
+        textTransform: sectionTitleTransform as any,
+        borderBottom,
+        marginBottom: '8px',
+        paddingBottom: '4px',
+        display: 'block',
+    };
+
+    const textStyles: React.CSSProperties = {
+        fontSize,
+        color: fontColor,
+        lineHeight,
+        whiteSpace: 'pre-wrap', // Preserve line breaks
+        margin: 0,
+    };
 
     return (
-        <div className="mb-6">
-            {settings.showLabel !== false && (
-                <h3 className="font-bold uppercase tracking-wider mb-2 border-b pb-1"
-                    style={{
-                        color: inverseText ? 'white' : primary,
-                        borderColor: inverseText ? 'rgba(255,255,255,0.2)' : template.palette.muted
-                    }}>
-                    Profile
-                </h3>
+        <div style={containerStyles}>
+            {sectionTitle && (
+                <h3 style={titleStyles}>{sectionTitle}</h3>
             )}
-            <p className={cn("text-sm leading-relaxed", !!settings.largeText && "text-base")}
-                style={{ color: inverseText ? 'rgba(255,255,255,0.9)' : text }}>
-                {summary}
-            </p>
+            <p style={textStyles}>{data.summary}</p>
         </div>
     );
 };

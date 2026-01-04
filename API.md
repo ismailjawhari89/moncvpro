@@ -2,299 +2,112 @@
 
 ## Base URL
 ```
-http://localhost:3001/api
+http://localhost:3001/api/v1
 ```
 
 ## Authentication
-All protected endpoints require a JWT token in the Authorization header:
+Authentication is primarily handled via **Secure, HttpOnly Cookies**.
+ 
+When using the API from a browser, ensure `credentials: 'include'` (fetch) or `withCredentials: true` (axios) is set.
+ 
+### Auth Cookies:
+- `auth_token`: JWT access token.
+- `refresh_token`: Long-lived refresh token.
+ 
+### Authorization Header (Fallback):
+Protected endpoints also accept a JWT token in the Authorization header:
 ```
 Authorization: Bearer <token>
 ```
 
 ---
 
-## CV Endpoints
+## CV Endpoints (`/cvs`)
 
 ### List All CVs
-```http
-GET /api/cv
-```
-
-**Response:**
-```json
-[
-  {
-    "id": "uuid",
-    "title": "Software Engineer CV",
-    "template": "modern",
-    "updatedAt": "2025-11-29T14:00:00Z"
-  }
-]
-```
-
-### Get CV by ID
-```http
-GET /api/cv/:id
-```
-
-**Response:**
-```json
-{
-  "id": "uuid",
-  "title": "Software Engineer CV",
-  "template": "modern",
-  "content": {
-    "personalInfo": {...},
-    "summary": "...",
-    "experience": [...],
-    "education": [...],
-    "skills": [...]
-  }
-}
-```
+`GET /cvs` - Lists user's CVs (Soft deletes excluded)
 
 ### Create CV
-```http
-POST /api/cv
-Content-Type: application/json
-```
+`POST /cvs` - Create a new CV with nested relations.
+**Body:** `cvSchema` (Zod validated)
 
-**Request Body:**
-```json
-{
-  "title": "My New CV",
-  "content": {...},
-  "userId": "uuid"
-}
-```
+### Get CV by ID
+`GET /cvs/:id` - Returns full CV with nested relations.
 
 ### Update CV
-```http
-PUT /api/cv/:id
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "title": "Updated Title",
-  "content": {...},
-  "template": "classic"
-}
-```
+`PUT /cvs/:id` - Updates CV and its relations (Experience, Education, Skills).
+**Body:** `cvSchema` (Zod validated)
 
 ### Delete CV
-```http
-DELETE /api/cv/:id
-```
+`DELETE /cvs/:id` - Performs a **Soft Delete** (`deletedAt` timestamp).
 
 ---
 
-## AI Endpoints
+## AI Endpoints (`/ai`)
 
-### Rewrite Section
-```http
-POST /api/ai/rewrite
-Content-Type: application/json
-```
+### Section Suggestions
+`POST /ai/suggest` - Professional suggestions for a CV section.
+**Body:** `{ "cvId": string, "section": string, "prompt": string }`
 
-**Request Body:**
+### Content Improvement
+`POST /ai/improve` - Rewrites content for better impact.
+**Body:** `{ "cvId": string, "content": string }`
+
+---
+
+## Upload Endpoints (`/upload`)
+
+### File Upload
+`POST /upload` - Uploads PDF/DOCX images.
+**Security:**
+- Unique UUID filenames.
+- Magic Bytes verification.
+- Size limit: 5MB.
+
+---
+
+## Health & Monitoring
+
+### Liveness Check
+`GET /health/live` - Quick process check. Returns `200`.
+
+### Deep Health Check
+`GET /health` - Readiness check for DB, Cache, and AI.
+**Example Response:**
 ```json
 {
-  "text": "Original text to rewrite",
-  "section": "summary"
-}
-```
-
-**Response:**
-```json
-{
-  "rewrittenText": "Improved professional text..."
-}
-```
-
-### Improve Entire CV
-```http
-POST /api/ai/improve
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "content": {
-    "personalInfo": {...},
-    "summary": "...",
-    ...
+  "status": "UP",
+  "timestamp": "2026-01-04T08:00:00.000Z",
+  "components": {
+    "database": "UP",
+    "cache": "UP",
+    "ai_provider": "UP"
   }
 }
 ```
 
-**Response:**
-```json
-{
-  "suggestions": [
-    "Use stronger action verbs",
-    "Quantify achievements"
-  ],
-  "improvedContent": {...}
-}
-```
-
-### Generate Bullet Points
-```http
-POST /api/ai/bullets
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "jobTitle": "Software Engineer",
-  "text": "Worked on web applications"
-}
-```
-
-**Response:**
-```json
-{
-  "bullets": [
-    "• Developed scalable web applications using React and Node.js",
-    "• Improved application performance by 40%"
-  ]
-}
-```
-
-### ATS Score
-```http
-POST /api/ai/ats-score
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "content": {...},
-  "jobDescription": "Job description text..."
-}
-```
-
-**Response:**
-```json
-{
-  "score": 85,
-  "missingKeywords": ["React", "TypeScript"],
-  "suggestions": [...]
-}
-```
-
 ---
 
-## Upload Endpoints
-
-### Upload CV File
-```http
-POST /api/upload
-Content-Type: multipart/form-data
-```
-
-**Form Data:**
-- `file`: PDF or DOCX file
-
-**Response:**
-```json
-{
-  "message": "File uploaded successfully",
-  "filename": "cv_1234567890.pdf",
-  "parsedContent": {...}
-}
-```
-
----
-
-## Export Endpoints
-
-### Export as PDF
-```http
-POST /api/export/pdf
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "cvId": "uuid",
-  "template": "modern"
-}
-```
-
-**Response:** PDF file download
-
-### Export as DOCX
-```http
-POST /api/export/docx
-Content-Type: application/json
-```
-
-**Response:** DOCX file download
-
-### Export as PNG
-```http
-POST /api/export/png
-Content-Type: application/json
-```
-
-**Response:** PNG image download
-
----
-
-## Image Endpoints
-
-### Enhance Image
-```http
-POST /api/image/enhance
-Content-Type: multipart/form-data
-```
-
-**Form Data:**
-- `image`: Image file
-
-**Response:**
-```json
-{
-  "enhancedImage": "base64_string_or_url"
-}
-```
-
-### Remove Background
-```http
-POST /api/image/remove-bg
-Content-Type: multipart/form-data
-```
-
-**Response:**
-```json
-{
-  "imageWithoutBg": "base64_string_or_url"
-}
-```
-
----
-
-## Error Responses
-
-All endpoints may return the following error format:
+## Standard Error Response
+All endpoints return a consistent error structure:
 
 ```json
 {
-  "error": "Error message description"
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable message",
+    "details": null,
+    "stack": "Included in development only"
+  },
+  "timestamp": "ISO_TIMESTAMP"
 }
 ```
 
-**Common Status Codes:**
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `404` - Not Found
-- `500` - Internal Server Error
+**Common Codes:**
+- `VALIDATION_ERROR` (400)
+- `UNAUTHORIZED` (401)
+- `FORBIDDEN` (403)
+- `NOT_FOUND` (404)
+- `INTERNAL_SERVER_ERROR` (500)
+- `DATABASE_ERROR` (500)

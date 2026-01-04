@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: moncvpro-postgres
+    environment:
+      POSTGRES_DB: moncvpro
+      POSTGRES_USER: ${DB_USER:-moncvpro}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-moncvpro123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-moncvpro}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - moncvpro-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: moncvpro-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - moncvpro-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moncvpro-backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER:-moncvpro}:${DB_PASSWORD:-moncvpro123}@postgres:5432/moncvpro
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - moncvpro-network
+    volumes:
+      - ./backend/logs:/app/logs
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: moncvpro-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+      NEXT_PUBLIC_BACKEND_URL: http://backend:3001
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - moncvpro-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  moncvpro-network:
+    driver: bridge
