@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CheckCircle, Zap, Star, Shield, ArrowRight } from 'lucide-react';
+import { CheckCircle, Zap, Star, Shield, ArrowRight, Sparkles } from 'lucide-react';
 import ProWaitlistForm from '@/components/marketing/ProWaitlistForm';
 
 export const metadata = {
