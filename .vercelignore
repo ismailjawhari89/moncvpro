@@ -1,0 +1,7 @@
+backend/
+mobile/
+docs/
+*.md
+.github/
+.vscode/
+.idea/

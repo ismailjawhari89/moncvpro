@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "nodemon src/index.ts",
         "build": "prisma generate && tsc",
+        "postinstall": "node scripts/safe-prisma-generate.js",
         "start": "node dist/index.js",
         "test": "jest",
         "test:watch": "jest --watch",

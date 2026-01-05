@@ -11,7 +11,6 @@
         "prisma:migrate": "npm run prisma:migrate --prefix backend",
         "prisma:studio": "npm run prisma:studio --prefix backend",
         "backup": "npm run backup --prefix backend",
-        "postinstall": "npm run postinstall -w moncvpro-backend",
         "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
     },
     "workspaces": [
@@ -29,9 +28,7 @@
     ],
     "author": "CV Master AI Team",
     "license": "MIT",
-    "dependencies": {
-        "prisma": "^6.1.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "concurrently": "^9.1.2"
     },

@@ -54,8 +54,16 @@ const prisma = new PrismaClient({ datasources });
 
 ### Vercel Deployment
 - Frontend builds correctly with `next build`
-- Backend Prisma client generates during workspace install
+- Backend has a safe postinstall script that skips if @prisma/client isn't installed yet
+- The postinstall script (`scripts/safe-prisma-generate.js`) checks for @prisma/client before running `prisma generate`
 - No manual intervention needed
+
+### Why the Safe Postinstall Script?
+In monorepo workspace installs, `postinstall` scripts run before all packages are installed.
+The safe script prevents build failures by:
+1. Checking if `@prisma/client` exists in `node_modules`
+2. Only running `prisma generate` if it's found
+3. Skipping gracefully otherwise (Prisma client will generate during `build` script)
 
 ### Environment Variables Required
 Make sure `DATABASE_URL` is set in your deployment environment:
