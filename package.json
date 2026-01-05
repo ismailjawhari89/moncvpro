@@ -29,9 +29,7 @@
     ],
     "author": "CV Master AI Team",
     "license": "MIT",
-    "dependencies": {
-        "prisma": "^6.1.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "concurrently": "^9.1.2"
     },
