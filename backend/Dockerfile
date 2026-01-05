@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN npm run prisma:generate
 
 # Build TypeScript
 RUN npm run build
