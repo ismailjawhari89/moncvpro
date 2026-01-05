@@ -7,13 +7,12 @@ export function generateStaticParams() {
     return [{ locale: 'en' }, { locale: 'ar' }, { locale: 'fr' }];
 }
 
-export default async function LocaleLayout({
-    children,
-    params: { locale }
-}: {
+export default async function LocaleLayout(props: {
     children: React.ReactNode;
-    params: { locale: string };
+    params: Promise<{ locale: string }>;
 }) {
+    const { locale } = await props.params;
+    const { children } = props;
     let messages;
     try {
         messages = (await import(`../../../messages/${locale}.json`)).default;
